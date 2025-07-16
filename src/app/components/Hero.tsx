@@ -6,17 +6,19 @@ import Spline from '@splinetool/react-spline'
 
 export default function Hero() {
     return (
-        <section className="relative mt-5 w-[95vw] h-[600px] sm:h-[500px] md:h-[700px] overflow-hidden mx-auto rounded-3xl">
+        <section className="relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
             {/* Background Image */}
-            <div
-                className="absolute inset-0 w-full h-full bg-cover bg-center rounded-3xl overflow-hidden"
-                style={{ backgroundImage: 'url(/HeroBg.svg)', backgroundSize: 'cover' }}
-            />
+            <main className="absolute inset-0 z-0 w-full h-full object-cover bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
+                <Spline
+                    scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
+                />
+            </main>
+
 
             {/* Content Layer */}
             <div className="absolute inset-0 z-10 p-6  flex flex-col justify-between text-white">
                 {/* Top Bar */}
-                <div className="flex flex-col sm:flex-row justify-between items-start gap-6">
+                <div className="relative top-4 flex flex-col sm:flex-row justify-between items-start gap-6">
                     <div className="flex-1">
                         <h1 className="text-5xl sm:text-6xl font-bold leading-tight font-primary">
                             ConvoAI Studio
@@ -25,8 +27,8 @@ export default function Hero() {
                             Two AIs. One Mic. Infinite Possibilities.
                         </p>
                     </div>
-                    <button className="hidden sm:block absolute top-0 right-0 w-[370px] rounded-full border border-gray-500 px-12 py-4 text-sm hover:bg-white hover:text-black transition">
-                        PRE-ORDER
+                    <button className="hidden sm:block absolute right-0 -top-5 w-[370px] rounded-full border border-gray-500 px-12 py-4 text-sm hover:bg-white hover:text-black transition">
+                        Get Started
                     </button>
                 </div>
 

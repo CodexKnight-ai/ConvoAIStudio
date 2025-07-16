@@ -32,3 +32,12 @@ body {
 .font-primary {
   font-family: 'Qube Genix' ;
 }
+
+.bg-mask {
+  -webkit-mask-image: url('/HeroBg.svg');
+  mask-image: url('/HeroBg.svg');
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
