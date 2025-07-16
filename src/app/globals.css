@@ -24,6 +24,12 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Netron';
+  src: url('/fonts/netron/Netron\ .otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 body {
   background: var(--background);
   color: var(--foreground);
@@ -31,6 +37,10 @@ body {
 
 .font-primary {
   font-family: 'Qube Genix' ;
+}
+
+.font-secondary {
+  font-family: 'Netron' ;
 }
 
 .bg-mask {
