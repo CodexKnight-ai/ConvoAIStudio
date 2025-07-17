@@ -2,9 +2,10 @@
 
 import React from 'react';
 import Spline from './SplineComponent';
+import { useRouter } from 'next/navigation';
 
 export default function Hero() {
-
+    const router = useRouter();
     return (
         <section className="hero-section relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
             <div className="absolute inset-0 z-0 w-full h-full bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
@@ -37,7 +38,7 @@ export default function Hero() {
                             Two AIs. One Mic. Infinite Possibilities.
                         </p>
                     </div>
-                    <button className="font-secondary hidden sm:block absolute right-0 -top-6 w-[370px] rounded-full border border-gray-500 px-12 py-4 text-xl hover:bg-white hover:text-black transition">
+                    <button onClick={() => router.push('/login')} className="font-secondary hidden sm:block absolute right-0 -top-6 w-[370px] rounded-full border border-gray-500 px-12 py-4 text-xl hover:bg-white hover:text-black transition">
                         Get Started
                     </button>
                 </div>

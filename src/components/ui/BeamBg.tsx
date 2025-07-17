@@ -201,7 +201,7 @@ export function BeamsBackground({
             <div className="relative z-10 flex h-screen w-full items-center justify-center">
                 <div className="flex flex-col items-center justify-center gap-6 px-4 text-center">
                     <motion.h1
-                        className="text-6xl md:text-7xl lg:text-8xl font-semibold text-white tracking-tighter"
+                        className="text-5xl font-secondary md:text-6xl lg:text-7xl font-semibold text-white tracking-tighter"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
