@@ -1,20 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-
-// Use a simple div as fallback
-const Spline = dynamic(
-  () => import('@splinetool/react-spline').then(mod => mod.default),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
+import Spline from './SplineComponent';
 
 export default function Hero() {
     const [isMounted, setIsMounted] = useState(false);
@@ -26,18 +13,19 @@ export default function Hero() {
     return (
         <section className="hero-section relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
             <div className="absolute inset-0 z-0 w-full h-full bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
-                {isMounted && typeof window !== 'undefined' && (
-                  <div className="w-full h-full">
-                    <Spline
-                      scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
-                      onLoad={() => console.log('Spline loaded successfully')}
-                      onError={(event: any) => {
-                        console.error('Spline error:', event);
-                      }}
-                      className="w-full h-full"
-                    />
-                  </div>
-                )}
+                <div className="w-full h-full">
+                  <Spline
+                    scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
+                    onLoad={() => {
+                      console.log('Spline loaded successfully');
+                    }}
+                    onError={(error: Error) => {
+                      console.error('Spline error:', error);
+                    }}
+                    className="w-full h-full"
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </div>
                 
             </div>
 
