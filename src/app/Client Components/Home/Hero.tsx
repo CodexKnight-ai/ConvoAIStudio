@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 
 // Use a simple div as fallback
 const Spline = dynamic(
-  () => import('@splinetool/react-spline'),
+  () => import('@splinetool/react-spline').then(mod => mod.default),
   { 
     ssr: false,
     loading: () => (
@@ -24,18 +24,21 @@ export default function Hero() {
     }, []);
 
     return (
-        <section className="relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
+        <section className="hero-section relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
             <div className="absolute inset-0 z-0 w-full h-full bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
-                {isMounted && (
-                  <Spline
-                    scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
-                    onLoad={() => console.log('Spline loaded successfully')}
-                    onError={(event: React.SyntheticEvent<HTMLDivElement, Event>) => {
-                      console.error('Spline error:', event);
-                    }}
-                    className="w-full h-full"
-                  />
+                {isMounted && typeof window !== 'undefined' && (
+                  <div className="w-full h-full">
+                    <Spline
+                      scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
+                      onLoad={() => console.log('Spline loaded successfully')}
+                      onError={(event: any) => {
+                        console.error('Spline error:', event);
+                      }}
+                      className="w-full h-full"
+                    />
+                  </div>
                 )}
+                
             </div>
 
 
