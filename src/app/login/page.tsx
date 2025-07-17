@@ -1,6 +1,6 @@
 "use client";
 
-import { FiUser, FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
 import { BeamsBackground } from "@/components/ui/BeamBg";
@@ -137,7 +137,7 @@ export default function SignUpPage() {
           </div>
 
           <p className="mt-8 text-center text-sm text-gray-400">
-            Don't have an account?{" "}
+            Don&apos;t have an account? {" "}
             <Link href="/login" className="font-medium text-blue-400 hover:text-blue-300">
               Sign up
             </Link>
