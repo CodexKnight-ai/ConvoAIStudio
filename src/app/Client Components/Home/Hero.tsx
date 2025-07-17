@@ -1,17 +1,32 @@
-// app/components/Hero.tsx or wherever you prefer
 'use client'
 
-import React from 'react'
-import Spline from '@splinetool/react-spline'
+import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+
+// Dynamically import Spline with SSR disabled
+const Spline = dynamic(
+  () => import('@splinetool/react-spline'),
+  { ssr: false }
+)
 
 export default function Hero() {
+    const [isMounted, setIsMounted] = useState(false)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
     return (
         <section className="relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
             {/* Background Image */}
             <main className="absolute inset-0 z-0 w-full h-full object-cover bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
-                <Spline
-                    scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
-                />
+                {isMounted && (
+                    <Spline
+                        scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
+                        onLoad={() => console.log('Spline loaded')}
+                        onError={(error) => console.error('Spline error:', error)}
+                    />
+                )}
             </main>
 
 
