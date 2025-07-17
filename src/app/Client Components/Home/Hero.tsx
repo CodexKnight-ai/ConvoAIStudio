@@ -1,33 +1,42 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
-// Dynamically import Spline with SSR disabled
+// Use a simple div as fallback
 const Spline = dynamic(
   () => import('@splinetool/react-spline'),
-  { ssr: false }
-)
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full bg-gray-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
 
 export default function Hero() {
-    const [isMounted, setIsMounted] = useState(false)
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        setIsMounted(true)
-    }, [])
+        setIsMounted(true);
+    }, []);
 
     return (
         <section className="relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">
-            {/* Background Image */}
-            <main className="absolute inset-0 z-0 w-full h-full object-cover bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
+            <div className="absolute inset-0 z-0 w-full h-full bg-mask bg-gradient-to-r from-gray-950 to-gray-900">
                 {isMounted && (
-                    <Spline
-                        scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
-                        onLoad={() => console.log('Spline loaded')}
-                        onError={(error) => console.error('Spline error:', error)}
-                    />
+                  <Spline
+                    scene="https://prod.spline.design/8qaHYedm72SB7LOm/scene.splinecode"
+                    onLoad={() => console.log('Spline loaded successfully')}
+                    onError={(event: React.SyntheticEvent<HTMLDivElement, Event>) => {
+                      console.error('Spline error:', event);
+                    }}
+                    className="w-full h-full"
+                  />
                 )}
-            </main>
+            </div>
 
 
             {/* Content Layer */}
