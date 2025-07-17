@@ -1,14 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Spline from './SplineComponent';
 
 export default function Hero() {
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
 
     return (
         <section className="hero-section relative w-[96vw] h-[90vh] my-8 overflow-hidden mx-auto rounded-3xl">

@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail, Twitter, Github, Linkedin, Mic2 } from 'lucide-react';
+import {Twitter, Github, Linkedin, Mic2 } from 'lucide-react';
 import Link from 'next/link';
 
 const navigation = {

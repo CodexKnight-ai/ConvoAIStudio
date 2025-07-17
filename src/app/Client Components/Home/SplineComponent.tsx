@@ -9,6 +9,7 @@ interface SplineProps {
   onError?: (error: Error) => void;
   className?: string;
   style?: React.CSSProperties;
+  [key: string]: unknown; // Allow additional props
 }
 
 // Create a wrapper component that will only be rendered on the client side
@@ -20,7 +21,7 @@ export default function SplineComponent({
   style = {},
 }: SplineProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [Spline, setSpline] = useState<ComponentType<any> | null>(null);
+  const [Spline, setSpline] = useState<ComponentType<SplineProps> | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -29,7 +30,9 @@ export default function SplineComponent({
     if (isMounted) {
       import('@splinetool/react-spline')
         .then((module) => {
-          setSpline(() => module.default);
+          // Cast the default export to ComponentType<SplineProps>
+          const SplineComponent = module.default as unknown as ComponentType<SplineProps>;
+          setSpline(() => SplineComponent);
           if (onLoad) onLoad();
         })
         .catch((error) => {
@@ -47,6 +50,13 @@ export default function SplineComponent({
     );
   }
 
-  // @ts-ignore - The Spline component is now properly loaded
-  return <Spline scene={scene} className={className} style={style} />;
+  if (!Spline) return null;
+  
+  return <Spline 
+    scene={scene} 
+    className={className} 
+    style={style} 
+    onLoad={onLoad}
+    onError={onError}
+  />;
 }
