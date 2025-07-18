@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "./Client Components/Footer";
 import Navbar from "./Client Components/Navbar";
-
+import { ClerkProvider } from "@clerk/nextjs";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,14 +25,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} scroll-smooth antialiased h-screen w-screen overflow-x-hidden`}
       >
         <Navbar/>
         {children}
         <Footer/>
       </body>
     </html>
+    </ClerkProvider>
   );
 }
