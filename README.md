@@ -20,17 +20,123 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+# ConvoAI Studio 🎙️
 
-To learn more about Next.js, take a look at the following resources:
+A modern podcast platform that leverages AI to deliver personalized podcast experiences. Built with Next.js and powered by Clerk for authentication.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Secure authentication with Clerk
+- Email verification flow
+- Modern, responsive UI with Tailwind CSS
+- Fast performance with Next.js
+- Real-time interactions
+- Mobile-friendly design
 
-## Deploy on Vercel
+## 🛠️ Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Frontend Framework**: Next.js 14 with App Router
+- **Styling**: Tailwind CSS
+- **Authentication**: Clerk
+- **UI Components**: Radix UI, Lucide Icons
+- **Animation**: Framer Motion
+- **State Management**: React Hooks
+- **Form Handling**: React Hook Form
+- **Type Safety**: TypeScript
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##  Getting Started
+
+### Prerequisites
+
+- Node.js 18.0.0 or later
+- npm or yarn
+- Clerk account (for authentication)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/CodexKnight-ai/ConvoAIStudio.git
+   cd ConvoAIStudio
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+
+3. Set up environment variables:
+   Create a `.env.local` file in the root directory and add your Clerk credentials:
+   ```env
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_publishable_key
+   CLERK_SECRET_KEY=your_secret_key
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+   NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+   NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+   NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+src/
+├── app/                    # App Router
+│   ├── sign-in/            # Sign-in page
+│   ├── sign-up/            # Sign-up page with email verification
+│   ├── (auth)/             # Authenticated routes
+│   ├── Client Components/   # Client-side components
+│   │   ├── Navbar/         # Navigation bar
+│   │   ├── Footer/         # Page footer
+│   │   └── Home/           # Homepage components
+│   └── layout.tsx          # Root layout
+├── components/             # Shared components
+├── lib/                    # Utility functions
+└── middleware.ts           # Authentication middleware
+```
+
+##  Authentication
+
+This project uses Clerk for authentication. The authentication flow includes:
+
+- Email/password sign-up
+- Email verification
+- Session management
+- Protected routes
+
+##  Styling
+
+- **Tailwind CSS** for utility-first styling
+- Custom animations with **Framer Motion**
+- Responsive design for all screen sizes
+- Dark mode support
+
+##  Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## Acknowledgments
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Clerk Documentation](https://clerk.com/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+---
+
+Made with ❤️ by CodexKnight
