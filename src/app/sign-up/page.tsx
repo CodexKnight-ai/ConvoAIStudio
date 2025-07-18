@@ -78,10 +78,9 @@ export default function SignUpPage() {
       });
 
       setPendingVerification(true);
-    } catch (error: any) {
+    } catch (error : unknown) {
       console.error("Sign-up error:", error);
-      const message =
-        error.errors?.[0]?.message || "Failed to sign up. Please try again.";
+      const message = "Failed to sign up. Please try again.";
       setError(message);
     } finally {
       setIsLoading(false);
@@ -105,9 +104,8 @@ export default function SignUpPage() {
       } else {
         setError("Verification failed. Code may be invalid or expired.");
       }
-    } catch (error: any) {
-      const message =
-        error.errors?.[0]?.message || "Failed to verify email. Try again.";
+    } catch (error: unknown) {
+      const message = "Failed to verify email. Try again.";
       setError(message);
     } finally {
       setIsLoading(false);
