@@ -1,64 +1,33 @@
 'use client';
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
 
 export default function Navbar() {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [heroHeight, setHeroHeight] = useState(0);
-    const [isHomePage,setIsHomePage] = useState(false);
-    const pathname = usePathname();
-
-    useEffect(() => {
-        // Calculate hero section height on mount
-        const hero = document.querySelector('.hero-section');
-        const currentPage = pathname;
-        if (hero) {
-            setHeroHeight(hero.scrollHeight);
-        }
-        if (currentPage === '/') {
-            setIsHomePage(true);
-        }
-
-        const handleScroll = () => {
-            // Check if scrolled past hero section
-            const scrolled = window.scrollY > heroHeight - 80; // 80 is the navbar height
-            setIsScrolled(scrolled);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [heroHeight,pathname]);
-
-    return (
-<nav
-  className={`px-12 w-full h-16 transition-all duration-300 ${
-    isScrolled || !isHomePage
-      ? 'fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md shadow-md'
-      : 'absolute bottom-16 z-50 left-0 right-0 bg-transparent'
-  }`}
->
-  <div className="container mx-auto h-full px-4 flex items-center justify-between relative z-[999]">
-    {/* Left: Logo */}
-    <div className="flex-1">
-      <Link href="/" className="text-xl font-primary font-bold hover:text-blue-600 transition-colors text-center w-full px-auto">
-        ConvoAI Studio
+  return (
+    <nav className="fixed top-4 left-0 right-0 z-50 flex items-center justify-between px-8 lg:px-16">
+      {/* Left Logo (with futuristic Qube Genix primary font) */}
+      <Link href="/" className="w-12 h-12 rounded-full liquid-glass flex items-center justify-center text-white text-2xl font-primary font-bold shadow-lg border border-white/20 cursor-pointer hover:bg-white/10 transition">
+        C
       </Link>
-    </div>
+      
+      {/* Center (desktop only) */}
+      <div className="hidden lg:flex items-center gap-1.5 bg-black/80 rounded-full px-2.5 py-1.5 shadow-lg border border-white/30">
+        <Link href="/" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">Home</Link>
+        {/* <Link href="/episodes" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">Episodes</Link> */}
+        <Link href="/discover" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">Discover</Link>
+        <Link href="/feed" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">Feed</Link>
+        <Link href="/channels" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">Channels</Link>
+        {/* <Link href="/hosts" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition whitespace-nowrap">AI Hosts</Link> */}
+        {/* <Link href="/live" className="px-3 py-2 text-sm font-medium text-white/90 font-sans hover:text-white transition mr-3 whitespace-nowrap">Live Stream</Link> */}
+        <button className="bg-white text-black text-sm font-bold font-secondary rounded-full px-5 py-2 flex items-center gap-1 hover:bg-white/90 cursor-pointer">
+          Listen Live
+          <ArrowUpRight className="h-4 w-4" />
+        </button>
+      </div>
 
-    {/* Center: Nav Links */}
-    <div className="hidden md:flex space-x-6 absolute left-1/2 transform -translate-x-1/2">
-      <Link href="/"  className={`hover:text-blue-600 transition-colors border ${!isScrolled && isHomePage ? 'border-gray-400' : 'border-transparent'} px-5 py-2 rounded-3xl text-md `}>Home</Link>
-      <Link href="/feed" className={`hover:text-blue-600 transition-colors border ${!isScrolled && isHomePage ? 'border-gray-400' : 'border-transparent'} px-5 py-2 rounded-3xl text-md `}>Feed</Link>
-      <Link href="/subscription" className={`hover:text-blue-600 transition-colors border ${!isScrolled && isHomePage ? 'border-gray-400' : 'border-transparent'} px-5 py-2 rounded-3xl text-md `}>Subscriptions</Link>
-      <Link href="/watch-history" className={`hover:text-blue-600 transition-colors border ${!isScrolled && isHomePage ? 'border-gray-400' : 'border-transparent'} px-5 py-2 rounded-3xl text-md `}>Watch History</Link>
-    </div>
-
-    {/* Right: Empty div to balance */}
-    <div className="flex-1" />
-  </div>
-</nav>
-
-    );
+      {/* Right invisible spacer */}
+      <div className="w-12 h-12 invisible"></div>
+    </nav>
+  );
 }
