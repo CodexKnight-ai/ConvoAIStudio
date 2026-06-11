@@ -17,11 +17,24 @@ model User {
   email     String    @unique
   firstName String
   lastName  String?
+  passwordHash String
+  role Role @default(USER)
+  sessions Session[]
   createdAt DateTime  @default(now())
-
   channels  Channel[]
 }
-
+model Session {
+  sessionId String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  refreshTokenHash String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+enum Role {
+  USER
+  ADMIN
+}
 model Channel {
   id                String    @id @default(uuid())
   name              String

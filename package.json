@@ -16,5 +16,9 @@
       "onFail": "download"
     }
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@fastify/redis": "^8.0.0",
+    "ioredis": "^5.11.1"
+  }
 }
