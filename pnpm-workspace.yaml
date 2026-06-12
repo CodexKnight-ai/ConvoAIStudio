@@ -4,7 +4,7 @@ packages:
 allowBuilds:
   '@apollo/protobufjs': true
   '@prisma/engines': true
-  argon2: set this to true or false
+  argon2: true
   esbuild: true
   prisma: true
   sharp: true
