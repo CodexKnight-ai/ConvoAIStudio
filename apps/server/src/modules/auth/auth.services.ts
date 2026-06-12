@@ -23,7 +23,7 @@ export async function refreshService(
         reply.clearCookie("accessToken");
         reply.clearCookie("refreshToken");
         reply.clearCookie("sessionId");
-        throw new Error("Session expired");
+        throw new Error("Session expired", { cause: 401 });
     }
     const isValid = verifyRefreshToken(
         fastify,
@@ -40,7 +40,8 @@ export async function refreshService(
         reply.clearCookie("refreshToken");
         reply.clearCookie("sessionId");
         throw new Error(
-            "Refresh token reuse detected"
+            "Refresh token reuse detected",
+            { cause: 401 }
         );
     }
 
@@ -101,6 +102,7 @@ export async function refreshService(
         maxAge: 7 * 24 * 60 * 60,
     });
 
+    reply.code(200);
     return {
         accessTokenExpiresAt,
         refreshTokenExpiresAt,
@@ -115,7 +117,7 @@ export async function registerService(fastify: FastifyInstance, reply: FastifyRe
 }) {
     const existingUser = await findUserByEmail(prisma, data.email);
     if (existingUser) {
-        throw new Error("User already exists");
+        throw new Error("User already exists",{cause:409});
     }
     const hashedPassword = await hashPassword(data.password)
     const user = await createUser(prisma, {
@@ -158,7 +160,8 @@ export async function registerService(fastify: FastifyInstance, reply: FastifyRe
         sameSite: "strict",
         path: "/",
         maxAge: 7 * 24 * 60 * 60,
-    })
+    });
+    reply.code(201);
     return {
         user: {
             id: user.id,
@@ -177,11 +180,11 @@ export async function loginService(fastify: FastifyInstance, reply: FastifyReply
 }) {
     const existingUser = await findUserByEmail(prisma, data.email);
     if (!existingUser) {
-        throw new Error("User not found");
+        throw new Error("User not found", { cause: 404 });
     }
     const isPasswordValid = await verifyPassword(data.password, existingUser.passwordHash);
     if (!isPasswordValid) {
-        throw new Error("Invalid password");
+        throw new Error("Invalid password", { cause: 401 });
     }
     const sessionId = randomUUID();
     const { refreshToken, refreshTokenHash, expiresAt: refreshTokenExpiresAt } = generateRefreshToken(fastify);
@@ -216,7 +219,8 @@ export async function loginService(fastify: FastifyInstance, reply: FastifyReply
         sameSite: "strict",
         path: "/",
         maxAge: 7 * 24 * 60 * 60,
-    })
+    });
+    reply.code(200);
     return {
         user: {
             id: existingUser.id,
@@ -233,17 +237,18 @@ export async function loginService(fastify: FastifyInstance, reply: FastifyReply
 export async function logoutService(fastify: FastifyInstance, request: FastifyRequest, reply: FastifyReply) {
     const refreshToken = request.cookies["refreshToken"];
     if (!refreshToken) {
-        throw new Error("No refresh token found");
+        throw new Error("No refresh token found", { cause: 401 });
     }
     const refreshTokenHash = createHash("sha256").update(refreshToken).digest("hex");
     const session = await getRedisSession(fastify, refreshTokenHash);
     if (!session) {
-        throw new Error("No session found");
+        throw new Error("No session found", { cause: 404 });
     }
     await deleteRedisSession(fastify, refreshTokenHash);
     reply.clearCookie("refreshToken");
     reply.clearCookie("accessToken");
     reply.clearCookie("sessionId");
+    reply.code(200);
     return {
         message: "Logout successful",
     };
@@ -252,5 +257,6 @@ export async function getUserById(fastify:FastifyInstance, reply:FastifyReply, p
     userId:string
 }){
     const user=await findUserById(prisma,data.userId);
+    reply.code(200);
     return user;
 }

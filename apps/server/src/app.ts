@@ -9,7 +9,10 @@ import { authRoutes } from "./modules/auth/auth.route.js";
 export async function buildApp() {
     const app = Fastify({ logger: true });
     app.register(corsPlugin, {
-        origin: "*",
+        origin: process.env.CLIENT_URL,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     });
 
     app.register(redisPlugin);
@@ -18,7 +21,7 @@ export async function buildApp() {
     app.register(prismaPlugin)
 
     app.register(authRoutes, {
-        prefix: "/auth",
+        prefix: "/api/v1/auth",
     });
 
     app.get("/health", async () => {

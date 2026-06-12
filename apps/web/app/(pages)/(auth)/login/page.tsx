@@ -3,17 +3,32 @@
 import { FiUser, FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { BeamsBackground } from "@/components/ui/BeamBg";
-
+import axios from "axios"
+import toast from "react-hot-toast";
 export default function SignUpPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
     password: '',
     terms: false
   });
-
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/login`, 
+        formData,
+      {withCredentials: true});
+      if(res.status === 200){
+        toast.success("Login success!");
+        router.push("/");
+      }
+    } catch (error:any) {
+        toast.error(error.response.data.message);
+      }
+  }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -36,7 +51,7 @@ export default function SignUpPage() {
             <h1 className="text-3xl font-bold text-white mb-2 font-secondary">Login to your account</h1>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={submitHandler}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
                 Email Address
@@ -98,6 +113,7 @@ export default function SignUpPage() {
             <div>
               <button
                 type="submit"
+                disabled={!formData.email || !formData.password}
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
               >
                 Login to your account
@@ -138,7 +154,7 @@ export default function SignUpPage() {
 
           <p className="mt-8 text-center text-sm text-gray-400">
             Don't have an account?{" "}
-            <Link href="/login" className="font-medium text-blue-400 hover:text-blue-300">
+            <Link href="/sign-up" className="font-medium text-blue-400 hover:text-blue-300">
               Sign up
             </Link>
           </p>

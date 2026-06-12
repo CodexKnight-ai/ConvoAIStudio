@@ -167,9 +167,8 @@ export function CommentsSection() {
                 <div className="flex items-center gap-4 pt-1">
                   <button
                     onClick={() => toggleLike(comment.id)}
-                    className={`flex items-center gap-1 text-xs font-sans font-bold transition-colors cursor-pointer ${
-                      comment.isLiked ? 'text-cyan-400 font-semibold' : 'text-white/40 hover:text-white/80'
-                    }`}
+                    className={`flex items-center gap-1 text-xs font-sans font-bold transition-colors cursor-pointer ${comment.isLiked ? 'text-cyan-400 font-semibold' : 'text-white/40 hover:text-white/80'
+                      }`}
                   >
                     <Heart className={`w-3.5 h-3.5 ${comment.isLiked ? 'fill-cyan-400' : ''}`} />
                     <span>{comment.likes}</span>
@@ -229,9 +228,8 @@ export function CommentsSection() {
                   <div className="flex items-center gap-3 pt-0.5">
                     <button
                       onClick={() => toggleLike(reply.id, comment.id)}
-                      className={`flex items-center gap-1 text-[10px] font-sans font-bold transition-colors cursor-pointer ${
-                        reply.isLiked ? 'text-cyan-400' : 'text-white/40 hover:text-white/80'
-                      }`}
+                      className={`flex items-center gap-1 text-[10px] font-sans font-bold transition-colors cursor-pointer ${reply.isLiked ? 'text-cyan-400' : 'text-white/40 hover:text-white/80'
+                        }`}
                     >
                       <Heart className={`w-3 h-3 ${reply.isLiked ? 'fill-cyan-400' : ''}`} />
                       <span>{reply.likes}</span>

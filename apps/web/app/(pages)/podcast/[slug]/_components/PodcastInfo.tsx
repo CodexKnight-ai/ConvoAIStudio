@@ -56,7 +56,7 @@ export function PodcastInfo({ podcast }: PodcastInfoProps) {
           }
           return null;
         })}
-        
+
         {/* Category badge */}
         <span className="text-xs font-bold font-sans uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">
           {podcast.category}

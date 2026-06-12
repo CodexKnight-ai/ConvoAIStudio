@@ -43,11 +43,11 @@ export function RelatedSidebar({ currentSlug }: RelatedSidebarProps) {
                 <h4 className="text-white text-xs sm:text-sm font-sans font-semibold line-clamp-2 leading-tight group-hover:text-cyan-400 transition-colors">
                   {item.title}
                 </h4>
-                
+
                 <span className="text-white/60 font-sans text-[11px] sm:text-xs mt-1 truncate">
                   {item.channelName}
                 </span>
-                
+
                 <span className="text-white/40 font-sans text-[10px] sm:text-[11px] mt-0.5">
                   {item.views} views
                 </span>

@@ -94,10 +94,10 @@ export default function PodcastDetailPage({ params }: PageProps) {
             <EngagementActions podcast={podcast} />
             <ChannelSection podcast={podcast} />
             <DescriptionSection podcast={podcast} />
-            
+
             {/* Divider line before comments */}
             <div className="h-[1px] bg-white/5 my-8" />
-            
+
             <CommentsSection />
           </div>
 
