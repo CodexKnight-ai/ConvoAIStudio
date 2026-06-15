@@ -387,6 +387,7 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Channel: 'Channel',
+  ChannelSubscription: 'ChannelSubscription',
   Podcast: 'Podcast'
 } as const
 
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "channel" | "podcast"
+    modelProps: "user" | "session" | "channel" | "channelSubscription" | "podcast"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -629,6 +630,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ChannelSubscription: {
+      payload: Prisma.$ChannelSubscriptionPayload<ExtArgs>
+      fields: Prisma.ChannelSubscriptionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChannelSubscriptionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChannelSubscriptionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        findFirst: {
+          args: Prisma.ChannelSubscriptionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChannelSubscriptionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        findMany: {
+          args: Prisma.ChannelSubscriptionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>[]
+        }
+        create: {
+          args: Prisma.ChannelSubscriptionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        createMany: {
+          args: Prisma.ChannelSubscriptionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChannelSubscriptionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>[]
+        }
+        delete: {
+          args: Prisma.ChannelSubscriptionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        update: {
+          args: Prisma.ChannelSubscriptionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChannelSubscriptionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChannelSubscriptionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChannelSubscriptionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChannelSubscriptionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChannelSubscriptionPayload>
+        }
+        aggregate: {
+          args: Prisma.ChannelSubscriptionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChannelSubscription>
+        }
+        groupBy: {
+          args: Prisma.ChannelSubscriptionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChannelSubscriptionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChannelSubscriptionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChannelSubscriptionCountAggregateOutputType> | number
+        }
+      }
+    }
     Podcast: {
       payload: Prisma.$PodcastPayload<ExtArgs>
       fields: Prisma.PodcastFieldRefs
@@ -770,14 +845,26 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 export const ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
   description: 'description',
   bannerUrl: 'bannerUrl',
   profilePictureUrl: 'profilePictureUrl',
+  subscriberCount: 'subscriberCount',
+  podcastCount: 'podcastCount',
   createdAt: 'createdAt',
   ownerId: 'ownerId'
 } as const
 
 export type ChannelScalarFieldEnum = (typeof ChannelScalarFieldEnum)[keyof typeof ChannelScalarFieldEnum]
+
+
+export const ChannelSubscriptionScalarFieldEnum = {
+  userId: 'userId',
+  channelId: 'channelId',
+  createdAt: 'createdAt'
+} as const
+
+export type ChannelSubscriptionScalarFieldEnum = (typeof ChannelSubscriptionScalarFieldEnum)[keyof typeof ChannelSubscriptionScalarFieldEnum]
 
 
 export const PodcastScalarFieldEnum = {
@@ -790,6 +877,8 @@ export const PodcastScalarFieldEnum = {
   views: 'views',
   upvotes: 'upvotes',
   downvotes: 'downvotes',
+  status: 'status',
+  visibility: 'visibility',
   createdAt: 'createdAt',
   channelId: 'channelId'
 } as const
@@ -880,6 +969,34 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PodcastStatus'
+ */
+export type EnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PodcastStatus[]'
+ */
+export type ListEnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Visibility'
+ */
+export type EnumVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Visibility'>
+    
+
+
+/**
+ * Reference to a field of type 'Visibility[]'
+ */
+export type ListEnumVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Visibility[]'>
     
 
 
@@ -1009,6 +1126,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   session?: Prisma.SessionOmit
   channel?: Prisma.ChannelOmit
+  channelSubscription?: Prisma.ChannelSubscriptionOmit
   podcast?: Prisma.PodcastOmit
 }
 

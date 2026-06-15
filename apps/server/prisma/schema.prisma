@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -11,56 +6,124 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-model User {
-  id        String    @id @default(uuid())
-  username  String    @unique
-  email     String    @unique
-  firstName String
-  lastName  String?
-  passwordHash String
-  role Role @default(USER)
-  sessions Session[]
-  createdAt DateTime  @default(now())
-  channels  Channel[]
-}
-model Session {
-  sessionId String @id @default(uuid())
-  userId String
-  user User @relation(fields: [userId], references: [id])
-  refreshTokenHash String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-}
+
 enum Role {
   USER
   ADMIN
 }
+
+enum PodcastStatus {
+  DRAFT
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  email        String    @unique
+
+  firstName    String
+  lastName     String?
+
+  passwordHash String
+
+  role         Role      @default(USER)
+
+  createdAt    DateTime  @default(now())
+
+  sessions      Session[]
+  channels      Channel[]
+  subscriptions ChannelSubscription[]
+}
+
+model Session {
+  sessionId        String   @id @default(uuid())
+
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+
+  refreshTokenHash String
+
+  expiresAt        DateTime
+
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+}
+
 model Channel {
-  id                String    @id @default(uuid())
+  id                String   @id @default(uuid())
+
   name              String
+  slug              String   @unique
+
   description       String
+
   bannerUrl         String?
   profilePictureUrl String?
-  createdAt         DateTime  @default(now())
 
-  ownerId String
-  owner   User @relation(fields: [ownerId], references: [id])
+  subscriberCount   Int      @default(0)
+  podcastCount      Int      @default(0)
 
-  podcasts Podcast[]
+  createdAt         DateTime @default(now())
+
+  ownerId           String
+  owner             User     @relation(fields: [ownerId], references: [id])
+
+  podcasts          Podcast[]
+  subscriptions     ChannelSubscription[]
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model ChannelSubscription {
+  userId    String
+  channelId String
+
+  createdAt DateTime @default(now())
+
+  user       User    @relation(fields: [userId], references: [id],onDelete:Cascade)
+  channel    Channel @relation(fields: [channelId], references: [id],onDelete:Cascade)
+
+  @@id([userId, channelId])
+
+  @@index([channelId])
+  @@index([userId])
 }
 
 model Podcast {
-  id          String    @id @default(uuid())
+  id          String          @id @default(uuid())
+
   title       String
   description String
+
   thumbnail   String?
   audioUrl    String?
-  duration    Int?
-  views       Int       @default(0)
-  upvotes     Int       @default(0)
-  downvotes   Int       @default(0)
-  createdAt   DateTime  @default(now())
 
-  channelId String
-  channel   Channel @relation(fields: [channelId], references: [id])
+  duration    Int?
+
+  views       Int             @default(0)
+  upvotes     Int             @default(0)
+  downvotes   Int             @default(0)
+
+  status      PodcastStatus   @default(DRAFT)
+  visibility  Visibility      @default(PUBLIC)
+
+  createdAt   DateTime        @default(now())
+
+  channelId   String
+  channel     Channel         @relation(fields: [channelId], references: [id])
+
+  @@index([channelId])
+  @@index([createdAt])
+  @@index([status])
 }

@@ -1,11 +1,15 @@
-"use client"
+"use client";
+
 import { useState } from 'react';
 import {FiEye, FiEyeOff, FiArrowRight } from 'react-icons/fi';
 import Link from 'next/link';
-import axios from "axios";
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useAuthStore } from "@/store/authStore";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const signup = useAuthStore((state) => state.signup);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -18,15 +22,15 @@ export default function SignUpPage() {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/register`,
-        formData,
-        { withCredentials: true }
-      );
-      console.log(res.data);
-      if (res.status === 200 || res.status === 201) {
-        toast.success("User registered successfully!");
-      }
+      await signup({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success("User registered successfully!");
+      router.push("/");
     } catch (error: any) {
       const errorMsg = error.response?.data?.message || error.message || "Something went wrong";
       toast.error(errorMsg);

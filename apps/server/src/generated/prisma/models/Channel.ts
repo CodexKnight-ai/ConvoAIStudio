@@ -20,16 +20,31 @@ export type ChannelModel = runtime.Types.Result.DefaultSelection<Prisma.$Channel
 
 export type AggregateChannel = {
   _count: ChannelCountAggregateOutputType | null
+  _avg: ChannelAvgAggregateOutputType | null
+  _sum: ChannelSumAggregateOutputType | null
   _min: ChannelMinAggregateOutputType | null
   _max: ChannelMaxAggregateOutputType | null
+}
+
+export type ChannelAvgAggregateOutputType = {
+  subscriberCount: number | null
+  podcastCount: number | null
+}
+
+export type ChannelSumAggregateOutputType = {
+  subscriberCount: number | null
+  podcastCount: number | null
 }
 
 export type ChannelMinAggregateOutputType = {
   id: string | null
   name: string | null
+  slug: string | null
   description: string | null
   bannerUrl: string | null
   profilePictureUrl: string | null
+  subscriberCount: number | null
+  podcastCount: number | null
   createdAt: Date | null
   ownerId: string | null
 }
@@ -37,9 +52,12 @@ export type ChannelMinAggregateOutputType = {
 export type ChannelMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  slug: string | null
   description: string | null
   bannerUrl: string | null
   profilePictureUrl: string | null
+  subscriberCount: number | null
+  podcastCount: number | null
   createdAt: Date | null
   ownerId: string | null
 }
@@ -47,21 +65,37 @@ export type ChannelMaxAggregateOutputType = {
 export type ChannelCountAggregateOutputType = {
   id: number
   name: number
+  slug: number
   description: number
   bannerUrl: number
   profilePictureUrl: number
+  subscriberCount: number
+  podcastCount: number
   createdAt: number
   ownerId: number
   _all: number
 }
 
 
+export type ChannelAvgAggregateInputType = {
+  subscriberCount?: true
+  podcastCount?: true
+}
+
+export type ChannelSumAggregateInputType = {
+  subscriberCount?: true
+  podcastCount?: true
+}
+
 export type ChannelMinAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   bannerUrl?: true
   profilePictureUrl?: true
+  subscriberCount?: true
+  podcastCount?: true
   createdAt?: true
   ownerId?: true
 }
@@ -69,9 +103,12 @@ export type ChannelMinAggregateInputType = {
 export type ChannelMaxAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   bannerUrl?: true
   profilePictureUrl?: true
+  subscriberCount?: true
+  podcastCount?: true
   createdAt?: true
   ownerId?: true
 }
@@ -79,9 +116,12 @@ export type ChannelMaxAggregateInputType = {
 export type ChannelCountAggregateInputType = {
   id?: true
   name?: true
+  slug?: true
   description?: true
   bannerUrl?: true
   profilePictureUrl?: true
+  subscriberCount?: true
+  podcastCount?: true
   createdAt?: true
   ownerId?: true
   _all?: true
@@ -125,6 +165,18 @@ export type ChannelAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ChannelAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ChannelSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ChannelMinAggregateInputType
@@ -155,6 +207,8 @@ export type ChannelGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: ChannelCountAggregateInputType | true
+  _avg?: ChannelAvgAggregateInputType
+  _sum?: ChannelSumAggregateInputType
   _min?: ChannelMinAggregateInputType
   _max?: ChannelMaxAggregateInputType
 }
@@ -162,12 +216,17 @@ export type ChannelGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type ChannelGroupByOutputType = {
   id: string
   name: string
+  slug: string
   description: string
   bannerUrl: string | null
   profilePictureUrl: string | null
+  subscriberCount: number
+  podcastCount: number
   createdAt: Date
   ownerId: string
   _count: ChannelCountAggregateOutputType | null
+  _avg: ChannelAvgAggregateOutputType | null
+  _sum: ChannelSumAggregateOutputType | null
   _min: ChannelMinAggregateOutputType | null
   _max: ChannelMaxAggregateOutputType | null
 }
@@ -193,29 +252,38 @@ export type ChannelWhereInput = {
   NOT?: Prisma.ChannelWhereInput | Prisma.ChannelWhereInput[]
   id?: Prisma.StringFilter<"Channel"> | string
   name?: Prisma.StringFilter<"Channel"> | string
+  slug?: Prisma.StringFilter<"Channel"> | string
   description?: Prisma.StringFilter<"Channel"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
   profilePictureUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
+  subscriberCount?: Prisma.IntFilter<"Channel"> | number
+  podcastCount?: Prisma.IntFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringFilter<"Channel"> | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   podcasts?: Prisma.PodcastListRelationFilter
+  subscriptions?: Prisma.ChannelSubscriptionListRelationFilter
 }
 
 export type ChannelOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
   podcasts?: Prisma.PodcastOrderByRelationAggregateInput
+  subscriptions?: Prisma.ChannelSubscriptionOrderByRelationAggregateInput
 }
 
 export type ChannelWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  slug?: string
   AND?: Prisma.ChannelWhereInput | Prisma.ChannelWhereInput[]
   OR?: Prisma.ChannelWhereInput[]
   NOT?: Prisma.ChannelWhereInput | Prisma.ChannelWhereInput[]
@@ -223,23 +291,31 @@ export type ChannelWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Channel"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
   profilePictureUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
+  subscriberCount?: Prisma.IntFilter<"Channel"> | number
+  podcastCount?: Prisma.IntFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringFilter<"Channel"> | string
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   podcasts?: Prisma.PodcastListRelationFilter
-}, "id">
+  subscriptions?: Prisma.ChannelSubscriptionListRelationFilter
+}, "id" | "slug">
 
 export type ChannelOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   _count?: Prisma.ChannelCountOrderByAggregateInput
+  _avg?: Prisma.ChannelAvgOrderByAggregateInput
   _max?: Prisma.ChannelMaxOrderByAggregateInput
   _min?: Prisma.ChannelMinOrderByAggregateInput
+  _sum?: Prisma.ChannelSumOrderByAggregateInput
 }
 
 export type ChannelScalarWhereWithAggregatesInput = {
@@ -248,9 +324,12 @@ export type ChannelScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ChannelScalarWhereWithAggregatesInput | Prisma.ChannelScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Channel"> | string
   name?: Prisma.StringWithAggregatesFilter<"Channel"> | string
+  slug?: Prisma.StringWithAggregatesFilter<"Channel"> | string
   description?: Prisma.StringWithAggregatesFilter<"Channel"> | string
   bannerUrl?: Prisma.StringNullableWithAggregatesFilter<"Channel"> | string | null
   profilePictureUrl?: Prisma.StringNullableWithAggregatesFilter<"Channel"> | string | null
+  subscriberCount?: Prisma.IntWithAggregatesFilter<"Channel"> | number
+  podcastCount?: Prisma.IntWithAggregatesFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringWithAggregatesFilter<"Channel"> | string
 }
@@ -258,53 +337,72 @@ export type ChannelScalarWhereWithAggregatesInput = {
 export type ChannelCreateInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutChannelsInput
   podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
+  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelUncheckedCreateInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   ownerId: string
   podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
   podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
+  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelCreateManyInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   ownerId: string
 }
@@ -312,18 +410,24 @@ export type ChannelCreateManyInput = {
 export type ChannelUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ChannelUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -341,19 +445,30 @@ export type ChannelOrderByRelationAggregateInput = {
 export type ChannelCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+}
+
+export type ChannelAvgOrderByAggregateInput = {
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
 }
 
 export type ChannelMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
 }
@@ -361,11 +476,19 @@ export type ChannelMaxOrderByAggregateInput = {
 export type ChannelMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   bannerUrl?: Prisma.SortOrder
   profilePictureUrl?: Prisma.SortOrder
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+}
+
+export type ChannelSumOrderByAggregateInput = {
+  subscriberCount?: Prisma.SortOrder
+  podcastCount?: Prisma.SortOrder
 }
 
 export type ChannelScalarRelationFilter = {
@@ -415,6 +538,28 @@ export type ChannelUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ChannelCreateNestedOneWithoutSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutSubscriptionsInput
+  connect?: Prisma.ChannelWhereUniqueInput
+}
+
+export type ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
+  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutSubscriptionsInput
+  upsert?: Prisma.ChannelUpsertWithoutSubscriptionsInput
+  connect?: Prisma.ChannelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChannelUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.ChannelUpdateWithoutSubscriptionsInput>, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
+}
+
 export type ChannelCreateNestedOneWithoutPodcastsInput = {
   create?: Prisma.XOR<Prisma.ChannelCreateWithoutPodcastsInput, Prisma.ChannelUncheckedCreateWithoutPodcastsInput>
   connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutPodcastsInput
@@ -432,21 +577,29 @@ export type ChannelUpdateOneRequiredWithoutPodcastsNestedInput = {
 export type ChannelCreateWithoutOwnerInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
+  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelUncheckedCreateWithoutOwnerInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelCreateOrConnectWithoutOwnerInput = {
@@ -481,31 +634,114 @@ export type ChannelScalarWhereInput = {
   NOT?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
   id?: Prisma.StringFilter<"Channel"> | string
   name?: Prisma.StringFilter<"Channel"> | string
+  slug?: Prisma.StringFilter<"Channel"> | string
   description?: Prisma.StringFilter<"Channel"> | string
   bannerUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
   profilePictureUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
+  subscriberCount?: Prisma.IntFilter<"Channel"> | number
+  podcastCount?: Prisma.IntFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringFilter<"Channel"> | string
+}
+
+export type ChannelCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  bannerUrl?: string | null
+  profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
+  createdAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutChannelsInput
+  podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
+}
+
+export type ChannelUncheckedCreateWithoutSubscriptionsInput = {
+  id?: string
+  name: string
+  slug: string
+  description: string
+  bannerUrl?: string | null
+  profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
+  createdAt?: Date | string
+  ownerId: string
+  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
+}
+
+export type ChannelCreateOrConnectWithoutSubscriptionsInput = {
+  where: Prisma.ChannelWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
+}
+
+export type ChannelUpsertWithoutSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.ChannelUpdateWithoutSubscriptionsInput, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
+  create: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
+  where?: Prisma.ChannelWhereInput
+}
+
+export type ChannelUpdateToOneWithWhereWithoutSubscriptionsInput = {
+  where?: Prisma.ChannelWhereInput
+  data: Prisma.XOR<Prisma.ChannelUpdateWithoutSubscriptionsInput, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
+}
+
+export type ChannelUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
+  podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
+}
+
+export type ChannelUncheckedUpdateWithoutSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelCreateWithoutPodcastsInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   owner: Prisma.UserCreateNestedOneWithoutChannelsInput
+  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelUncheckedCreateWithoutPodcastsInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
   ownerId: string
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelCreateOrConnectWithoutPodcastsInput = {
@@ -527,58 +763,80 @@ export type ChannelUpdateToOneWithWhereWithoutPodcastsInput = {
 export type ChannelUpdateWithoutPodcastsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
+  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelUncheckedUpdateWithoutPodcastsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelCreateManyOwnerInput = {
   id?: string
   name: string
+  slug: string
   description: string
   bannerUrl?: string | null
   profilePictureUrl?: string | null
+  subscriberCount?: number
+  podcastCount?: number
   createdAt?: Date | string
 }
 
 export type ChannelUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
+  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelUncheckedUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
+  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
+  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -589,10 +847,12 @@ export type ChannelUncheckedUpdateManyWithoutOwnerInput = {
 
 export type ChannelCountOutputType = {
   podcasts: number
+  subscriptions: number
 }
 
 export type ChannelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   podcasts?: boolean | ChannelCountOutputTypeCountPodcastsArgs
+  subscriptions?: boolean | ChannelCountOutputTypeCountSubscriptionsArgs
 }
 
 /**
@@ -612,26 +872,40 @@ export type ChannelCountOutputTypeCountPodcastsArgs<ExtArgs extends runtime.Type
   where?: Prisma.PodcastWhereInput
 }
 
+/**
+ * ChannelCountOutputType without action
+ */
+export type ChannelCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ChannelSubscriptionWhereInput
+}
+
 
 export type ChannelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   bannerUrl?: boolean
   profilePictureUrl?: boolean
+  subscriberCount?: boolean
+  podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   podcasts?: boolean | Prisma.Channel$podcastsArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.Channel$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.ChannelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channel"]>
 
 export type ChannelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   bannerUrl?: boolean
   profilePictureUrl?: boolean
+  subscriberCount?: boolean
+  podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -640,9 +914,12 @@ export type ChannelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ChannelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   bannerUrl?: boolean
   profilePictureUrl?: boolean
+  subscriberCount?: boolean
+  podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -651,17 +928,21 @@ export type ChannelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type ChannelSelectScalar = {
   id?: boolean
   name?: boolean
+  slug?: boolean
   description?: boolean
   bannerUrl?: boolean
   profilePictureUrl?: boolean
+  subscriberCount?: boolean
+  podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
 }
 
-export type ChannelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "bannerUrl" | "profilePictureUrl" | "createdAt" | "ownerId", ExtArgs["result"]["channel"]>
+export type ChannelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "bannerUrl" | "profilePictureUrl" | "subscriberCount" | "podcastCount" | "createdAt" | "ownerId", ExtArgs["result"]["channel"]>
 export type ChannelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   podcasts?: boolean | Prisma.Channel$podcastsArgs<ExtArgs>
+  subscriptions?: boolean | Prisma.Channel$subscriptionsArgs<ExtArgs>
   _count?: boolean | Prisma.ChannelCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ChannelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -676,13 +957,17 @@ export type $ChannelPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     owner: Prisma.$UserPayload<ExtArgs>
     podcasts: Prisma.$PodcastPayload<ExtArgs>[]
+    subscriptions: Prisma.$ChannelSubscriptionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    slug: string
     description: string
     bannerUrl: string | null
     profilePictureUrl: string | null
+    subscriberCount: number
+    podcastCount: number
     createdAt: Date
     ownerId: string
   }, ExtArgs["result"]["channel"]>
@@ -1081,6 +1366,7 @@ export interface Prisma__ChannelClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   podcasts<T extends Prisma.Channel$podcastsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Channel$podcastsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PodcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subscriptions<T extends Prisma.Channel$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Channel$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChannelSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1112,9 +1398,12 @@ export interface Prisma__ChannelClient<T, Null = never, ExtArgs extends runtime.
 export interface ChannelFieldRefs {
   readonly id: Prisma.FieldRef<"Channel", 'String'>
   readonly name: Prisma.FieldRef<"Channel", 'String'>
+  readonly slug: Prisma.FieldRef<"Channel", 'String'>
   readonly description: Prisma.FieldRef<"Channel", 'String'>
   readonly bannerUrl: Prisma.FieldRef<"Channel", 'String'>
   readonly profilePictureUrl: Prisma.FieldRef<"Channel", 'String'>
+  readonly subscriberCount: Prisma.FieldRef<"Channel", 'Int'>
+  readonly podcastCount: Prisma.FieldRef<"Channel", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Channel", 'DateTime'>
   readonly ownerId: Prisma.FieldRef<"Channel", 'String'>
 }
@@ -1539,6 +1828,30 @@ export type Channel$podcastsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.PodcastScalarFieldEnum | Prisma.PodcastScalarFieldEnum[]
+}
+
+/**
+ * Channel.subscriptions
+ */
+export type Channel$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ChannelSubscription
+   */
+  select?: Prisma.ChannelSubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ChannelSubscription
+   */
+  omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
+  where?: Prisma.ChannelSubscriptionWhereInput
+  orderBy?: Prisma.ChannelSubscriptionOrderByWithRelationInput | Prisma.ChannelSubscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.ChannelSubscriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ChannelSubscriptionScalarFieldEnum | Prisma.ChannelSubscriptionScalarFieldEnum[]
 }
 
 /**

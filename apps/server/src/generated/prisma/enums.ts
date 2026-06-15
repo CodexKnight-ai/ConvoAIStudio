@@ -15,3 +15,22 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const PodcastStatus = {
+  DRAFT: 'DRAFT',
+  PROCESSING: 'PROCESSING',
+  PUBLISHED: 'PUBLISHED',
+  FAILED: 'FAILED'
+} as const
+
+export type PodcastStatus = (typeof PodcastStatus)[keyof typeof PodcastStatus]
+
+
+export const Visibility = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+  UNLISTED: 'UNLISTED'
+} as const
+
+export type Visibility = (typeof Visibility)[keyof typeof Visibility]

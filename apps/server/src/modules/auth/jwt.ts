@@ -45,7 +45,7 @@ export function generateRefreshToken(fastify: FastifyInstance) {
 }
 
 export async function verifyAccessToken(fastify: FastifyInstance, token: string) {
-    const decoded = await fastify.jwt.verify<JWTPayload>(token);
+    const decoded = fastify.jwt.verify<JWTPayload>(token);
     return decoded;
 }
 

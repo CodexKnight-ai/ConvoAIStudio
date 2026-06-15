@@ -33,6 +33,11 @@ export type Session = Prisma.SessionModel
  */
 export type Channel = Prisma.ChannelModel
 /**
+ * Model ChannelSubscription
+ * 
+ */
+export type ChannelSubscription = Prisma.ChannelSubscriptionModel
+/**
  * Model Podcast
  * 
  */

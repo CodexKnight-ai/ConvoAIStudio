@@ -236,15 +236,22 @@ export async function loginService(fastify: FastifyInstance, reply: FastifyReply
 
 export async function logoutService(fastify: FastifyInstance, request: FastifyRequest, reply: FastifyReply) {
     const refreshToken = request.cookies["refreshToken"];
+    const sessionId = request.cookies["sessionId"];
     if (!refreshToken) {
         throw new Error("No refresh token found", { cause: 401 });
     }
-    const refreshTokenHash = createHash("sha256").update(refreshToken).digest("hex");
-    const session = await getRedisSession(fastify, refreshTokenHash);
+    if (!sessionId) {
+        throw new Error("No session ID found in cookies", { cause: 401 });
+    }
+    const session = await getRedisSession(fastify, sessionId);
     if (!session) {
         throw new Error("No session found", { cause: 404 });
     }
-    await deleteRedisSession(fastify, refreshTokenHash);
+    const refreshTokenHash = createHash("sha256").update(refreshToken).digest("hex");
+    if (session.refreshTokenHash !== refreshTokenHash) {
+        throw new Error("Invalid session refresh token", { cause: 401 });
+    }
+    await deleteRedisSession(fastify, sessionId);
     reply.clearCookie("refreshToken");
     reply.clearCookie("accessToken");
     reply.clearCookie("sessionId");

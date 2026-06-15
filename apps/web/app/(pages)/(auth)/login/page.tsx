@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BeamsBackground } from "@/components/ui/BeamBg";
-import axios from "axios"
 import toast from "react-hot-toast";
+import { useAuthStore } from "@/store/authStore";
+
 export default function SignUpPage() {
   const router = useRouter();
+  const login = useAuthStore((state) => state.login);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -18,16 +20,16 @@ export default function SignUpPage() {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/v1/auth/login`, 
-        formData,
-      {withCredentials: true});
-      if(res.status === 200){
-        toast.success("Login success!");
-        router.push("/");
-      }
+      await login({
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success("Login success!");
+      router.push("/");
     } catch (error:any) {
-        toast.error(error.response.data.message);
-      }
+      const errorMsg = error.response?.data?.message || error.message || "Something went wrong";
+      toast.error(errorMsg);
+    }
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;

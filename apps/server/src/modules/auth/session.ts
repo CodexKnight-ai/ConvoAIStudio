@@ -37,7 +37,7 @@ export async function getRedisSession(
     const key = getSessionKey(sessionId);
 
     const data = await fastify.redis.get(key);
-
+    console.log(data);
     if (!data) {
         return null;
     }

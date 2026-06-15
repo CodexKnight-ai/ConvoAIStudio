@@ -50,6 +50,8 @@ export type PodcastMinAggregateOutputType = {
   views: number | null
   upvotes: number | null
   downvotes: number | null
+  status: $Enums.PodcastStatus | null
+  visibility: $Enums.Visibility | null
   createdAt: Date | null
   channelId: string | null
 }
@@ -64,6 +66,8 @@ export type PodcastMaxAggregateOutputType = {
   views: number | null
   upvotes: number | null
   downvotes: number | null
+  status: $Enums.PodcastStatus | null
+  visibility: $Enums.Visibility | null
   createdAt: Date | null
   channelId: string | null
 }
@@ -78,6 +82,8 @@ export type PodcastCountAggregateOutputType = {
   views: number
   upvotes: number
   downvotes: number
+  status: number
+  visibility: number
   createdAt: number
   channelId: number
   _all: number
@@ -108,6 +114,8 @@ export type PodcastMinAggregateInputType = {
   views?: true
   upvotes?: true
   downvotes?: true
+  status?: true
+  visibility?: true
   createdAt?: true
   channelId?: true
 }
@@ -122,6 +130,8 @@ export type PodcastMaxAggregateInputType = {
   views?: true
   upvotes?: true
   downvotes?: true
+  status?: true
+  visibility?: true
   createdAt?: true
   channelId?: true
 }
@@ -136,6 +146,8 @@ export type PodcastCountAggregateInputType = {
   views?: true
   upvotes?: true
   downvotes?: true
+  status?: true
+  visibility?: true
   createdAt?: true
   channelId?: true
   _all?: true
@@ -237,6 +249,8 @@ export type PodcastGroupByOutputType = {
   views: number
   upvotes: number
   downvotes: number
+  status: $Enums.PodcastStatus
+  visibility: $Enums.Visibility
   createdAt: Date
   channelId: string
   _count: PodcastCountAggregateOutputType | null
@@ -274,6 +288,8 @@ export type PodcastWhereInput = {
   views?: Prisma.IntFilter<"Podcast"> | number
   upvotes?: Prisma.IntFilter<"Podcast"> | number
   downvotes?: Prisma.IntFilter<"Podcast"> | number
+  status?: Prisma.EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringFilter<"Podcast"> | string
   channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
@@ -289,6 +305,8 @@ export type PodcastOrderByWithRelationInput = {
   views?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
   channel?: Prisma.ChannelOrderByWithRelationInput
@@ -307,6 +325,8 @@ export type PodcastWhereUniqueInput = Prisma.AtLeast<{
   views?: Prisma.IntFilter<"Podcast"> | number
   upvotes?: Prisma.IntFilter<"Podcast"> | number
   downvotes?: Prisma.IntFilter<"Podcast"> | number
+  status?: Prisma.EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringFilter<"Podcast"> | string
   channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
@@ -322,6 +342,8 @@ export type PodcastOrderByWithAggregationInput = {
   views?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
   _count?: Prisma.PodcastCountOrderByAggregateInput
@@ -344,6 +366,8 @@ export type PodcastScalarWhereWithAggregatesInput = {
   views?: Prisma.IntWithAggregatesFilter<"Podcast"> | number
   upvotes?: Prisma.IntWithAggregatesFilter<"Podcast"> | number
   downvotes?: Prisma.IntWithAggregatesFilter<"Podcast"> | number
+  status?: Prisma.EnumPodcastStatusWithAggregatesFilter<"Podcast"> | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityWithAggregatesFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringWithAggregatesFilter<"Podcast"> | string
 }
@@ -358,6 +382,8 @@ export type PodcastCreateInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
   channel: Prisma.ChannelCreateNestedOneWithoutPodcastsInput
 }
@@ -372,6 +398,8 @@ export type PodcastUncheckedCreateInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
   channelId: string
 }
@@ -386,6 +414,8 @@ export type PodcastUpdateInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channel?: Prisma.ChannelUpdateOneRequiredWithoutPodcastsNestedInput
 }
@@ -400,6 +430,8 @@ export type PodcastUncheckedUpdateInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channelId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -414,6 +446,8 @@ export type PodcastCreateManyInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
   channelId: string
 }
@@ -428,6 +462,8 @@ export type PodcastUpdateManyMutationInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -441,6 +477,8 @@ export type PodcastUncheckedUpdateManyInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channelId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -465,6 +503,8 @@ export type PodcastCountOrderByAggregateInput = {
   views?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
 }
@@ -486,6 +526,8 @@ export type PodcastMaxOrderByAggregateInput = {
   views?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
 }
@@ -500,6 +542,8 @@ export type PodcastMinOrderByAggregateInput = {
   views?: Prisma.SortOrder
   upvotes?: Prisma.SortOrder
   downvotes?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
 }
@@ -561,12 +605,12 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type EnumPodcastStatusFieldUpdateOperationsInput = {
+  set?: $Enums.PodcastStatus
+}
+
+export type EnumVisibilityFieldUpdateOperationsInput = {
+  set?: $Enums.Visibility
 }
 
 export type PodcastCreateWithoutChannelInput = {
@@ -579,6 +623,8 @@ export type PodcastCreateWithoutChannelInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
 }
 
@@ -592,6 +638,8 @@ export type PodcastUncheckedCreateWithoutChannelInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
 }
 
@@ -634,6 +682,8 @@ export type PodcastScalarWhereInput = {
   views?: Prisma.IntFilter<"Podcast"> | number
   upvotes?: Prisma.IntFilter<"Podcast"> | number
   downvotes?: Prisma.IntFilter<"Podcast"> | number
+  status?: Prisma.EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringFilter<"Podcast"> | string
 }
@@ -648,6 +698,8 @@ export type PodcastCreateManyChannelInput = {
   views?: number
   upvotes?: number
   downvotes?: number
+  status?: $Enums.PodcastStatus
+  visibility?: $Enums.Visibility
   createdAt?: Date | string
 }
 
@@ -661,6 +713,8 @@ export type PodcastUpdateWithoutChannelInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -674,6 +728,8 @@ export type PodcastUncheckedUpdateWithoutChannelInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -687,6 +743,8 @@ export type PodcastUncheckedUpdateManyWithoutChannelInput = {
   views?: Prisma.IntFieldUpdateOperationsInput | number
   upvotes?: Prisma.IntFieldUpdateOperationsInput | number
   downvotes?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -702,6 +760,8 @@ export type PodcastSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   views?: boolean
   upvotes?: boolean
   downvotes?: boolean
+  status?: boolean
+  visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
   channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
@@ -717,6 +777,8 @@ export type PodcastSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   views?: boolean
   upvotes?: boolean
   downvotes?: boolean
+  status?: boolean
+  visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
   channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
@@ -732,6 +794,8 @@ export type PodcastSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   views?: boolean
   upvotes?: boolean
   downvotes?: boolean
+  status?: boolean
+  visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
   channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
@@ -747,11 +811,13 @@ export type PodcastSelectScalar = {
   views?: boolean
   upvotes?: boolean
   downvotes?: boolean
+  status?: boolean
+  visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
 }
 
-export type PodcastOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "thumbnail" | "audioUrl" | "duration" | "views" | "upvotes" | "downvotes" | "createdAt" | "channelId", ExtArgs["result"]["podcast"]>
+export type PodcastOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "thumbnail" | "audioUrl" | "duration" | "views" | "upvotes" | "downvotes" | "status" | "visibility" | "createdAt" | "channelId", ExtArgs["result"]["podcast"]>
 export type PodcastInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }
@@ -777,6 +843,8 @@ export type $PodcastPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     views: number
     upvotes: number
     downvotes: number
+    status: $Enums.PodcastStatus
+    visibility: $Enums.Visibility
     createdAt: Date
     channelId: string
   }, ExtArgs["result"]["podcast"]>
@@ -1212,6 +1280,8 @@ export interface PodcastFieldRefs {
   readonly views: Prisma.FieldRef<"Podcast", 'Int'>
   readonly upvotes: Prisma.FieldRef<"Podcast", 'Int'>
   readonly downvotes: Prisma.FieldRef<"Podcast", 'Int'>
+  readonly status: Prisma.FieldRef<"Podcast", 'PodcastStatus'>
+  readonly visibility: Prisma.FieldRef<"Podcast", 'Visibility'>
   readonly createdAt: Prisma.FieldRef<"Podcast", 'DateTime'>
   readonly channelId: Prisma.FieldRef<"Podcast", 'String'>
 }

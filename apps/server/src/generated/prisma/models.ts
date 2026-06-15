@@ -11,5 +11,6 @@
 export type * from './models/User.js'
 export type * from './models/Session.js'
 export type * from './models/Channel.js'
+export type * from './models/ChannelSubscription.js'
 export type * from './models/Podcast.js'
 export type * from './commonInputTypes.js'

@@ -52,10 +52,9 @@ export function logoutController(fastify: FastifyInstance) {
 
 export function getUserByIdController(fastify: FastifyInstance) {
     return async function (request: FastifyRequest, reply: FastifyReply) {
-        const data = request.body as {
-            userId: string;
-        };
-        const result = await getUserById(fastify, reply, fastify.prisma, data);
+        const result = await getUserById(fastify, reply, fastify.prisma, {
+            userId: request.user.userId,
+        });
         return result;
     };
 }

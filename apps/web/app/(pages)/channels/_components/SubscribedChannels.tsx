@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import {
   Search, ChevronDown, CheckCircle2, Users, Mic,
   Eye, UserMinus, X, AlertTriangle
@@ -10,56 +11,56 @@ import {
 // ─── Mock Data ───────────────────────────────────────────────
 const CHANNELS = [
   {
-    id: 'ch-1', name: 'Lex Fridman', verified: true,
+    id: 'ch-1', name: 'Lex Fridman', slug: 'techtalk-ai', verified: true,
     category: 'AI & Technology', followers: '4.2M', podcasts: 420,
     description: 'Deep conversations about intelligence, science, and the nature of the universe.',
     image: 'https://i.pravatar.cc/150?img=11',
     lastActive: '2 hours ago',
   },
   {
-    id: 'ch-2', name: 'Andrew Huberman', verified: true,
+    id: 'ch-2', name: 'Andrew Huberman', slug: 'neurotalks', verified: true,
     category: 'Science & Health', followers: '3.8M', podcasts: 290,
     description: 'Neuroscience-based tools for everyday life. Protocols for sleep, focus, and performance.',
     image: 'https://i.pravatar.cc/150?img=12',
     lastActive: '5 hours ago',
   },
   {
-    id: 'ch-3', name: 'Y Combinator', verified: true,
+    id: 'ch-3', name: 'Y Combinator', slug: 'synthetic-minds', verified: true,
     category: 'Startups', followers: '2.1M', podcasts: 185,
     description: 'Startup lessons from the world\'s top accelerator. Founder stories, AMAs, and deep dives.',
     image: 'https://i.pravatar.cc/150?img=13',
     lastActive: '1 day ago',
   },
   {
-    id: 'ch-4', name: 'MKBHD', verified: true,
+    id: 'ch-4', name: 'MKBHD', slug: 'techtalk-ai', verified: true,
     category: 'Technology', followers: '5.6M', podcasts: 340,
     description: 'Quality tech reviews, discussions, and behind-the-scenes looks at the latest in consumer tech.',
     image: 'https://i.pravatar.cc/150?img=14',
     lastActive: '3 hours ago',
   },
   {
-    id: 'ch-5', name: 'My First Million', verified: false,
+    id: 'ch-5', name: 'My First Million', slug: 'neurotalks', verified: false,
     category: 'Business & Finance', followers: '1.5M', podcasts: 510,
     description: 'Brainstorming business ideas, dissecting trends, and interviewing millionaire entrepreneurs.',
     image: 'https://i.pravatar.cc/150?img=15',
     lastActive: '12 hours ago',
   },
   {
-    id: 'ch-6', name: 'Tim Ferriss', verified: true,
+    id: 'ch-6', name: 'Tim Ferriss', slug: 'synthetic-minds', verified: true,
     category: 'Lifestyle & Productivity', followers: '3.1M', podcasts: 720,
     description: 'Deconstructing world-class performers to extract tactics, tools, and routines you can use.',
     image: 'https://i.pravatar.cc/150?img=16',
     lastActive: '6 hours ago',
   },
   {
-    id: 'ch-7', name: 'Chris Williamson', verified: true,
+    id: 'ch-7', name: 'Chris Williamson', slug: 'techtalk-ai', verified: true,
     category: 'Psychology', followers: '2.4M', podcasts: 380,
     description: 'Exploring modern masculinity, psychology, and the art of living a meaningful life.',
     image: 'https://i.pravatar.cc/150?img=17',
     lastActive: '1 hour ago',
   },
   {
-    id: 'ch-8', name: 'Renee DiResta', verified: false,
+    id: 'ch-8', name: 'Renee DiResta', slug: 'neurotalks', verified: false,
     category: 'Media & Society', followers: '890K', podcasts: 95,
     description: 'Investigating disinformation, platform dynamics, and the intersection of tech and society.',
     image: 'https://i.pravatar.cc/150?img=18',
@@ -308,10 +309,13 @@ function ChannelRow({
 
       {/* Right: Actions */}
       <div className="flex items-center gap-3 flex-shrink-0 w-full md:w-auto">
-        <button className="flex-1 md:flex-none bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/30 text-cyan-400 text-sm font-sans font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer hover:shadow-[0_0_12px_rgba(8,145,178,0.2)]">
+        <Link
+          href={`/channels/${channel.slug}`}
+          className="flex-1 md:flex-none bg-cyan-600/20 hover:bg-cyan-600/30 border border-cyan-500/30 text-cyan-400 text-sm font-sans font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer hover:shadow-[0_0_12px_rgba(8,145,178,0.2)]"
+        >
           <Eye className="w-4 h-4" />
           View Channel
-        </button>
+        </Link>
         <button
           onClick={onUnsubscribe}
           className="flex-1 md:flex-none bg-transparent hover:bg-red-600/10 border border-white/10 hover:border-red-500/40 text-white/60 hover:text-red-400 text-sm font-sans font-semibold px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer"

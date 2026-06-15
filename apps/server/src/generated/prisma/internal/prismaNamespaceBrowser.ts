@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Session: 'Session',
   Channel: 'Channel',
+  ChannelSubscription: 'ChannelSubscription',
   Podcast: 'Podcast'
 } as const
 
@@ -101,14 +102,26 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 export const ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  slug: 'slug',
   description: 'description',
   bannerUrl: 'bannerUrl',
   profilePictureUrl: 'profilePictureUrl',
+  subscriberCount: 'subscriberCount',
+  podcastCount: 'podcastCount',
   createdAt: 'createdAt',
   ownerId: 'ownerId'
 } as const
 
 export type ChannelScalarFieldEnum = (typeof ChannelScalarFieldEnum)[keyof typeof ChannelScalarFieldEnum]
+
+
+export const ChannelSubscriptionScalarFieldEnum = {
+  userId: 'userId',
+  channelId: 'channelId',
+  createdAt: 'createdAt'
+} as const
+
+export type ChannelSubscriptionScalarFieldEnum = (typeof ChannelSubscriptionScalarFieldEnum)[keyof typeof ChannelSubscriptionScalarFieldEnum]
 
 
 export const PodcastScalarFieldEnum = {
@@ -121,6 +134,8 @@ export const PodcastScalarFieldEnum = {
   views: 'views',
   upvotes: 'upvotes',
   downvotes: 'downvotes',
+  status: 'status',
+  visibility: 'visibility',
   createdAt: 'createdAt',
   channelId: 'channelId'
 } as const
