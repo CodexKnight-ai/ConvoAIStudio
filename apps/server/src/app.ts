@@ -9,6 +9,7 @@ import { channelOwnerMiddleware } from "./middlewares/channel-owner.js";
 
 import { authRoutes } from "./modules/auth/auth.route.js";
 import { channelRoutes } from "./modules/channel/channel.routes.js";
+import { podcastRoutes } from "./modules/podcasts/podcast.routes.js";
 
 export async function buildApp() {
     const app = Fastify({ logger: true });
@@ -32,6 +33,10 @@ export async function buildApp() {
 
     app.register(channelRoutes, {
         prefix: "/api/v1/channels",
+    });
+
+    app.register(podcastRoutes, {
+        prefix: "/api/v1/podcasts",
     });
 
     app.get("/health", async () => {

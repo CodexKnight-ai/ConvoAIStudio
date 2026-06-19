@@ -1,11 +1,9 @@
-import argon2 from "argon2"
+import argon2 from 'argon2';
 
 export async function hashPassword(password: string) {
-    const hash = await argon2.hash(password)
-    return hash
+    return argon2.hash(password);
 }
 
 export async function verifyPassword(password: string, hash: string) {
-    const verified = await argon2.verify(hash, password)
-    return verified
+    return argon2.verify(hash, password);
 }

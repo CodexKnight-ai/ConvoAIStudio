@@ -1,226 +1,85 @@
-import { createChannelRepository } from "./channel.repository.js";
-import { FastifyInstance,FastifyRequest,FastifyReply } from "fastify";
-import { PrismaClient, Visibility } from "../../generated/prisma/client.js";
+import { ChannelRepository } from './channel.repository.js';
 
-export async function createChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        name:string,
-        description:string,
-        imageUrl:string,
-        visibility:Visibility,
-        userId:string,
+export async function createChannel(
+    repo: ChannelRepository,
+    userId: string,
+    data: { name: string; description: string }
+) {
+    const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    const existing = await repo.findBySlug(slug);
+    if (existing) {
+        throw new Error(`Channel already exists with slug ${slug}`, { cause: 409 });
     }
-){
-    try{
-        const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-        const existingChannel = await createChannelRepository(fastify.prisma).findBySlug(slug);
-        if(existingChannel){
-            throw new Error(`Channel already exists with slug ${slug}`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).create({
-            name: data.name,
-            slug,
-            description: data.description,
-            ownerId: data.userId,
-        });
-        reply.code(201).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to create channel");
-    }
+
+    return repo.create({ name: data.name, slug, description: data.description, ownerId: userId });
 }
 
-export async function updateChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
-        name?:string,
-        description?:string,
-        imageUrl?:string,
-        visibility?:Visibility,
+export async function updateChannel(
+    repo: ChannelRepository,
+    userId: string,
+    channelId: string,
+    data: { name?: string; description?: string; bannerUrl?: string; profilePictureUrl?: string }
+) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error(`Channel not found`, { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        if(channelExist.ownerId !== request.user.userId){
-            throw new Error(`You are not authorized to update this channel`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).update(data.channelId,data);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to update channel");
+    if (channel.ownerId !== userId) {
+        throw new Error('Forbidden', { cause: 403 });
     }
+
+    return repo.update(channelId, data);
 }
 
-export async function deleteChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
-        userId:string,
+export async function deleteChannel(repo: ChannelRepository, userId: string, channelId: string) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found', { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        if(channelExist.ownerId !== request.user.userId){
-            throw new Error(`You are not authorized to delete this channel`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).delete(data.channelId);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to delete channel");
+    if (channel.ownerId !== userId) {
+        throw new Error('Forbidden', { cause: 403 });
     }
+
+    return repo.delete(channelId);
 }
 
-export async function findChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
+export async function findChannel(repo: ChannelRepository, channelId: string) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found', { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to find channel");
-    }
+    return channel;
 }
 
-export async function getMyChannelsService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        userId:string,
-    }
-){
-    try{
-        const channels = await createChannelRepository(fastify.prisma).findByOwnerId(data.userId);
-        reply.code(200).send(channels);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to get channels");
-    }
+export async function getMyChannels(repo: ChannelRepository, userId: string) {
+    return repo.findByOwnerId(userId);
 }
 
-export async function subscribeToChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
-        userId:string,
+export async function subscribeToChannel(repo: ChannelRepository, userId: string, channelId: string) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found', { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).subscribe(data.userId,data.channelId);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to subscribe to channel");
-    }
+    return repo.subscribe(userId, channelId);
 }
 
-export async function unsubscribeFromChannelService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
-        userId:string,
+export async function unsubscribeFromChannel(repo: ChannelRepository, userId: string, channelId: string) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found', { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).unsubscribe(data.userId,data.channelId);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to unsubscribe from channel");
-    }
+    return repo.unsubscribe(userId, channelId);
 }
 
-export async function getMySubscriptionsService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        userId:string,
-    }
-){
-    try{
-        const channels = await createChannelRepository(fastify.prisma).findSubscriptionsByUserId(data.userId);
-        reply.code(200).send(channels);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to get subscriptions");
-    }
+export async function getMySubscriptions(repo: ChannelRepository, userId: string) {
+    return repo.findSubscriptionsByUserId(userId);
 }
 
-export async function isSubscribedService(
-    fastify:FastifyInstance,
-    reply:FastifyReply,
-    request:FastifyRequest,
-    data:{
-        channelId:string,
-        userId:string,
+export async function isSubscribed(repo: ChannelRepository, userId: string, channelId: string) {
+    const channel = await repo.findById(channelId);
+    if (!channel) {
+        throw new Error('Channel not found', { cause: 404 });
     }
-){
-    try{
-        const channelExist = await createChannelRepository(fastify.prisma).findById(data.channelId);
-        if(!channelExist){
-            throw new Error(`Channel does not exist with id ${data.channelId}`);
-        }
-        const channel = await createChannelRepository(fastify.prisma).findSubscription(data.userId,data.channelId);
-        reply.code(200).send(channel);
-    }catch(error){
-        if(error instanceof Error){
-            throw error;
-        }
-        throw new Error("Failed to check subscription");
-    }
+    return repo.findSubscription(userId, channelId);
 }

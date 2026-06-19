@@ -26,18 +26,18 @@ enum Visibility {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  username     String    @unique
-  email        String    @unique
+  id       String @id @default(uuid())
+  username String @unique
+  email    String @unique
 
-  firstName    String
-  lastName     String?
+  firstName String
+  lastName  String?
 
   passwordHash String
 
-  role         Role      @default(USER)
+  role Role @default(USER)
 
-  createdAt    DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   sessions      Session[]
   channels      Channel[]
@@ -45,41 +45,41 @@ model User {
 }
 
 model Session {
-  sessionId        String   @id @default(uuid())
+  sessionId String @id @default(uuid())
 
-  userId           String
-  user             User     @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
   refreshTokenHash String
 
-  expiresAt        DateTime
+  expiresAt DateTime
 
-  createdAt        DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([userId])
 }
 
 model Channel {
-  id                String   @id @default(uuid())
+  id String @id @default(uuid())
 
-  name              String
-  slug              String   @unique
+  name String
+  slug String @unique
 
-  description       String
+  description String
 
   bannerUrl         String?
   profilePictureUrl String?
 
-  subscriberCount   Int      @default(0)
-  podcastCount      Int      @default(0)
+  subscriberCount Int @default(0)
+  podcastCount    Int @default(0)
 
-  createdAt         DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  ownerId           String
-  owner             User     @relation(fields: [ownerId], references: [id])
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
 
-  podcasts          Podcast[]
-  subscriptions     ChannelSubscription[]
+  podcasts      Podcast[]
+  subscriptions ChannelSubscription[]
 
   @@index([ownerId])
   @@index([slug])
@@ -91,37 +91,36 @@ model ChannelSubscription {
 
   createdAt DateTime @default(now())
 
-  user       User    @relation(fields: [userId], references: [id],onDelete:Cascade)
-  channel    Channel @relation(fields: [channelId], references: [id],onDelete:Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   @@id([userId, channelId])
-
   @@index([channelId])
   @@index([userId])
 }
 
 model Podcast {
-  id          String          @id @default(uuid())
+  id String @id @default(uuid())
 
   title       String
   description String
 
-  thumbnail   String?
-  audioUrl    String?
+  thumbnail String?
+  audioUrl  String?
 
-  duration    Int?
+  duration Int?
 
-  views       Int             @default(0)
-  upvotes     Int             @default(0)
-  downvotes   Int             @default(0)
+  views     Int @default(0)
+  upvotes   Int @default(0)
+  downvotes Int @default(0)
 
-  status      PodcastStatus   @default(DRAFT)
-  visibility  Visibility      @default(PUBLIC)
+  status     PodcastStatus @default(DRAFT)
+  visibility Visibility    @default(PUBLIC)
 
-  createdAt   DateTime        @default(now())
+  createdAt DateTime @default(now())
 
-  channelId   String
-  channel     Channel         @relation(fields: [channelId], references: [id])
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id])
 
   @@index([channelId])
   @@index([createdAt])

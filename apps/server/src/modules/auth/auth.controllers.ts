@@ -1,60 +1,58 @@
-import {
-    refreshService,
-    registerService,
-    loginService,
-    logoutService,
-    getUserById,
-} from "./auth.services.js";
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { AuthRepository } from './auth.repository.js';
+import * as authService from './auth.services.js';
 
-export function refreshController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const data = request.body as {
-            refreshToken: string;
-            sessionId: string;
-        };
-        const result = await refreshService(fastify, reply, data);
-        return result;
-    };
+export async function handleRegister(
+    request: FastifyRequest<{ Body: { firstName: string; lastName?: string; email: string; username: string; password: string } }>,
+    reply: FastifyReply,
+    repo: AuthRepository
+) {
+    try {
+        return await authService.register(request.server, reply, repo, request.body);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function registerController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const data = request.body as {
-            firstName: string;
-            lastName?: string;
-            email: string;
-            username: string;
-            password: string;
-        };
-        const result = await registerService(fastify, reply, fastify.prisma, data);
-        return result;
-    };
+export async function handleLogin(
+    request: FastifyRequest<{ Body: { email: string; password: string } }>,
+    reply: FastifyReply,
+    repo: AuthRepository
+) {
+    try {
+        return await authService.login(request.server, reply, repo, request.body);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function loginController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const data = request.body as {
-            email: string;
-            password: string;
-        };
-        const result = await loginService(fastify, reply, fastify.prisma, data);
-        return result;
-    };
+export async function handleRefresh(
+    request: FastifyRequest<{ Body: { refreshToken: string; sessionId: string } }>,
+    reply: FastifyReply
+) {
+    try {
+        return await authService.refresh(request.server, reply, request.body);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function logoutController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const result = await logoutService(fastify, request, reply);
-        return result;
-    };
+export async function handleLogout(request: FastifyRequest, reply: FastifyReply) {
+    try {
+        return await authService.logout(request.server, request, reply);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function getUserByIdController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const result = await getUserById(fastify, reply, fastify.prisma, {
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleGetMe(request: FastifyRequest, reply: FastifyReply, repo: AuthRepository) {
+    try {
+        return await authService.getMe(reply, repo, request.user.userId);
+    } catch (error: any) {
+        return reply.code(500).send({ error: 'Internal Server Error' });
+    }
 }

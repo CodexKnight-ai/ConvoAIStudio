@@ -1,160 +1,96 @@
-import { PrismaClient } from "../../generated/prisma/client.js";
+import { FastifyInstance } from 'fastify';
 
-export type CreateChannelData = {
+export interface CreateChannelInput {
     name: string;
     slug: string;
     description: string;
     ownerId: string;
-};
+}
 
-export type UpdateChannelData = {
+export interface UpdateChannelInput {
     name?: string;
     description?: string;
     bannerUrl?: string;
     profilePictureUrl?: string;
-};
+}
 
-export const createChannelRepository = (
-    prisma: PrismaClient
-) => ({
-    create(data: CreateChannelData) {
-        return prisma.$transaction(async (tx) => {
-            const channel =
-                await tx.channel.create({
-                    data: {
-                        ...data,
-                        subscriberCount: 1,
-                    },
-                });
+export class ChannelRepository {
+    private prisma;
+
+    constructor(fastify: FastifyInstance) {
+        this.prisma = fastify.prisma;
+    }
+
+    async create(data: CreateChannelInput) {
+        return this.prisma.$transaction(async (tx) => {
+            const channel = await tx.channel.create({
+                data: { ...data, subscriberCount: 1 },
+            });
 
             await tx.channelSubscription.create({
-                data: {
-                    userId: data.ownerId,
-                    channelId: channel.id,
-                },
+                data: { userId: data.ownerId, channelId: channel.id },
             });
 
             return channel;
         });
-    },
-    findById(id: string) {
-        return prisma.channel.findUnique({
-            where: { id },
+    }
+
+    async findById(id: string) {
+        return this.prisma.channel.findUnique({ where: { id } });
+    }
+
+    async findBySlug(slug: string) {
+        return this.prisma.channel.findUnique({ where: { slug } });
+    }
+
+    async findByOwnerId(ownerId: string) {
+        return this.prisma.channel.findMany({ where: { ownerId } });
+    }
+
+    async update(channelId: string, data: UpdateChannelInput) {
+        return this.prisma.channel.update({ where: { id: channelId }, data });
+    }
+
+    async delete(channelId: string) {
+        return this.prisma.channel.delete({ where: { id: channelId } });
+    }
+
+    async findOwnerId(channelId: string) {
+        return this.prisma.channel.findUnique({
+            where: { id: channelId },
+            select: { ownerId: true },
         });
-    },
+    }
 
-    findBySlug(slug: string) {
-        return prisma.channel.findUnique({
-            where: { slug },
-        });
-    },
-
-    findByOwnerId(ownerId: string) {
-        return prisma.channel.findMany({
-            where: { ownerId },
-        });
-    },
-
-    update(
-        channelId: string,
-        data: UpdateChannelData
-    ) {
-        return prisma.channel.update({
-            where: {
-                id: channelId,
-            },
-            data,
-        });
-    },
-
-    delete(channelId: string) {
-        return prisma.channel.delete({
-            where: {
-                id: channelId,
-            },
-
-        });
-    },
-
-    findOwnerId(channelId: string) {
-        return prisma.channel.findUnique({
-            where: {
-                id: channelId,
-            },
-            select: {
-                ownerId: true,
-            },
-        });
-    },
-    subscribe(
-        userId: string,
-        channelId: string
-    ) {
-        return prisma.$transaction(async (tx) => {
-            await tx.channelSubscription.create({
-                data: {
-                    userId,
-                    channelId,
-                },
-            });
-
+    async subscribe(userId: string, channelId: string) {
+        return this.prisma.$transaction(async (tx) => {
+            await tx.channelSubscription.create({ data: { userId, channelId } });
             await tx.channel.update({
-                where: {
-                    id: channelId,
-                },
-                data: {
-                    subscriberCount: {
-                        increment: 1,
-                    },
-                },
+                where: { id: channelId },
+                data: { subscriberCount: { increment: 1 } },
             });
         });
-    },
-    unsubscribe(
-        userId: string,
-        channelId: string
-    ) {
-        return prisma.$transaction(async (tx) => {
+    }
+
+    async unsubscribe(userId: string, channelId: string) {
+        return this.prisma.$transaction(async (tx) => {
             await tx.channelSubscription.delete({
-                where: {
-                    userId_channelId: {
-                        userId,
-                        channelId,
-                    },
-                },
+                where: { userId_channelId: { userId, channelId } },
             });
-
             await tx.channel.update({
-                where: {
-                    id: channelId,
-                },
-                data: {
-                    subscriberCount: {
-                        decrement: 1,
-                    },
-                },
+                where: { id: channelId },
+                data: { subscriberCount: { decrement: 1 } },
             });
         });
-    },
-    findSubscription(
-        userId: string,
-        channelId: string
-    ) {
-        return prisma.channelSubscription.findUnique({
-            where: {
-                userId_channelId: {
-                    userId,
-                    channelId,
-                },
-            },
-        });
-    },
+    }
 
-    findSubscriptionsByUserId(userId: string) {
-        return prisma.channelSubscription.findMany({
-            where: {
-                userId,
-            },
+    async findSubscription(userId: string, channelId: string) {
+        return this.prisma.channelSubscription.findUnique({
+            where: { userId_channelId: { userId, channelId } },
         });
-    },
-});
+    }
+
+    async findSubscriptionsByUserId(userId: string) {
+        return this.prisma.channelSubscription.findMany({ where: { userId } });
+    }
+}

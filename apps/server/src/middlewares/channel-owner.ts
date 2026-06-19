@@ -1,15 +1,17 @@
-import {FastifyReply,FastifyRequest} from "fastify";
-import { createChannelRepository } from "../modules/channel/channel.repository.js";
-export const channelOwnerMiddleware = async (request:FastifyRequest,reply:FastifyReply)=>{
-    const {channelId} = request.params as {channelId:string};
-    if (!channelId) {
-        return;
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { ChannelRepository } from '../modules/channel/channel.repository.js';
+
+export const channelOwnerMiddleware = async (request: FastifyRequest, reply: FastifyReply) => {
+    const { channelId } = request.params as { channelId: string };
+    if (!channelId) return;
+
+    const repo = new ChannelRepository(request.server);
+    const channel = await repo.findById(channelId);
+
+    if (!channel) {
+        return reply.code(404).send({ error: `Channel not found` });
     }
-    const channelExist = await createChannelRepository(request.server.prisma).findById(channelId);
-    if(!channelExist){
-        throw new Error(`Channel does not exist with id ${channelId}`);
+    if (channel.ownerId !== request.user.userId) {
+        return reply.code(403).send({ error: 'Forbidden' });
     }
-    if(channelExist.ownerId !== request.user.userId){
-        throw new Error(`You are not authorized to perform this action`,{cause:403});
-    }
-}
+};

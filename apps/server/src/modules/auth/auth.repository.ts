@@ -1,34 +1,33 @@
-import { PrismaClient } from "../../generated/prisma/client.js";
+import { FastifyInstance } from 'fastify';
 
-export async function findUserByEmail(
-    prisma: PrismaClient,
-    email: string
-) {
-    return prisma.user.findUnique({
-        where: { email },
-    });
+export interface CreateUserInput {
+    firstName: string;
+    lastName?: string;
+    email: string;
+    username: string;
+    passwordHash: string;
 }
 
-export async function findUserById(
-    prisma: PrismaClient,
-    userId: string
-) {
-    return prisma.user.findUnique({
-        where: { id: userId },
-    });
-}
+export class AuthRepository {
+    private prisma;
 
-export async function createUser(
-    prisma: PrismaClient,
-    data: {
-        firstName: string;
-        lastName?: string;
-        email: string;
-        username: string;
-        passwordHash: string;
+    constructor(fastify: FastifyInstance) {
+        this.prisma = fastify.prisma;
     }
-) {
-    return prisma.user.create({
-        data,
-    });
+
+    async findByEmail(email: string) {
+        return this.prisma.user.findUnique({
+            where: { email },
+        });
+    }
+
+    async findById(userId: string) {
+        return this.prisma.user.findUnique({
+            where: { id: userId },
+        });
+    }
+
+    async create(data: CreateUserInput) {
+        return this.prisma.user.create({ data });
+    }
 }

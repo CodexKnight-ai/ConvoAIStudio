@@ -1,118 +1,119 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { Visibility } from "../../generated/prisma/client.js";
-import {
-    createChannelService,
-    updateChannelService,
-    deleteChannelService,
-    findChannelService,
-    getMyChannelsService,
-    subscribeToChannelService,
-    unsubscribeFromChannelService,
-    getMySubscriptionsService,
-    isSubscribedService,
-} from "./channel.services.js";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { ChannelRepository } from './channel.repository.js';
+import * as channelService from './channel.services.js';
 
-export function createChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const body = request.body as {
-            name: string;
-            description: string;
-            imageUrl: string;
-            visibility: Visibility;
-        };
-        const result = await createChannelService(fastify, reply, request, {
-            ...body,
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleCreateChannel(
+    request: FastifyRequest<{ Body: { name: string; description: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        const channel = await channelService.createChannel(repo, request.user.userId, request.body);
+        return reply.code(201).send(channel);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function updateChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const body = request.body as {
-            name?: string;
-            description?: string;
-            imageUrl?: string;
-            visibility?: Visibility;
-        };
-        const result = await updateChannelService(fastify, reply, request, {
-            ...body,
-            channelId,
-        });
-        return result;
-    };
+export async function handleUpdateChannel(
+    request: FastifyRequest<{ Params: { channelId: string }; Body: { name?: string; description?: string; bannerUrl?: string; profilePictureUrl?: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        const channel = await channelService.updateChannel(repo, request.user.userId, request.params.channelId, request.body);
+        return reply.code(200).send(channel);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function deleteChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const result = await deleteChannelService(fastify, reply, request, {
-            channelId,
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleDeleteChannel(
+    request: FastifyRequest<{ Params: { channelId: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        const channel = await channelService.deleteChannel(repo, request.user.userId, request.params.channelId);
+        return reply.code(200).send(channel);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function findChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const result = await findChannelService(fastify, reply, request, {
-            channelId,
-        });
-        return result;
-    };
+export async function handleFindChannel(
+    request: FastifyRequest<{ Params: { channelId: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        const channel = await channelService.findChannel(repo, request.params.channelId);
+        return reply.code(200).send(channel);
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function getMyChannelsController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const result = await getMyChannelsService(fastify, reply, request, {
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleGetMyChannels(request: FastifyRequest, reply: FastifyReply, repo: ChannelRepository) {
+    try {
+        const channels = await channelService.getMyChannels(repo, request.user.userId);
+        return reply.code(200).send(channels);
+    } catch (error: any) {
+        return reply.code(500).send({ error: 'Internal Server Error' });
+    }
 }
 
-export function subscribeToChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const result = await subscribeToChannelService(fastify, reply, request, {
-            channelId,
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleSubscribe(
+    request: FastifyRequest<{ Params: { channelId: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        await channelService.subscribeToChannel(repo, request.user.userId, request.params.channelId);
+        return reply.code(200).send({ message: 'Subscribed' });
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function unsubscribeFromChannelController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const result = await unsubscribeFromChannelService(fastify, reply, request, {
-            channelId,
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleUnsubscribe(
+    request: FastifyRequest<{ Params: { channelId: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        await channelService.unsubscribeFromChannel(repo, request.user.userId, request.params.channelId);
+        return reply.code(200).send({ message: 'Unsubscribed' });
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }
 
-export function getMySubscriptionsController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const result = await getMySubscriptionsService(fastify, reply, request, {
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleGetMySubscriptions(request: FastifyRequest, reply: FastifyReply, repo: ChannelRepository) {
+    try {
+        const subscriptions = await channelService.getMySubscriptions(repo, request.user.userId);
+        return reply.code(200).send(subscriptions);
+    } catch (error: any) {
+        return reply.code(500).send({ error: 'Internal Server Error' });
+    }
 }
 
-export function isSubscribedController(fastify: FastifyInstance) {
-    return async function (request: FastifyRequest, reply: FastifyReply) {
-        const { channelId } = request.params as { channelId: string };
-        const result = await isSubscribedService(fastify, reply, request, {
-            channelId,
-            userId: request.user.userId,
-        });
-        return result;
-    };
+export async function handleIsSubscribed(
+    request: FastifyRequest<{ Params: { channelId: string } }>,
+    reply: FastifyReply,
+    repo: ChannelRepository
+) {
+    try {
+        const result = await channelService.isSubscribed(repo, request.user.userId, request.params.channelId);
+        return reply.code(200).send({ isSubscribed: !!result });
+    } catch (error: any) {
+        const status = typeof error.cause === 'number' ? error.cause : 500;
+        return reply.code(status).send({ error: error.message });
+    }
 }

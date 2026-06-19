@@ -8,7 +8,6 @@ export async function Authenticate(request: FastifyRequest, reply: FastifyReply)
                 "Bearer ",
                 ""
             );
-        console.log(token);
         if (!token) {
             return reply.status(401).send({ error: "Unauthorized" });
         }
