@@ -40,8 +40,6 @@ model User {
   createdAt DateTime @default(now())
 
   sessions      Session[]
-  channels      Channel[]
-  subscriptions ChannelSubscription[]
 }
 
 model Session {
@@ -76,10 +74,10 @@ model Channel {
   createdAt DateTime @default(now())
 
   ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id])
+  // owner   User   @relation(fields: [ownerId], references: [id])
 
-  podcasts      Podcast[]
-  subscriptions ChannelSubscription[]
+  // podcasts      Podcast[]
+  // subscriptions ChannelSubscription[]
 
   @@index([ownerId])
   @@index([slug])
@@ -91,8 +89,8 @@ model ChannelSubscription {
 
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  // user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
 
   @@id([userId, channelId])
   @@index([channelId])
@@ -120,9 +118,45 @@ model Podcast {
   createdAt DateTime @default(now())
 
   channelId String
-  channel   Channel @relation(fields: [channelId], references: [id])
+  // channel   Channel @relation(fields: [channelId], references: [id])
 
   @@index([channelId])
   @@index([createdAt])
   @@index([status])
+}
+model WatchHistory {
+  id        String   @id @default(uuid())
+  userId    String   
+  podcastId String   
+  
+  watchedAt DateTime @default(now())
+  progress  Int      @default(0) 
+
+  @@index([userId])
+  @@index([podcastId])
+}
+enum VoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+model PodcastVote {
+  userId    String   
+  podcastId String  
+  type      VoteType
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, podcastId]) 
+  @@index([podcastId])
+}
+model SavedPodcast {
+  id        String   @id @default(uuid())
+  userId    String   
+  podcastId String  
+  
+  savedAt   DateTime @default(now())
+
+  @@unique([userId, podcastId]) 
+  @@index([userId])
 }

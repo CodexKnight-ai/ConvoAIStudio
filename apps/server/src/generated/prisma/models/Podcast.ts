@@ -292,7 +292,6 @@ export type PodcastWhereInput = {
   visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringFilter<"Podcast"> | string
-  channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
 }
 
 export type PodcastOrderByWithRelationInput = {
@@ -309,7 +308,6 @@ export type PodcastOrderByWithRelationInput = {
   visibility?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
-  channel?: Prisma.ChannelOrderByWithRelationInput
 }
 
 export type PodcastWhereUniqueInput = Prisma.AtLeast<{
@@ -329,7 +327,6 @@ export type PodcastWhereUniqueInput = Prisma.AtLeast<{
   visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
   createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
   channelId?: Prisma.StringFilter<"Podcast"> | string
-  channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
 }, "id">
 
 export type PodcastOrderByWithAggregationInput = {
@@ -385,7 +382,7 @@ export type PodcastCreateInput = {
   status?: $Enums.PodcastStatus
   visibility?: $Enums.Visibility
   createdAt?: Date | string
-  channel: Prisma.ChannelCreateNestedOneWithoutPodcastsInput
+  channelId: string
 }
 
 export type PodcastUncheckedCreateInput = {
@@ -417,7 +414,7 @@ export type PodcastUpdateInput = {
   status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  channel?: Prisma.ChannelUpdateOneRequiredWithoutPodcastsNestedInput
+  channelId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PodcastUncheckedUpdateInput = {
@@ -465,6 +462,7 @@ export type PodcastUpdateManyMutationInput = {
   status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  channelId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PodcastUncheckedUpdateManyInput = {
@@ -481,16 +479,6 @@ export type PodcastUncheckedUpdateManyInput = {
   visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   channelId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type PodcastListRelationFilter = {
-  every?: Prisma.PodcastWhereInput
-  some?: Prisma.PodcastWhereInput
-  none?: Prisma.PodcastWhereInput
-}
-
-export type PodcastOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type PodcastCountOrderByAggregateInput = {
@@ -555,48 +543,6 @@ export type PodcastSumOrderByAggregateInput = {
   downvotes?: Prisma.SortOrder
 }
 
-export type PodcastCreateNestedManyWithoutChannelInput = {
-  create?: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput> | Prisma.PodcastCreateWithoutChannelInput[] | Prisma.PodcastUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.PodcastCreateOrConnectWithoutChannelInput | Prisma.PodcastCreateOrConnectWithoutChannelInput[]
-  createMany?: Prisma.PodcastCreateManyChannelInputEnvelope
-  connect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-}
-
-export type PodcastUncheckedCreateNestedManyWithoutChannelInput = {
-  create?: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput> | Prisma.PodcastCreateWithoutChannelInput[] | Prisma.PodcastUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.PodcastCreateOrConnectWithoutChannelInput | Prisma.PodcastCreateOrConnectWithoutChannelInput[]
-  createMany?: Prisma.PodcastCreateManyChannelInputEnvelope
-  connect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-}
-
-export type PodcastUpdateManyWithoutChannelNestedInput = {
-  create?: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput> | Prisma.PodcastCreateWithoutChannelInput[] | Prisma.PodcastUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.PodcastCreateOrConnectWithoutChannelInput | Prisma.PodcastCreateOrConnectWithoutChannelInput[]
-  upsert?: Prisma.PodcastUpsertWithWhereUniqueWithoutChannelInput | Prisma.PodcastUpsertWithWhereUniqueWithoutChannelInput[]
-  createMany?: Prisma.PodcastCreateManyChannelInputEnvelope
-  set?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  disconnect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  delete?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  connect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  update?: Prisma.PodcastUpdateWithWhereUniqueWithoutChannelInput | Prisma.PodcastUpdateWithWhereUniqueWithoutChannelInput[]
-  updateMany?: Prisma.PodcastUpdateManyWithWhereWithoutChannelInput | Prisma.PodcastUpdateManyWithWhereWithoutChannelInput[]
-  deleteMany?: Prisma.PodcastScalarWhereInput | Prisma.PodcastScalarWhereInput[]
-}
-
-export type PodcastUncheckedUpdateManyWithoutChannelNestedInput = {
-  create?: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput> | Prisma.PodcastCreateWithoutChannelInput[] | Prisma.PodcastUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.PodcastCreateOrConnectWithoutChannelInput | Prisma.PodcastCreateOrConnectWithoutChannelInput[]
-  upsert?: Prisma.PodcastUpsertWithWhereUniqueWithoutChannelInput | Prisma.PodcastUpsertWithWhereUniqueWithoutChannelInput[]
-  createMany?: Prisma.PodcastCreateManyChannelInputEnvelope
-  set?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  disconnect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  delete?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  connect?: Prisma.PodcastWhereUniqueInput | Prisma.PodcastWhereUniqueInput[]
-  update?: Prisma.PodcastUpdateWithWhereUniqueWithoutChannelInput | Prisma.PodcastUpdateWithWhereUniqueWithoutChannelInput[]
-  updateMany?: Prisma.PodcastUpdateManyWithWhereWithoutChannelInput | Prisma.PodcastUpdateManyWithWhereWithoutChannelInput[]
-  deleteMany?: Prisma.PodcastScalarWhereInput | Prisma.PodcastScalarWhereInput[]
-}
-
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -611,141 +557,6 @@ export type EnumPodcastStatusFieldUpdateOperationsInput = {
 
 export type EnumVisibilityFieldUpdateOperationsInput = {
   set?: $Enums.Visibility
-}
-
-export type PodcastCreateWithoutChannelInput = {
-  id?: string
-  title: string
-  description: string
-  thumbnail?: string | null
-  audioUrl?: string | null
-  duration?: number | null
-  views?: number
-  upvotes?: number
-  downvotes?: number
-  status?: $Enums.PodcastStatus
-  visibility?: $Enums.Visibility
-  createdAt?: Date | string
-}
-
-export type PodcastUncheckedCreateWithoutChannelInput = {
-  id?: string
-  title: string
-  description: string
-  thumbnail?: string | null
-  audioUrl?: string | null
-  duration?: number | null
-  views?: number
-  upvotes?: number
-  downvotes?: number
-  status?: $Enums.PodcastStatus
-  visibility?: $Enums.Visibility
-  createdAt?: Date | string
-}
-
-export type PodcastCreateOrConnectWithoutChannelInput = {
-  where: Prisma.PodcastWhereUniqueInput
-  create: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput>
-}
-
-export type PodcastCreateManyChannelInputEnvelope = {
-  data: Prisma.PodcastCreateManyChannelInput | Prisma.PodcastCreateManyChannelInput[]
-  skipDuplicates?: boolean
-}
-
-export type PodcastUpsertWithWhereUniqueWithoutChannelInput = {
-  where: Prisma.PodcastWhereUniqueInput
-  update: Prisma.XOR<Prisma.PodcastUpdateWithoutChannelInput, Prisma.PodcastUncheckedUpdateWithoutChannelInput>
-  create: Prisma.XOR<Prisma.PodcastCreateWithoutChannelInput, Prisma.PodcastUncheckedCreateWithoutChannelInput>
-}
-
-export type PodcastUpdateWithWhereUniqueWithoutChannelInput = {
-  where: Prisma.PodcastWhereUniqueInput
-  data: Prisma.XOR<Prisma.PodcastUpdateWithoutChannelInput, Prisma.PodcastUncheckedUpdateWithoutChannelInput>
-}
-
-export type PodcastUpdateManyWithWhereWithoutChannelInput = {
-  where: Prisma.PodcastScalarWhereInput
-  data: Prisma.XOR<Prisma.PodcastUpdateManyMutationInput, Prisma.PodcastUncheckedUpdateManyWithoutChannelInput>
-}
-
-export type PodcastScalarWhereInput = {
-  AND?: Prisma.PodcastScalarWhereInput | Prisma.PodcastScalarWhereInput[]
-  OR?: Prisma.PodcastScalarWhereInput[]
-  NOT?: Prisma.PodcastScalarWhereInput | Prisma.PodcastScalarWhereInput[]
-  id?: Prisma.StringFilter<"Podcast"> | string
-  title?: Prisma.StringFilter<"Podcast"> | string
-  description?: Prisma.StringFilter<"Podcast"> | string
-  thumbnail?: Prisma.StringNullableFilter<"Podcast"> | string | null
-  audioUrl?: Prisma.StringNullableFilter<"Podcast"> | string | null
-  duration?: Prisma.IntNullableFilter<"Podcast"> | number | null
-  views?: Prisma.IntFilter<"Podcast"> | number
-  upvotes?: Prisma.IntFilter<"Podcast"> | number
-  downvotes?: Prisma.IntFilter<"Podcast"> | number
-  status?: Prisma.EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
-  visibility?: Prisma.EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFilter<"Podcast"> | Date | string
-  channelId?: Prisma.StringFilter<"Podcast"> | string
-}
-
-export type PodcastCreateManyChannelInput = {
-  id?: string
-  title: string
-  description: string
-  thumbnail?: string | null
-  audioUrl?: string | null
-  duration?: number | null
-  views?: number
-  upvotes?: number
-  downvotes?: number
-  status?: $Enums.PodcastStatus
-  visibility?: $Enums.Visibility
-  createdAt?: Date | string
-}
-
-export type PodcastUpdateWithoutChannelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  views?: Prisma.IntFieldUpdateOperationsInput | number
-  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
-  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PodcastUncheckedUpdateWithoutChannelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  views?: Prisma.IntFieldUpdateOperationsInput | number
-  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
-  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PodcastUncheckedUpdateManyWithoutChannelInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  thumbnail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  audioUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  duration?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  views?: Prisma.IntFieldUpdateOperationsInput | number
-  upvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  downvotes?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
-  visibility?: Prisma.EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -764,7 +575,6 @@ export type PodcastSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["podcast"]>
 
 export type PodcastSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -781,7 +591,6 @@ export type PodcastSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["podcast"]>
 
 export type PodcastSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -798,7 +607,6 @@ export type PodcastSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   visibility?: boolean
   createdAt?: boolean
   channelId?: boolean
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["podcast"]>
 
 export type PodcastSelectScalar = {
@@ -818,21 +626,10 @@ export type PodcastSelectScalar = {
 }
 
 export type PodcastOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "thumbnail" | "audioUrl" | "duration" | "views" | "upvotes" | "downvotes" | "status" | "visibility" | "createdAt" | "channelId", ExtArgs["result"]["podcast"]>
-export type PodcastInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
-export type PodcastIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
-export type PodcastIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
 
 export type $PodcastPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Podcast"
-  objects: {
-    channel: Prisma.$ChannelPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
@@ -1241,7 +1038,6 @@ readonly fields: PodcastFieldRefs;
  */
 export interface Prisma__PodcastClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  channel<T extends Prisma.ChannelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChannelDefaultArgs<ExtArgs>>): Prisma.Prisma__ChannelClient<runtime.Types.Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1301,10 +1097,6 @@ export type PodcastFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
-  /**
    * Filter, which Podcast to fetch.
    */
   where: Prisma.PodcastWhereUniqueInput
@@ -1323,10 +1115,6 @@ export type PodcastFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
-  /**
    * Filter, which Podcast to fetch.
    */
   where: Prisma.PodcastWhereUniqueInput
@@ -1344,10 +1132,6 @@ export type PodcastFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
   /**
    * Filter, which Podcast to fetch.
    */
@@ -1397,10 +1181,6 @@ export type PodcastFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
-  /**
    * Filter, which Podcast to fetch.
    */
   where?: Prisma.PodcastWhereInput
@@ -1448,10 +1228,6 @@ export type PodcastFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
   /**
    * Filter, which Podcasts to fetch.
    */
@@ -1501,10 +1277,6 @@ export type PodcastCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
-  /**
    * The data needed to create a Podcast.
    */
   data: Prisma.XOR<Prisma.PodcastCreateInput, Prisma.PodcastUncheckedCreateInput>
@@ -1538,10 +1310,6 @@ export type PodcastCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.PodcastCreateManyInput | Prisma.PodcastCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1556,10 +1324,6 @@ export type PodcastUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
   /**
    * The data needed to update a Podcast.
    */
@@ -1612,10 +1376,6 @@ export type PodcastUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Podcasts to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1630,10 +1390,6 @@ export type PodcastUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
   /**
    * The filter to search for the Podcast to update in case it exists.
    */
@@ -1660,10 +1416,6 @@ export type PodcastDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
   /**
    * Filter which Podcast to delete.
    */
@@ -1696,8 +1448,4 @@ export type PodcastDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Podcast
    */
   omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
 }

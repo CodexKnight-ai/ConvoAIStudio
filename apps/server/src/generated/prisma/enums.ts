@@ -34,3 +34,11 @@ export const Visibility = {
 } as const
 
 export type Visibility = (typeof Visibility)[keyof typeof Visibility]
+
+
+export const VoteType = {
+  UPVOTE: 'UPVOTE',
+  DOWNVOTE: 'DOWNVOTE'
+} as const
+
+export type VoteType = (typeof VoteType)[keyof typeof VoteType]

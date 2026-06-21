@@ -42,3 +42,18 @@ export type ChannelSubscription = Prisma.ChannelSubscriptionModel
  * 
  */
 export type Podcast = Prisma.PodcastModel
+/**
+ * Model WatchHistory
+ * 
+ */
+export type WatchHistory = Prisma.WatchHistoryModel
+/**
+ * Model PodcastVote
+ * 
+ */
+export type PodcastVote = Prisma.PodcastVoteModel
+/**
+ * Model SavedPodcast
+ * 
+ */
+export type SavedPodcast = Prisma.SavedPodcastModel

@@ -55,7 +55,10 @@ export const ModelName = {
   Session: 'Session',
   Channel: 'Channel',
   ChannelSubscription: 'ChannelSubscription',
-  Podcast: 'Podcast'
+  Podcast: 'Podcast',
+  WatchHistory: 'WatchHistory',
+  PodcastVote: 'PodcastVote',
+  SavedPodcast: 'SavedPodcast'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -141,6 +144,37 @@ export const PodcastScalarFieldEnum = {
 } as const
 
 export type PodcastScalarFieldEnum = (typeof PodcastScalarFieldEnum)[keyof typeof PodcastScalarFieldEnum]
+
+
+export const WatchHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  podcastId: 'podcastId',
+  watchedAt: 'watchedAt',
+  progress: 'progress'
+} as const
+
+export type WatchHistoryScalarFieldEnum = (typeof WatchHistoryScalarFieldEnum)[keyof typeof WatchHistoryScalarFieldEnum]
+
+
+export const PodcastVoteScalarFieldEnum = {
+  userId: 'userId',
+  podcastId: 'podcastId',
+  type: 'type',
+  createdAt: 'createdAt'
+} as const
+
+export type PodcastVoteScalarFieldEnum = (typeof PodcastVoteScalarFieldEnum)[keyof typeof PodcastVoteScalarFieldEnum]
+
+
+export const SavedPodcastScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  podcastId: 'podcastId',
+  savedAt: 'savedAt'
+} as const
+
+export type SavedPodcastScalarFieldEnum = (typeof SavedPodcastScalarFieldEnum)[keyof typeof SavedPodcastScalarFieldEnum]
 
 
 export const SortOrder = {

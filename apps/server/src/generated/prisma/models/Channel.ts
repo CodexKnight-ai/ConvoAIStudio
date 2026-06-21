@@ -260,9 +260,6 @@ export type ChannelWhereInput = {
   podcastCount?: Prisma.IntFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringFilter<"Channel"> | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  podcasts?: Prisma.PodcastListRelationFilter
-  subscriptions?: Prisma.ChannelSubscriptionListRelationFilter
 }
 
 export type ChannelOrderByWithRelationInput = {
@@ -276,9 +273,6 @@ export type ChannelOrderByWithRelationInput = {
   podcastCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
-  owner?: Prisma.UserOrderByWithRelationInput
-  podcasts?: Prisma.PodcastOrderByRelationAggregateInput
-  subscriptions?: Prisma.ChannelSubscriptionOrderByRelationAggregateInput
 }
 
 export type ChannelWhereUniqueInput = Prisma.AtLeast<{
@@ -295,9 +289,6 @@ export type ChannelWhereUniqueInput = Prisma.AtLeast<{
   podcastCount?: Prisma.IntFilter<"Channel"> | number
   createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
   ownerId?: Prisma.StringFilter<"Channel"> | string
-  owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  podcasts?: Prisma.PodcastListRelationFilter
-  subscriptions?: Prisma.ChannelSubscriptionListRelationFilter
 }, "id" | "slug">
 
 export type ChannelOrderByWithAggregationInput = {
@@ -344,9 +335,7 @@ export type ChannelCreateInput = {
   subscriberCount?: number
   podcastCount?: number
   createdAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutChannelsInput
-  podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
-  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
+  ownerId: string
 }
 
 export type ChannelUncheckedCreateInput = {
@@ -360,8 +349,6 @@ export type ChannelUncheckedCreateInput = {
   podcastCount?: number
   createdAt?: Date | string
   ownerId: string
-  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
 }
 
 export type ChannelUpdateInput = {
@@ -374,9 +361,7 @@ export type ChannelUpdateInput = {
   subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
   podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
-  podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
-  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ChannelUncheckedUpdateInput = {
@@ -390,8 +375,6 @@ export type ChannelUncheckedUpdateInput = {
   podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
-  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
 }
 
 export type ChannelCreateManyInput = {
@@ -417,6 +400,7 @@ export type ChannelUpdateManyMutationInput = {
   subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
   podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ChannelUncheckedUpdateManyInput = {
@@ -430,16 +414,6 @@ export type ChannelUncheckedUpdateManyInput = {
   podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type ChannelListRelationFilter = {
-  every?: Prisma.ChannelWhereInput
-  some?: Prisma.ChannelWhereInput
-  none?: Prisma.ChannelWhereInput
-}
-
-export type ChannelOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ChannelCountOrderByAggregateInput = {
@@ -491,53 +465,6 @@ export type ChannelSumOrderByAggregateInput = {
   podcastCount?: Prisma.SortOrder
 }
 
-export type ChannelScalarRelationFilter = {
-  is?: Prisma.ChannelWhereInput
-  isNot?: Prisma.ChannelWhereInput
-}
-
-export type ChannelCreateNestedManyWithoutOwnerInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput> | Prisma.ChannelCreateWithoutOwnerInput[] | Prisma.ChannelUncheckedCreateWithoutOwnerInput[]
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutOwnerInput | Prisma.ChannelCreateOrConnectWithoutOwnerInput[]
-  createMany?: Prisma.ChannelCreateManyOwnerInputEnvelope
-  connect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-}
-
-export type ChannelUncheckedCreateNestedManyWithoutOwnerInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput> | Prisma.ChannelCreateWithoutOwnerInput[] | Prisma.ChannelUncheckedCreateWithoutOwnerInput[]
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutOwnerInput | Prisma.ChannelCreateOrConnectWithoutOwnerInput[]
-  createMany?: Prisma.ChannelCreateManyOwnerInputEnvelope
-  connect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-}
-
-export type ChannelUpdateManyWithoutOwnerNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput> | Prisma.ChannelCreateWithoutOwnerInput[] | Prisma.ChannelUncheckedCreateWithoutOwnerInput[]
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutOwnerInput | Prisma.ChannelCreateOrConnectWithoutOwnerInput[]
-  upsert?: Prisma.ChannelUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ChannelUpsertWithWhereUniqueWithoutOwnerInput[]
-  createMany?: Prisma.ChannelCreateManyOwnerInputEnvelope
-  set?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  disconnect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  delete?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  connect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  update?: Prisma.ChannelUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ChannelUpdateWithWhereUniqueWithoutOwnerInput[]
-  updateMany?: Prisma.ChannelUpdateManyWithWhereWithoutOwnerInput | Prisma.ChannelUpdateManyWithWhereWithoutOwnerInput[]
-  deleteMany?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
-}
-
-export type ChannelUncheckedUpdateManyWithoutOwnerNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput> | Prisma.ChannelCreateWithoutOwnerInput[] | Prisma.ChannelUncheckedCreateWithoutOwnerInput[]
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutOwnerInput | Prisma.ChannelCreateOrConnectWithoutOwnerInput[]
-  upsert?: Prisma.ChannelUpsertWithWhereUniqueWithoutOwnerInput | Prisma.ChannelUpsertWithWhereUniqueWithoutOwnerInput[]
-  createMany?: Prisma.ChannelCreateManyOwnerInputEnvelope
-  set?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  disconnect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  delete?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  connect?: Prisma.ChannelWhereUniqueInput | Prisma.ChannelWhereUniqueInput[]
-  update?: Prisma.ChannelUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ChannelUpdateWithWhereUniqueWithoutOwnerInput[]
-  updateMany?: Prisma.ChannelUpdateManyWithWhereWithoutOwnerInput | Prisma.ChannelUpdateManyWithWhereWithoutOwnerInput[]
-  deleteMany?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -546,338 +473,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type ChannelCreateNestedOneWithoutSubscriptionsInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutSubscriptionsInput
-  connect?: Prisma.ChannelWhereUniqueInput
-}
-
-export type ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutSubscriptionsInput
-  upsert?: Prisma.ChannelUpsertWithoutSubscriptionsInput
-  connect?: Prisma.ChannelWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ChannelUpdateToOneWithWhereWithoutSubscriptionsInput, Prisma.ChannelUpdateWithoutSubscriptionsInput>, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
-}
-
-export type ChannelCreateNestedOneWithoutPodcastsInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutPodcastsInput, Prisma.ChannelUncheckedCreateWithoutPodcastsInput>
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutPodcastsInput
-  connect?: Prisma.ChannelWhereUniqueInput
-}
-
-export type ChannelUpdateOneRequiredWithoutPodcastsNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelCreateWithoutPodcastsInput, Prisma.ChannelUncheckedCreateWithoutPodcastsInput>
-  connectOrCreate?: Prisma.ChannelCreateOrConnectWithoutPodcastsInput
-  upsert?: Prisma.ChannelUpsertWithoutPodcastsInput
-  connect?: Prisma.ChannelWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ChannelUpdateToOneWithWhereWithoutPodcastsInput, Prisma.ChannelUpdateWithoutPodcastsInput>, Prisma.ChannelUncheckedUpdateWithoutPodcastsInput>
-}
-
-export type ChannelCreateWithoutOwnerInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
-  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelUncheckedCreateWithoutOwnerInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelCreateOrConnectWithoutOwnerInput = {
-  where: Prisma.ChannelWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput>
-}
-
-export type ChannelCreateManyOwnerInputEnvelope = {
-  data: Prisma.ChannelCreateManyOwnerInput | Prisma.ChannelCreateManyOwnerInput[]
-  skipDuplicates?: boolean
-}
-
-export type ChannelUpsertWithWhereUniqueWithoutOwnerInput = {
-  where: Prisma.ChannelWhereUniqueInput
-  update: Prisma.XOR<Prisma.ChannelUpdateWithoutOwnerInput, Prisma.ChannelUncheckedUpdateWithoutOwnerInput>
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutOwnerInput, Prisma.ChannelUncheckedCreateWithoutOwnerInput>
-}
-
-export type ChannelUpdateWithWhereUniqueWithoutOwnerInput = {
-  where: Prisma.ChannelWhereUniqueInput
-  data: Prisma.XOR<Prisma.ChannelUpdateWithoutOwnerInput, Prisma.ChannelUncheckedUpdateWithoutOwnerInput>
-}
-
-export type ChannelUpdateManyWithWhereWithoutOwnerInput = {
-  where: Prisma.ChannelScalarWhereInput
-  data: Prisma.XOR<Prisma.ChannelUpdateManyMutationInput, Prisma.ChannelUncheckedUpdateManyWithoutOwnerInput>
-}
-
-export type ChannelScalarWhereInput = {
-  AND?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
-  OR?: Prisma.ChannelScalarWhereInput[]
-  NOT?: Prisma.ChannelScalarWhereInput | Prisma.ChannelScalarWhereInput[]
-  id?: Prisma.StringFilter<"Channel"> | string
-  name?: Prisma.StringFilter<"Channel"> | string
-  slug?: Prisma.StringFilter<"Channel"> | string
-  description?: Prisma.StringFilter<"Channel"> | string
-  bannerUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
-  profilePictureUrl?: Prisma.StringNullableFilter<"Channel"> | string | null
-  subscriberCount?: Prisma.IntFilter<"Channel"> | number
-  podcastCount?: Prisma.IntFilter<"Channel"> | number
-  createdAt?: Prisma.DateTimeFilter<"Channel"> | Date | string
-  ownerId?: Prisma.StringFilter<"Channel"> | string
-}
-
-export type ChannelCreateWithoutSubscriptionsInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutChannelsInput
-  podcasts?: Prisma.PodcastCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelUncheckedCreateWithoutSubscriptionsInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  ownerId: string
-  podcasts?: Prisma.PodcastUncheckedCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelCreateOrConnectWithoutSubscriptionsInput = {
-  where: Prisma.ChannelWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
-}
-
-export type ChannelUpsertWithoutSubscriptionsInput = {
-  update: Prisma.XOR<Prisma.ChannelUpdateWithoutSubscriptionsInput, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutSubscriptionsInput, Prisma.ChannelUncheckedCreateWithoutSubscriptionsInput>
-  where?: Prisma.ChannelWhereInput
-}
-
-export type ChannelUpdateToOneWithWhereWithoutSubscriptionsInput = {
-  where?: Prisma.ChannelWhereInput
-  data: Prisma.XOR<Prisma.ChannelUpdateWithoutSubscriptionsInput, Prisma.ChannelUncheckedUpdateWithoutSubscriptionsInput>
-}
-
-export type ChannelUpdateWithoutSubscriptionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
-  podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelUncheckedUpdateWithoutSubscriptionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
-  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelCreateWithoutPodcastsInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  owner: Prisma.UserCreateNestedOneWithoutChannelsInput
-  subscriptions?: Prisma.ChannelSubscriptionCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelUncheckedCreateWithoutPodcastsInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-  ownerId: string
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
-}
-
-export type ChannelCreateOrConnectWithoutPodcastsInput = {
-  where: Prisma.ChannelWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutPodcastsInput, Prisma.ChannelUncheckedCreateWithoutPodcastsInput>
-}
-
-export type ChannelUpsertWithoutPodcastsInput = {
-  update: Prisma.XOR<Prisma.ChannelUpdateWithoutPodcastsInput, Prisma.ChannelUncheckedUpdateWithoutPodcastsInput>
-  create: Prisma.XOR<Prisma.ChannelCreateWithoutPodcastsInput, Prisma.ChannelUncheckedCreateWithoutPodcastsInput>
-  where?: Prisma.ChannelWhereInput
-}
-
-export type ChannelUpdateToOneWithWhereWithoutPodcastsInput = {
-  where?: Prisma.ChannelWhereInput
-  data: Prisma.XOR<Prisma.ChannelUpdateWithoutPodcastsInput, Prisma.ChannelUncheckedUpdateWithoutPodcastsInput>
-}
-
-export type ChannelUpdateWithoutPodcastsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  owner?: Prisma.UserUpdateOneRequiredWithoutChannelsNestedInput
-  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelUncheckedUpdateWithoutPodcastsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelCreateManyOwnerInput = {
-  id?: string
-  name: string
-  slug: string
-  description: string
-  bannerUrl?: string | null
-  profilePictureUrl?: string | null
-  subscriberCount?: number
-  podcastCount?: number
-  createdAt?: Date | string
-}
-
-export type ChannelUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  podcasts?: Prisma.PodcastUpdateManyWithoutChannelNestedInput
-  subscriptions?: Prisma.ChannelSubscriptionUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelUncheckedUpdateWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  podcasts?: Prisma.PodcastUncheckedUpdateManyWithoutChannelNestedInput
-  subscriptions?: Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
-}
-
-export type ChannelUncheckedUpdateManyWithoutOwnerInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profilePictureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subscriberCount?: Prisma.IntFieldUpdateOperationsInput | number
-  podcastCount?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-
-/**
- * Count Type ChannelCountOutputType
- */
-
-export type ChannelCountOutputType = {
-  podcasts: number
-  subscriptions: number
-}
-
-export type ChannelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  podcasts?: boolean | ChannelCountOutputTypeCountPodcastsArgs
-  subscriptions?: boolean | ChannelCountOutputTypeCountSubscriptionsArgs
-}
-
-/**
- * ChannelCountOutputType without action
- */
-export type ChannelCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ChannelCountOutputType
-   */
-  select?: Prisma.ChannelCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * ChannelCountOutputType without action
- */
-export type ChannelCountOutputTypeCountPodcastsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PodcastWhereInput
-}
-
-/**
- * ChannelCountOutputType without action
- */
-export type ChannelCountOutputTypeCountSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ChannelSubscriptionWhereInput
-}
 
 
 export type ChannelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -891,10 +486,6 @@ export type ChannelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  podcasts?: boolean | Prisma.Channel$podcastsArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.Channel$subscriptionsArgs<ExtArgs>
-  _count?: boolean | Prisma.ChannelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channel"]>
 
 export type ChannelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -908,7 +499,6 @@ export type ChannelSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channel"]>
 
 export type ChannelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -922,7 +512,6 @@ export type ChannelSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   podcastCount?: boolean
   createdAt?: boolean
   ownerId?: boolean
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channel"]>
 
 export type ChannelSelectScalar = {
@@ -939,26 +528,10 @@ export type ChannelSelectScalar = {
 }
 
 export type ChannelOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "description" | "bannerUrl" | "profilePictureUrl" | "subscriberCount" | "podcastCount" | "createdAt" | "ownerId", ExtArgs["result"]["channel"]>
-export type ChannelInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  podcasts?: boolean | Prisma.Channel$podcastsArgs<ExtArgs>
-  subscriptions?: boolean | Prisma.Channel$subscriptionsArgs<ExtArgs>
-  _count?: boolean | Prisma.ChannelCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type ChannelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type ChannelIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
 
 export type $ChannelPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Channel"
-  objects: {
-    owner: Prisma.$UserPayload<ExtArgs>
-    podcasts: Prisma.$PodcastPayload<ExtArgs>[]
-    subscriptions: Prisma.$ChannelSubscriptionPayload<ExtArgs>[]
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -1364,9 +937,6 @@ readonly fields: ChannelFieldRefs;
  */
 export interface Prisma__ChannelClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  podcasts<T extends Prisma.Channel$podcastsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Channel$podcastsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PodcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  subscriptions<T extends Prisma.Channel$subscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Channel$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChannelSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1423,10 +993,6 @@ export type ChannelFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
-  /**
    * Filter, which Channel to fetch.
    */
   where: Prisma.ChannelWhereUniqueInput
@@ -1445,10 +1011,6 @@ export type ChannelFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extension
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
-  /**
    * Filter, which Channel to fetch.
    */
   where: Prisma.ChannelWhereUniqueInput
@@ -1466,10 +1028,6 @@ export type ChannelFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the Channel
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
   /**
    * Filter, which Channel to fetch.
    */
@@ -1519,10 +1077,6 @@ export type ChannelFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
-  /**
    * Filter, which Channel to fetch.
    */
   where?: Prisma.ChannelWhereInput
@@ -1570,10 +1124,6 @@ export type ChannelFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Omit specific fields from the Channel
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
   /**
    * Filter, which Channels to fetch.
    */
@@ -1623,10 +1173,6 @@ export type ChannelCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
-  /**
    * The data needed to create a Channel.
    */
   data: Prisma.XOR<Prisma.ChannelCreateInput, Prisma.ChannelUncheckedCreateInput>
@@ -1660,10 +1206,6 @@ export type ChannelCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.ChannelCreateManyInput | Prisma.ChannelCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1678,10 +1220,6 @@ export type ChannelUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Channel
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
   /**
    * The data needed to update a Channel.
    */
@@ -1734,10 +1272,6 @@ export type ChannelUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Channels to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1752,10 +1286,6 @@ export type ChannelUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Channel
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
   /**
    * The filter to search for the Channel to update in case it exists.
    */
@@ -1783,10 +1313,6 @@ export type ChannelDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
-  /**
    * Filter which Channel to delete.
    */
   where: Prisma.ChannelWhereUniqueInput
@@ -1807,54 +1333,6 @@ export type ChannelDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Channel.podcasts
- */
-export type Channel$podcastsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Podcast
-   */
-  select?: Prisma.PodcastSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Podcast
-   */
-  omit?: Prisma.PodcastOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PodcastInclude<ExtArgs> | null
-  where?: Prisma.PodcastWhereInput
-  orderBy?: Prisma.PodcastOrderByWithRelationInput | Prisma.PodcastOrderByWithRelationInput[]
-  cursor?: Prisma.PodcastWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PodcastScalarFieldEnum | Prisma.PodcastScalarFieldEnum[]
-}
-
-/**
- * Channel.subscriptions
- */
-export type Channel$subscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ChannelSubscription
-   */
-  select?: Prisma.ChannelSubscriptionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ChannelSubscription
-   */
-  omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
-  where?: Prisma.ChannelSubscriptionWhereInput
-  orderBy?: Prisma.ChannelSubscriptionOrderByWithRelationInput | Prisma.ChannelSubscriptionOrderByWithRelationInput[]
-  cursor?: Prisma.ChannelSubscriptionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ChannelSubscriptionScalarFieldEnum | Prisma.ChannelSubscriptionScalarFieldEnum[]
-}
-
-/**
  * Channel without action
  */
 export type ChannelDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1866,8 +1344,4 @@ export type ChannelDefaultArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Channel
    */
   omit?: Prisma.ChannelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelInclude<ExtArgs> | null
 }

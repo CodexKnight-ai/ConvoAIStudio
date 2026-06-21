@@ -166,16 +166,12 @@ export type ChannelSubscriptionWhereInput = {
   userId?: Prisma.StringFilter<"ChannelSubscription"> | string
   channelId?: Prisma.StringFilter<"ChannelSubscription"> | string
   createdAt?: Prisma.DateTimeFilter<"ChannelSubscription"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
 }
 
 export type ChannelSubscriptionOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   channelId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  channel?: Prisma.ChannelOrderByWithRelationInput
 }
 
 export type ChannelSubscriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -186,8 +182,6 @@ export type ChannelSubscriptionWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"ChannelSubscription"> | string
   channelId?: Prisma.StringFilter<"ChannelSubscription"> | string
   createdAt?: Prisma.DateTimeFilter<"ChannelSubscription"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  channel?: Prisma.XOR<Prisma.ChannelScalarRelationFilter, Prisma.ChannelWhereInput>
 }, "userId_channelId">
 
 export type ChannelSubscriptionOrderByWithAggregationInput = {
@@ -209,9 +203,9 @@ export type ChannelSubscriptionScalarWhereWithAggregatesInput = {
 }
 
 export type ChannelSubscriptionCreateInput = {
+  userId: string
+  channelId: string
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSubscriptionsInput
-  channel: Prisma.ChannelCreateNestedOneWithoutSubscriptionsInput
 }
 
 export type ChannelSubscriptionUncheckedCreateInput = {
@@ -221,9 +215,9 @@ export type ChannelSubscriptionUncheckedCreateInput = {
 }
 
 export type ChannelSubscriptionUpdateInput = {
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  channelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSubscriptionsNestedInput
-  channel?: Prisma.ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput
 }
 
 export type ChannelSubscriptionUncheckedUpdateInput = {
@@ -239,6 +233,8 @@ export type ChannelSubscriptionCreateManyInput = {
 }
 
 export type ChannelSubscriptionUpdateManyMutationInput = {
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  channelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -246,16 +242,6 @@ export type ChannelSubscriptionUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   channelId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ChannelSubscriptionListRelationFilter = {
-  every?: Prisma.ChannelSubscriptionWhereInput
-  some?: Prisma.ChannelSubscriptionWhereInput
-  none?: Prisma.ChannelSubscriptionWhereInput
-}
-
-export type ChannelSubscriptionOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
 }
 
 export type ChannelSubscriptionUserIdChannelIdCompoundUniqueInput = {
@@ -281,235 +267,24 @@ export type ChannelSubscriptionMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type ChannelSubscriptionCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput> | Prisma.ChannelSubscriptionCreateWithoutUserInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyUserInputEnvelope
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-}
-
-export type ChannelSubscriptionUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput> | Prisma.ChannelSubscriptionCreateWithoutUserInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyUserInputEnvelope
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-}
-
-export type ChannelSubscriptionUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput> | Prisma.ChannelSubscriptionCreateWithoutUserInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutUserInput | Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyUserInputEnvelope
-  set?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  disconnect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  delete?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  update?: Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutUserInput | Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutUserInput | Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-}
-
-export type ChannelSubscriptionUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput> | Prisma.ChannelSubscriptionCreateWithoutUserInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutUserInput | Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyUserInputEnvelope
-  set?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  disconnect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  delete?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  update?: Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutUserInput | Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutUserInput | Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-}
-
-export type ChannelSubscriptionCreateNestedManyWithoutChannelInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput> | Prisma.ChannelSubscriptionCreateWithoutChannelInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyChannelInputEnvelope
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-}
-
-export type ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput> | Prisma.ChannelSubscriptionCreateWithoutChannelInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyChannelInputEnvelope
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-}
-
-export type ChannelSubscriptionUpdateManyWithoutChannelNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput> | Prisma.ChannelSubscriptionCreateWithoutChannelInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
-  upsert?: Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput | Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyChannelInputEnvelope
-  set?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  disconnect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  delete?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  update?: Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput | Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput[]
-  updateMany?: Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput | Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput[]
-  deleteMany?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-}
-
-export type ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput = {
-  create?: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput> | Prisma.ChannelSubscriptionCreateWithoutChannelInput[] | Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
-  connectOrCreate?: Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput | Prisma.ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
-  upsert?: Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput | Prisma.ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput[]
-  createMany?: Prisma.ChannelSubscriptionCreateManyChannelInputEnvelope
-  set?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  disconnect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  delete?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  connect?: Prisma.ChannelSubscriptionWhereUniqueInput | Prisma.ChannelSubscriptionWhereUniqueInput[]
-  update?: Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput | Prisma.ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput[]
-  updateMany?: Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput | Prisma.ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput[]
-  deleteMany?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-}
-
-export type ChannelSubscriptionCreateWithoutUserInput = {
-  createdAt?: Date | string
-  channel: Prisma.ChannelCreateNestedOneWithoutSubscriptionsInput
-}
-
-export type ChannelSubscriptionUncheckedCreateWithoutUserInput = {
-  channelId: string
-  createdAt?: Date | string
-}
-
-export type ChannelSubscriptionCreateOrConnectWithoutUserInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput>
-}
-
-export type ChannelSubscriptionCreateManyUserInputEnvelope = {
-  data: Prisma.ChannelSubscriptionCreateManyUserInput | Prisma.ChannelSubscriptionCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
-export type ChannelSubscriptionUpsertWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  update: Prisma.XOR<Prisma.ChannelSubscriptionUpdateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutUserInput>
-}
-
-export type ChannelSubscriptionUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  data: Prisma.XOR<Prisma.ChannelSubscriptionUpdateWithoutUserInput, Prisma.ChannelSubscriptionUncheckedUpdateWithoutUserInput>
-}
-
-export type ChannelSubscriptionUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.ChannelSubscriptionScalarWhereInput
-  data: Prisma.XOR<Prisma.ChannelSubscriptionUpdateManyMutationInput, Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutUserInput>
-}
-
-export type ChannelSubscriptionScalarWhereInput = {
-  AND?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-  OR?: Prisma.ChannelSubscriptionScalarWhereInput[]
-  NOT?: Prisma.ChannelSubscriptionScalarWhereInput | Prisma.ChannelSubscriptionScalarWhereInput[]
-  userId?: Prisma.StringFilter<"ChannelSubscription"> | string
-  channelId?: Prisma.StringFilter<"ChannelSubscription"> | string
-  createdAt?: Prisma.DateTimeFilter<"ChannelSubscription"> | Date | string
-}
-
-export type ChannelSubscriptionCreateWithoutChannelInput = {
-  createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutSubscriptionsInput
-}
-
-export type ChannelSubscriptionUncheckedCreateWithoutChannelInput = {
-  userId: string
-  createdAt?: Date | string
-}
-
-export type ChannelSubscriptionCreateOrConnectWithoutChannelInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  create: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput>
-}
-
-export type ChannelSubscriptionCreateManyChannelInputEnvelope = {
-  data: Prisma.ChannelSubscriptionCreateManyChannelInput | Prisma.ChannelSubscriptionCreateManyChannelInput[]
-  skipDuplicates?: boolean
-}
-
-export type ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  update: Prisma.XOR<Prisma.ChannelSubscriptionUpdateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedUpdateWithoutChannelInput>
-  create: Prisma.XOR<Prisma.ChannelSubscriptionCreateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedCreateWithoutChannelInput>
-}
-
-export type ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput = {
-  where: Prisma.ChannelSubscriptionWhereUniqueInput
-  data: Prisma.XOR<Prisma.ChannelSubscriptionUpdateWithoutChannelInput, Prisma.ChannelSubscriptionUncheckedUpdateWithoutChannelInput>
-}
-
-export type ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput = {
-  where: Prisma.ChannelSubscriptionScalarWhereInput
-  data: Prisma.XOR<Prisma.ChannelSubscriptionUpdateManyMutationInput, Prisma.ChannelSubscriptionUncheckedUpdateManyWithoutChannelInput>
-}
-
-export type ChannelSubscriptionCreateManyUserInput = {
-  channelId: string
-  createdAt?: Date | string
-}
-
-export type ChannelSubscriptionUpdateWithoutUserInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  channel?: Prisma.ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput
-}
-
-export type ChannelSubscriptionUncheckedUpdateWithoutUserInput = {
-  channelId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ChannelSubscriptionUncheckedUpdateManyWithoutUserInput = {
-  channelId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ChannelSubscriptionCreateManyChannelInput = {
-  userId: string
-  createdAt?: Date | string
-}
-
-export type ChannelSubscriptionUpdateWithoutChannelInput = {
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutSubscriptionsNestedInput
-}
-
-export type ChannelSubscriptionUncheckedUpdateWithoutChannelInput = {
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type ChannelSubscriptionUncheckedUpdateManyWithoutChannelInput = {
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
 
 
 export type ChannelSubscriptionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   channelId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channelSubscription"]>
 
 export type ChannelSubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   channelId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channelSubscription"]>
 
 export type ChannelSubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   userId?: boolean
   channelId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["channelSubscription"]>
 
 export type ChannelSubscriptionSelectScalar = {
@@ -519,25 +294,10 @@ export type ChannelSubscriptionSelectScalar = {
 }
 
 export type ChannelSubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "channelId" | "createdAt", ExtArgs["result"]["channelSubscription"]>
-export type ChannelSubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
-export type ChannelSubscriptionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
-export type ChannelSubscriptionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  channel?: boolean | Prisma.ChannelDefaultArgs<ExtArgs>
-}
 
 export type $ChannelSubscriptionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ChannelSubscription"
-  objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    channel: Prisma.$ChannelPayload<ExtArgs>
-  }
+  objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     userId: string
     channelId: string
@@ -936,8 +696,6 @@ readonly fields: ChannelSubscriptionFieldRefs;
  */
 export interface Prisma__ChannelSubscriptionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  channel<T extends Prisma.ChannelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ChannelDefaultArgs<ExtArgs>>): Prisma.Prisma__ChannelClient<runtime.Types.Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -987,10 +745,6 @@ export type ChannelSubscriptionFindUniqueArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
-  /**
    * Filter, which ChannelSubscription to fetch.
    */
   where: Prisma.ChannelSubscriptionWhereUniqueInput
@@ -1009,10 +763,6 @@ export type ChannelSubscriptionFindUniqueOrThrowArgs<ExtArgs extends runtime.Typ
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
-  /**
    * Filter, which ChannelSubscription to fetch.
    */
   where: Prisma.ChannelSubscriptionWhereUniqueInput
@@ -1030,10 +780,6 @@ export type ChannelSubscriptionFindFirstArgs<ExtArgs extends runtime.Types.Exten
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
   /**
    * Filter, which ChannelSubscription to fetch.
    */
@@ -1083,10 +829,6 @@ export type ChannelSubscriptionFindFirstOrThrowArgs<ExtArgs extends runtime.Type
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
-  /**
    * Filter, which ChannelSubscription to fetch.
    */
   where?: Prisma.ChannelSubscriptionWhereInput
@@ -1134,10 +876,6 @@ export type ChannelSubscriptionFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
   /**
    * Filter, which ChannelSubscriptions to fetch.
    */
@@ -1187,10 +925,6 @@ export type ChannelSubscriptionCreateArgs<ExtArgs extends runtime.Types.Extensio
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
   /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
-  /**
    * The data needed to create a ChannelSubscription.
    */
   data: Prisma.XOR<Prisma.ChannelSubscriptionCreateInput, Prisma.ChannelSubscriptionUncheckedCreateInput>
@@ -1224,10 +958,6 @@ export type ChannelSubscriptionCreateManyAndReturnArgs<ExtArgs extends runtime.T
    */
   data: Prisma.ChannelSubscriptionCreateManyInput | Prisma.ChannelSubscriptionCreateManyInput[]
   skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1242,10 +972,6 @@ export type ChannelSubscriptionUpdateArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
   /**
    * The data needed to update a ChannelSubscription.
    */
@@ -1298,10 +1024,6 @@ export type ChannelSubscriptionUpdateManyAndReturnArgs<ExtArgs extends runtime.T
    * Limit how many ChannelSubscriptions to update.
    */
   limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1316,10 +1038,6 @@ export type ChannelSubscriptionUpsertArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
   /**
    * The filter to search for the ChannelSubscription to update in case it exists.
    */
@@ -1346,10 +1064,6 @@ export type ChannelSubscriptionDeleteArgs<ExtArgs extends runtime.Types.Extensio
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
   /**
    * Filter which ChannelSubscription to delete.
    */
@@ -1382,8 +1096,4 @@ export type ChannelSubscriptionDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Omit specific fields from the ChannelSubscription
    */
   omit?: Prisma.ChannelSubscriptionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ChannelSubscriptionInclude<ExtArgs> | null
 }
