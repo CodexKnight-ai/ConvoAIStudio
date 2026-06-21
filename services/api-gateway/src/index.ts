@@ -16,6 +16,7 @@ const app = Fastify({
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
+const PODCAST_SERVICE_URL = process.env.PODCAST_SERVICE_URL || "http://localhost:4002";
 
 async function bootstrap() {
     await app.register(helmet, {
@@ -44,10 +45,21 @@ async function bootstrap() {
         return reply.from(targetUrl);
     });
 
+    // Podcast Service Boundary
+    app.all("/api/v1/channels/*", (request, reply) => {
+        const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
+        return reply.from(targetUrl);
+    });
+
+    app.all("/api/v1/podcasts/*", (request, reply) => {
+        const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
+        return reply.from(targetUrl);
+    });
+
     app.get("/health", async () => {
         return { status: "OK", service: "API Gateway" };
     });
-    app.setErrorHandler((error, request, reply) => {
+    app.setErrorHandler((error: any, request, reply) => {
         request.log.error(error);
 
         if (error.statusCode === 429) {

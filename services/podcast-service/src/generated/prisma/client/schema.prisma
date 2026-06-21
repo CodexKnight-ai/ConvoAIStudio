@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PodcastStatus {
+  DRAFT
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+}
+
+model Channel {
+  id String @id @default(uuid())
+
+  name String
+  slug String @unique
+
+  description String
+
+  bannerUrl         String?
+  profilePictureUrl String?
+
+  subscriberCount Int @default(0)
+  podcastCount    Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  // ownerId is a scalar reference to auth-service User — no cross-service @relation
+  ownerId  String
+  podcasts Podcast[]
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model ChannelSubscription {
+  userId    String
+  channelId String
+  createdAt DateTime @default(now())
+
+  @@id([userId, channelId])
+  @@index([channelId])
+  @@index([userId])
+}
+
+model Podcast {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  thumbnail   String?
+  audioUrl    String?
+  duration    Int?
+  views       Int           @default(0)
+  upvotes     Int           @default(0)
+  downvotes   Int           @default(0)
+  status      PodcastStatus @default(DRAFT)
+  visibility  Visibility    @default(PUBLIC)
+  createdAt   DateTime      @default(now())
+  channelId   String
+  channel     Channel       @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId])
+  @@index([createdAt])
+  @@index([status])
+}

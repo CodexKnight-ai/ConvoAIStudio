@@ -1,25 +1,75 @@
+networks:
+  convo-network:
+    driver: bridge
+
 services:
   postgres:
     image: postgres:16
     container_name: convo-postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: convo_ai_studio
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - convo-network
 
   redis:
     image: redis:7
     container_name: convo-redis
     restart: always
-
     ports:
       - "6379:6379"
+    networks:
+      - convo-network
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks:
+      - convo-network
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:4001
+      - PODCAST_SERVICE_URL=http://podcast-service:4002
+    depends_on:
+      - auth-service
+      - podcast-service
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/auth_db
+      - REDIS_DB=0
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - convo-network
+    expose:
+      - "4001"
+
+  podcast-service:
+    build:
+      context: ./services/podcast-service
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://admin:password@postgres:5432/podcast_db
+      - REDIS_DB=1
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - convo-network
+    expose:
+      - "4002"
 
 volumes:
   postgres_data:
