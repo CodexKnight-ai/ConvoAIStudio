@@ -1,194 +1,178 @@
 # Project Progress: Convo-AI-Studio
 
-**Last updated:** June 21, 2026
+Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has migrated from a planned monolithic layout (`apps/server`, `apps/web`) to a **microservices architecture** with an API gateway, isolated databases per service, and a standalone Next.js frontend.
 
-Convo-AI-Studio is a production-grade, AI-powered realtime podcast platform. The codebase is actively migrating from a monolithic Fastify backend (`apps/server`) toward a **database-per-service microservices architecture** aligned with `AGENTS.md`.
-
----
-
-## Overall Status
-
-| Area | Status | Notes |
-|------|--------|-------|
-| Monorepo & workspace | ✅ Done | `pnpm` workspaces: `apps/*`, `services/*`, `packages/*` |
-| Frontend UI | 🟡 Partial | Rich static/mock UI; limited live API wiring |
-| Auth microservice | ✅ Done | Isolated DB, JWT + Redis sessions |
-| Podcast microservice | 🟡 Partial | Channels & podcasts CRUD; mock AI pipeline |
-| API Gateway | 🟡 Partial | Reverse proxy + rate limit; no GraphQL yet |
-| Legacy monolith (`apps/server`) | ⚠️ Legacy | Superset of features; being replaced |
-| Realtime service | ❌ Not started | WebSockets / WebRTC not implemented |
-| AI engine (Python) | ❌ Not started | No gRPC, LangChain, or workers |
-| Shared packages (`proto-contracts`, etc.) | ❌ Not started | `packages/` directory empty |
-| Infra (k8s, monitoring) | ❌ Not started | `infra/` directory empty |
-| CI/CD & tests | ❌ Not started | No GitHub Actions or test suites |
+**Last analyzed:** June 21, 2026
 
 ---
 
 ## Architecture Snapshot
 
-```mermaid
-flowchart LR
-    subgraph Client
-        WEB[apps/web<br/>Next.js 16]
-    end
-    subgraph Gateway
-        GW[api-gateway :4000]
-    end
-    subgraph Services
-        AUTH[auth-service :4001<br/>auth_db]
-        POD[podcast-service :4002<br/>podcast_db]
-    end
-    subgraph Data
-        PG[(PostgreSQL)]
-        REDIS[(Redis)]
-    end
-    subgraph Legacy
-        MONO[apps/server<br/>monolith — deprecated path]
-    end
+| Layer | Target (AGENTS.md) | Current State |
+|-------|-------------------|---------------|
+| Frontend | `apps/client` (Next.js 15, Apollo/GraphQL) | `Client/web` (Next.js 16, REST via axios) |
+| API Gateway | Fastify + Mercurius GraphQL + circuit breakers | Fastify reverse proxy (`@fastify/reply-from`) — **REST only** |
+| Auth | `auth-service` (isolated DB) | **Implemented** |
+| Podcasts | `podcast-service` (isolated DB) | **Partially implemented** |
+| Realtime | `realtime-service` (WebSockets, WebRTC) | **Not started** |
+| AI Pipeline | `ai-engine` (Python FastAPI, gRPC) | **Not started** (mock 15s timer in podcast-service) |
+| Shared packages | `proto-contracts`, `ts-config` | **Not created** |
+| Infra | `infra/k8s`, `infra/monitoring` | **Not created** |
+| Queues | BullMQ / Redis Pub/Sub | **Not implemented** |
+| GraphQL | Mercurius at gateway | **Not implemented** |
 
-    WEB -->|REST /api/v1/*| GW
-    GW --> AUTH
-    GW --> POD
-    AUTH --> PG
-    AUTH --> REDIS
-    POD --> PG
-    POD --> REDIS
-    WEB -.->|dev fallback| MONO
+---
+
+## Monorepo Layout (Actual)
+
 ```
-
-**Target architecture** (from `AGENTS.md`): GraphQL federation at the gateway, gRPC to a Python `ai-engine`, BullMQ workers, dedicated `realtime-service`, and strict cross-service logical references only. Current implementation covers the first hop (gateway → REST microservices).
+ai-podcast/
+├── Client/web/                 # Next.js 16 frontend (not in root pnpm workspace)
+├── services/
+│   ├── api-gateway/            # Entry point :4000 — proxies to downstream services
+│   ├── auth-service/           # IAM :4001 — auth_db
+│   └── podcast-service/        # Channels & podcasts :4002 — podcast_db
+├── docker-compose.yaml         # Postgres, Redis, gateway, auth, podcast
+├── pnpm-workspace.yaml         # apps/*, services/*, packages/* (apps/ & packages/ empty)
+├── AGENTS.md                   # Target architecture blueprint
+└── README.md                   # Outdated — still describes old monolith + GraphQL
+```
 
 ---
 
 ## Completed Work
 
-### 1. Microservices Foundation
+### 1. Infrastructure & DevOps
+- **Docker Compose** orchestrates PostgreSQL 16, Redis 7, `api-gateway`, `auth-service`, and `podcast-service`.
+- **Database-per-service isolation**: `auth_db` and `podcast_db` on shared Postgres instance with separate Prisma schemas.
+- **Redis isolation**: auth-service uses DB `0`, podcast-service uses DB `1`.
+- Per-service **Dockerfiles** and health check endpoints (`/health`).
 
-#### API Gateway (`services/api-gateway`)
-- Central entry on port **4000** with `@fastify/reply-from` reverse proxy
-- Routes:
-  - `/api/v1/auth/*` → auth-service
-  - `/api/v1/channels/*` → podcast-service
-  - `/api/v1/podcasts/*` → podcast-service
-- Security middleware: Helmet, CORS, rate limiting (100 req/min)
-- Health check: `GET /health`
+### 2. API Gateway (`services/api-gateway`)
+- Reverse-proxies traffic to downstream services:
+  - `GET|POST|… /api/v1/auth/*` → auth-service
+  - `GET|POST|… /api/v1/channels/*` → podcast-service
+  - `GET|POST|… /api/v1/podcasts/*` → podcast-service
+- Security middleware: Helmet, CORS (credentials), rate limiting (100 req/min).
+- Structured logging via Pino.
 
-#### Auth Service (`services/auth-service`)
-- **Isolated database:** `auth_db` (PostgreSQL)
-- **Prisma models:** `User`, `Session` with `Role` enum (`USER`, `CREATOR`, `ADMIN`)
-- **Three-layer pattern:** repository → service → controller
-- **Endpoints** (`/api/v1/auth`):
-  - `POST /register`, `POST /login`
-  - `POST /refresh`, `POST /logout`, `GET /me` (authenticated)
-- **Auth flow:** Argon2 password hashing, JWT access tokens, HttpOnly cookies, **Redis-backed session store** (30-day TTL, refresh token rotation)
-- Docker image + migration: `20260621100527_init_auth_service_db`
+### 3. Auth Service (`services/auth-service`)
+Three-layer pattern: **repository → service → controller → routes**.
 
-#### Podcast Service (`services/podcast-service`)
-- **Isolated database:** `podcast_db` (PostgreSQL)
-- **Prisma models:** `Channel`, `ChannelSubscription`, `Podcast`
-- Enums: `PodcastStatus` (DRAFT, PROCESSING, PUBLISHED, FAILED), `Visibility` (PUBLIC, PRIVATE, UNLISTED)
-- **Database-per-service compliance:** `ownerId` and `userId` are scalar references (no FK to auth DB); only intra-service FK is `Podcast.channelId → Channel`
-- **Three-layer pattern** for channels and podcasts
-- **Channel endpoints** (`/api/v1/channels`):
-  - CRUD, `/me`, subscribe/unsubscribe, subscriptions list, `isSubscribed`
-  - `channelowner` middleware for owner-only mutations
-- **Podcast endpoints** (`/api/v1/podcasts`):
-  - `POST /podcast`, `GET /podcast/:id`, `GET /podcast/channel/:channelId`
-- **Mock AI pipeline:** 15s timeout → sets status `PUBLISHED` with placeholder audio URL (no real LLM/TTS)
-- Docker image + migration: `20260621163423_add_foregin_key`
+**Database models** (`prisma/schema.prisma`):
+- `User` — id, username, email, firstName, lastName, passwordHash, role (`USER` | `CREATOR` | `ADMIN`)
+- `Session` — defined in schema but **unused**; sessions live in Redis instead
 
-### 2. Local Infrastructure (`docker-compose.yaml`)
-- **PostgreSQL 16** and **Redis 7** on shared `convo-network`
-- Containerized: `api-gateway`, `auth-service`, `podcast-service`
-- Separate Redis DB indices per service (`REDIS_DB=0` auth, `REDIS_DB=1` podcast)
+**Endpoints** (prefix `/api/v1/auth`):
 
-### 3. Frontend (`apps/web`)
-- **Stack:** Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, Axios
-- **Live API integration:**
-  - Auth store (`store/authStore.ts`): register, login, logout, session check via gateway
-  - Profile page: fetch/create channels through `/api/v1/channels`
-- **Pages built (mostly static/mock data):**
-  - Landing (`Hero`, `Features`, `HowItWorks`, `TopPodcasts`, `CTASection`, Spline 3D)
-  - Auth: `/login`, `/sign-up`
-  - Discover: search hero, category filters, trending, regional sections, top creators
-  - Channels: list, detail `[slug]`, activity hub, subscribed channels
-  - Podcast detail `[slug]`: player, engagement, comments, related sidebar
-  - Feed and Profile (tabs: history, watch-later, channels)
-- **Design system:** Dark premium theme, liquid-glass UI, shared `Button`, `BeamBg` components
+| Method | Route | Status |
+|--------|-------|--------|
+| POST | `/register` | Done |
+| POST | `/login` | Done |
+| POST | `/refresh` | Done |
+| POST | `/logout` | Done |
+| GET | `/me` | Done |
 
-### 4. Legacy Monolith (`apps/server`) — Still Present
-- Original all-in-one Fastify server with auth, channels, and podcasts
-- **Extended schema** not yet ported to microservices:
-  - `WatchHistory`, `PodcastVote`, `SavedPodcast`
-  - Cross-model relations partially removed (`20260621084555_break_foreign_relations`)
-- Apollo Server + GraphQL listed in `package.json` but **not wired** in `app.ts`
-- Functionally duplicated by auth-service + podcast-service; treat as **migration source**, not target
+**Auth mechanics:**
+- Argon2 password hashing
+- JWT access tokens (15 min) + refresh tokens (7 days) in HttpOnly cookies
+- Session state stored in **Redis** (not the Prisma `Session` table)
+- Refresh token rotation with reuse detection
 
-### 5. Documentation & Governance
-- `README.md`: product vision, NFRs, architecture diagrams, setup guide
-- `AGENTS.md`: target microservices blueprint, database isolation rules, service boundaries
+**Migrations applied:** `20260621100527_init_auth_service_db`, `20260621103239_add_username_and_names`
 
----
+### 4. Podcast Service (`services/podcast-service`)
+Three-layer pattern: **repository → service → controller → routes**.
 
-## In Progress / Partial
+**Database models** (`prisma/schema.prisma`):
+- `Channel` — name, slug, description, banner/profile URLs, subscriber/podcast counts, `ownerId` (logical ref, no cross-DB FK)
+- `ChannelSubscription` — composite PK `(userId, channelId)`
+- `Podcast` — title, description, thumbnail, audioUrl, duration, views, votes, status, visibility
 
-| Item | Detail |
-|------|--------|
-| Frontend ↔ backend wiring | Only auth + channel management hit live APIs; discover, feed, channel detail, and podcast pages use mock data |
-| Auth DB migrations | Initial migration schema (`password`, no `username`/`firstName`) may be out of sync with current Prisma schema — verify before deploy |
-| Docker CMD paths | Auth Dockerfile references `dist/index.js`; service entry is `dist/server.js` — likely needs fix |
-| Monolith deprecation | `apps/server` still in workspace; no formal cutover or data migration script |
-| README vs reality | README describes GraphQL playground and single `apps/server`; actual dev path is gateway + microservices |
+**Channel endpoints** (prefix `/api/v1/channels`):
 
----
+| Method | Route | Auth | Status |
+|--------|-------|------|--------|
+| POST | `/` | Required | Done |
+| PUT | `/:channelId` | Owner | Done |
+| DELETE | `/:channelId` | Owner | Done |
+| GET | `/:channelId` | Required | Done |
+| GET | `/me` | Required | Done |
+| POST | `/subscribe/:channelId` | Required | Done |
+| POST | `/unsubscribe/:channelId` | Required | Done |
+| GET | `/subscriptions` | Required | Done |
+| GET | `/isSubscribed/:channelId` | Required | Done |
 
-## Not Started (Target from AGENTS.md)
+**Podcast endpoints** (prefix `/api/v1/podcasts`):
 
-### Services
-- **`realtime-service`** — WebSockets, live reactions, WebRTC signaling
-- **`ai-engine`** (Python/FastAPI) — multi-agent orchestration, LangChain, gRPC server, Celery/BullMQ workers
+| Method | Route | Auth | Status |
+|--------|-------|------|--------|
+| POST | `/podcast` | Owner | Done |
+| GET | `/podcast/:id` | Public | Done |
+| GET | `/podcast/channel/:channelId` | Public | Done |
 
-### Platform Capabilities
-- GraphQL / Mercurius at API gateway (federation, schema stitching)
-- gRPC contracts in `packages/proto-contracts`
-- BullMQ job queues for AI synthesis, analytics, notifications
-- AI character library (`ai_characters`, turn manager, memory store)
-- Live podcast streaming (token streaming, audience Q&A, polls)
-- Vector search / RAG for transcripts
-- WebRTC audio streaming
+**Mock AI pipeline:** On podcast creation, status is set to `PROCESSING`, then a 15-second in-process timer simulates synthesis and sets status to `PUBLISHED` with a placeholder audio URL.
 
-### Engineering
-- Shared packages: `ts-config`, `ui`, `utils`
-- Kubernetes manifests (`infra/k8s/`)
-- Observability stack (`infra/monitoring/` — Prometheus, Grafana, OpenTelemetry)
-- GitHub Actions CI (lint, typecheck, integration tests)
-- Automated or manual test suites
+**Migration applied:** `20260621163423_add_foregin_key`
+
+### 5. Frontend (`Client/web`)
+Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, axios.
+
+**Pages built:**
+
+| Route | UI | API Integration |
+|-------|-----|-----------------|
+| `/` | Landing (Hero, Features, How It Works, Top Podcasts, CTA) | Mock data |
+| `/login` | Auth form | Wired to gateway |
+| `/sign-up` | Auth form | Wired to gateway |
+| `/profile` | User info, channel management, history/watch-later tabs | Auth + channels **wired** |
+| `/discover` | Search hero, trending, categories, regional filters | Mock data |
+| `/feed` | Podcast feed grid with filters | Mock data |
+| `/channels` | Subscribed channels, activity hub | Mock data |
+| `/channels/[slug]` | Channel detail, featured/all podcasts | Mock data |
+| `/podcast/[slug]` | Player, comments, engagement, related sidebar | Mock data |
+
+**Shared UI:** Dark premium theme, bento grids, beam backgrounds, Spline 3D hero component.
 
 ---
 
-## Functional Requirements Coverage
+## Partially Done / In Progress
 
-| ID | Requirement | Status |
-|----|-------------|--------|
-| FR-01 | Creators create/edit/delete channels | ✅ Via podcast-service |
-| FR-02 | Schedule podcast with start/end timestamps | ❌ Not implemented |
-| FR-03 | Stream AI text to participants via WebSocket | ❌ Not implemented |
-| FR-04 | Audience reactions and questions in real time | ❌ UI mock only |
-| FR-05 | Persist messages to PostgreSQL | ❌ No `messages` model yet |
-| FR-06 | Post-podcast analytics & email workers | ❌ Not implemented |
-| FR-07 | Admin manage AI characters without redeploy | ❌ Not implemented |
+### Backend
+- Podcast **views/votes** fields exist in schema but have no update endpoints.
+- No **slug-based channel lookup** route (`GET /channels/slug/:slug`) — frontend channel pages use local mock data instead.
+- No **public discovery** endpoints (trending, search, categories).
+- No **BullMQ** job queue — AI processing runs as an in-memory `setTimeout`.
+- `channelOwner` and `authenticate` middleware duplicated across auth-service and podcast-service (JWT verification not centralized at gateway).
+
+### Frontend
+- Only **auth** and **profile/channel CRUD** call the real API.
+- Discover, feed, channel detail, and podcast detail pages are **UI-complete but data-mocked**.
+- Profile channel-create form sends `imageUrl` and `visibility` fields the backend does not accept.
+- Frontend is **outside the root pnpm workspace** (`Client/web` vs `apps/*`).
+
+### Documentation
+- `README.md` describes the old monolith (`apps/server`, GraphQL, Apollo) and does not match the current microservices layout.
+- `pnpm-workspace.yaml` references `apps/*` and `packages/*` directories that do not exist.
 
 ---
 
-## Recommended Next Steps
+## Not Started
 
-1. **Finish microservices cutover** — Retire `apps/server`; port `WatchHistory`, votes, and saved podcasts into appropriate services; add missing auth schema migration.
-2. **Wire frontend to live APIs** — Replace mock data on discover, feed, channel detail, and podcast pages with gateway calls.
-3. **Fix Docker/build issues** — Align Dockerfiles, env examples, and root `package.json` scripts for one-command local dev.
-4. **Introduce async AI pipeline** — BullMQ queue in podcast-service → stub Python `ai-engine` gRPC contract.
-5. **Add `realtime-service`** — WebSocket room per podcast; gateway stays stateless.
-6. **GraphQL read layer** — Mercurius at gateway for aggregated reads (user + channel + podcast stitching).
-7. **CI baseline** — Lint, typecheck, and smoke tests for auth + channel flows.
+| Component | Description |
+|-----------|-------------|
+| `realtime-service` | WebSockets, live chat, audience reactions, WebRTC signaling |
+| `ai-engine` | Python FastAPI multi-agent pipeline, LangChain, gRPC server |
+| `packages/proto-contracts` | Shared gRPC `.proto` definitions |
+| `packages/ts-config` | Shared TypeScript configs |
+| `infra/k8s` | Kubernetes deployment manifests |
+| `infra/monitoring` | Prometheus / Grafana configs |
+| GraphQL / Mercurius | Federated reads at API gateway |
+| BullMQ workers | Analytics, email, transcription, media processing |
+| AI character library | `ai_characters` model, admin CRUD, prompt templates |
+| Message / transcript persistence | Live message storage and replay |
+| Tests & CI | No test files or GitHub Actions workflows found |
+| Frontend Docker service | Not included in `docker-compose.yaml` |
 
 ---
 
@@ -196,36 +180,52 @@ flowchart LR
 
 | Layer | Technology |
 |-------|------------|
-| Monorepo | pnpm workspaces |
-| Frontend | Next.js 16, React 19, TailwindCSS 4, Zustand, Axios |
-| Gateway | Fastify 5, `@fastify/reply-from`, rate-limit, Helmet |
-| Microservices | Fastify 5, Prisma 7, PostgreSQL, Redis, Argon2, JWT |
+| Monorepo | pnpm workspaces (partial — frontend excluded) |
+| Frontend | Next.js 16, React 19, TailwindCSS 4, Zustand, axios |
+| Gateway | Fastify 5, `@fastify/reply-from`, Helmet, rate-limit |
+| Services | Fastify 5, Prisma 7, PostgreSQL, Redis, JWT, Argon2 |
 | Containers | Docker Compose (Postgres 16, Redis 7) |
-| Legacy | `apps/server` (Fastify monolith, unused GraphQL deps) |
 
 ---
 
-## Local Development (Current Path)
+## Known Gaps & Tech Debt
 
-```bash
-# Infrastructure
-docker-compose up -d postgres redis
-
-# Run migrations (per service)
-cd services/auth-service && pnpm db:migrate
-cd services/podcast-service && pnpm db:migrate
-
-# Start services (separate terminals or use pnpm filters)
-pnpm --filter api-gateway dev      # :4000
-pnpm --filter @convoai/auth-service dev  # :4001
-pnpm --filter podcast-service dev  # :4002
-pnpm --filter web dev              # :3000
-```
-
-Set `NEXT_PUBLIC_BASE_URL=http://localhost:4000/api` for the frontend.
+1. **Session model drift** — Prisma `Session` table exists but auth uses Redis exclusively; table is never written to.
+2. **No slug API** — Channel pages cannot load real data by slug.
+3. **Mock AI** — No gRPC call to a Python engine; processing is a local timer stub.
+4. **No circuit breakers** — Gateway proxies directly without failure fallbacks (required by AGENTS.md).
+5. **Cross-service auth** — Podcast-service validates JWT independently; no shared auth middleware package.
+6. **README / workspace mismatch** — Docs and workspace config lag behind the microservices migration.
 
 ---
 
-## Summary
+## Recommended Next Steps
 
-The project has made substantial progress on **service decomposition** and **frontend UI scaffolding**. Auth and channel/podcast REST APIs run as isolated microservices behind an API gateway, following database-per-service boundaries. The core product differentiators — live multi-agent AI discussions, realtime audience interaction, and production AI/audio pipelines — remain **future work**. The legacy monolith and mock-heavy frontend should be the focus of the next integration sprint.
+1. **Wire frontend to backend** — Connect discover, feed, channel `[slug]`, and podcast `[slug]` pages to podcast-service APIs; add slug lookup endpoint.
+2. **Align monorepo** — Move `Client/web` → `apps/client`, add to pnpm workspace, update README.
+3. **Replace mock AI** — Scaffold `services/ai-engine` (Python) + `packages/proto-contracts`; enqueue jobs via BullMQ instead of `setTimeout`.
+4. **Add realtime-service** — WebSocket layer for live AI token streaming and audience reactions.
+5. **GraphQL gateway** — Add Mercurius for federated reads once cross-service stitching is needed.
+6. **Tests & CI** — Unit tests for auth/channel/podcast services; GitHub Actions lint + build pipeline.
+7. **Clean up auth schema** — Remove unused Prisma `Session` model or migrate session persistence to Postgres.
+
+---
+
+## Progress Summary
+
+| Area | Completion |
+|------|------------|
+| Microservices scaffold | ~60% |
+| Auth & sessions | ~90% |
+| Channel management | ~75% |
+| Podcast CRUD & AI pipeline | ~30% |
+| API gateway | ~50% |
+| Frontend UI | ~85% |
+| Frontend ↔ API integration | ~25% |
+| Realtime / WebSockets | 0% |
+| AI engine (Python) | 0% |
+| GraphQL / federation | 0% |
+| Infra / observability | ~10% (Docker Compose only) |
+| Tests / CI | 0% |
+
+**Overall project maturity: ~35–40%** — solid auth and channel foundations with a polished frontend shell; core realtime AI, job queues, and cross-service features remain ahead.
