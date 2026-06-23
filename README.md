@@ -85,7 +85,6 @@ Build the infrastructure layer for the next generation of AI-powered media, wher
 ## 6. System Architecture
 
 ![Architecture](./Client/web/public/arch.png)
-```
 
 ---
 
