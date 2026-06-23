@@ -17,6 +17,7 @@ const app = Fastify({
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
 const PODCAST_SERVICE_URL = process.env.PODCAST_SERVICE_URL || "http://localhost:4002";
+const CLIENT_ORIGINS = (process.env.CLIENT_ORIGINS || "http://localhost:3000").split(",").map((origin) => origin.trim());
 
 async function bootstrap() {
     await app.register(helmet, {
@@ -24,8 +25,9 @@ async function bootstrap() {
         contentSecurityPolicy: false
     });
     await app.register(cors, {
-        origin: true,
+        origin: CLIENT_ORIGINS,
         credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     });
     await app.register(rateLimit, {
         max: 100,
@@ -71,7 +73,7 @@ async function bootstrap() {
 
         return reply.status(500).send({
             error: "Internal Server Error",
-            message: "An issue occurred processing traffic inside the API Gateway framework."
+            message: error.message
         });
     });
 
