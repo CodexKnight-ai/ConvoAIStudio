@@ -1,0 +1,91 @@
+syntax = "proto3";
+package auth;
+
+service AuthService {
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc GetMe(GetMeRequest) returns (GetMeResponse);
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  string user_id = 2;
+  string session_id = 3;
+  repeated string roles = 4;
+  int64 expires_at = 5;
+  string error = 6;
+}
+
+message RegisterRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string username = 4;
+  string password = 5;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  string role = 4;
+  int64 access_token_expires_at = 5;
+  int64 refresh_token_expires_at = 6;
+  string error = 7;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  string role = 4;
+  int64 access_token_expires_at = 5;
+  int64 refresh_token_expires_at = 6;
+  string error = 7;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+  string session_id = 2;
+}
+
+message RefreshResponse {
+  int64 access_token_expires_at = 1;
+  int64 refresh_token_expires_at = 2;
+  string error = 3;
+}
+
+message LogoutRequest {
+  string session_id = 1;
+}
+
+message LogoutResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message GetMeRequest {
+  string user_id = 1;
+}
+
+message GetMeResponse {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  string role = 4;
+  string first_name = 5;
+  string last_name = 6;
+  string error = 7;
+}

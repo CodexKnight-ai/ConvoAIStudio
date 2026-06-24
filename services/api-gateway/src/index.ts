@@ -3,14 +3,17 @@ import cors from "@fastify/cors";
 import replyFrom from "@fastify/reply-from";
 import rateLimit from "@fastify/rate-limit";
 import helmet from "@fastify/helmet";
-import dotenv from "dotenv";
+import cookie from "@fastify/cookie";
+import * as dotenv from "dotenv";
+import { Authenticate } from "./middleware/auth.middleware.js";
+import { authRoutes } from "./routes/auth.routes.js";
 
 dotenv.config();
 
 const app = Fastify({
     logger: {
         level: process.env.LOG_LEVEL || "info",
-        transport: process.env.NODE_ENV !== "production" ? { target: "pino-pretty" } : undefined,
+        transport: { target: "pino-pretty" }
     },
 });
 
@@ -18,6 +21,14 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || "http://localhost:4001";
 const PODCAST_SERVICE_URL = process.env.PODCAST_SERVICE_URL || "http://localhost:4002";
 const CLIENT_ORIGINS = (process.env.CLIENT_ORIGINS || "http://localhost:3000").split(",").map((origin) => origin.trim());
+
+/** Standard cookie options for auth tokens */
+const COOKIE_OPTS = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict" as const,
+    path: "/",
+};
 
 async function bootstrap() {
     await app.register(helmet, {
@@ -36,24 +47,28 @@ async function bootstrap() {
             return (request.headers["x-forwarded-for"] as string) || request.ip;
         },
     });
+    await app.register(cookie);
     await app.register(replyFrom);
+
     app.addHook("onRequest", async (request, reply) => {
         request.log.info({ path: request.url, method: request.method }, "Intercepted gateway traffic");
     });
 
-    // Auth Service Boundary
-    app.all("/api/v1/auth/*", (request, reply) => {
-        const targetUrl = `${AUTH_SERVICE_URL}${request.url}`;
-        return reply.from(targetUrl);
-    });
+    // ──────────────────────────────────────────────
+    // Auth Routes — gRPC to auth-service
+    // ──────────────────────────────────────────────
 
-    // Podcast Service Boundary
-    app.all("/api/v1/channels/*", (request, reply) => {
+    await app.register(authRoutes, { prefix: "/api/v1/auth" });
+
+    // ──────────────────────────────────────────────
+    // Protected Routes — Podcast/Channel via Authenticate middleware
+    // ──────────────────────────────────────────────
+    app.all("/api/v1/channels/*", { preHandler: Authenticate }, (request, reply) => {
         const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
         return reply.from(targetUrl);
     });
 
-    app.all("/api/v1/podcasts/*", (request, reply) => {
+    app.all("/api/v1/podcasts/*", { preHandler: Authenticate }, (request, reply) => {
         const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
         return reply.from(targetUrl);
     });
@@ -61,6 +76,7 @@ async function bootstrap() {
     app.get("/health", async () => {
         return { status: "OK", service: "API Gateway" };
     });
+
     app.setErrorHandler((error: any, request, reply) => {
         request.log.error(error);
 

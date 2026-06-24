@@ -36,6 +36,7 @@ services:
       - convo-network
     environment:
       - AUTH_SERVICE_URL=http://auth-service:4001
+      - AUTH_SERVICE_GRPC_URL=http://auth-service:50051
       - PODCAST_SERVICE_URL=http://podcast-service:4002
     depends_on:
       - auth-service
@@ -55,6 +56,7 @@ services:
       - convo-network
     expose:
       - "4001"
+      - "50051"
 
   podcast-service:
     build:

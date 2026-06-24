@@ -6,14 +6,16 @@ import jwtPlugin from "./plugins/jwt.js";
 import prismaPlugin from "./plugins/prisma.js";
 
 import { Authenticate } from "./middlewares/authenticate.js";
-
 import { authRoutes } from "./auth/auth.route.js";
+
+import { createAuthGrpcHandlers } from "./grpc/auth.grpc.js";
 
 export async function buildApp() {
     const app = Fastify({ logger: true });
     await app.register(fastifyRedis, {
         url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/${process.env.REDIS_DB || '0'}`,
     });
+
     app.register(jwtPlugin);
     app.register(cookiePlugin);
     app.register(prismaPlugin);
@@ -21,6 +23,8 @@ export async function buildApp() {
     app.register(authRoutes, {
         prefix: "/api/v1/auth",
     });
+
+    // Health check
     app.get("/health", async () => {
         return {
             status: "ok",

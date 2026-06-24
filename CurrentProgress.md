@@ -2,7 +2,9 @@
 
 Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has migrated from a planned monolithic layout (`apps/server`, `apps/web`) to a **microservices architecture** with an API gateway, isolated databases per service, and a standalone Next.js frontend.
 
-**Last analyzed:** June 21, 2026
+**Last analyzed:** June 24, 2026
+
+**Update:** Progress review and status summary added on June 24, 2026.
 
 ---
 

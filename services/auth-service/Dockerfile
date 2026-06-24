@@ -12,4 +12,4 @@ COPY . .
 RUN pnpm build
 
 EXPOSE 4001
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/server.js"]

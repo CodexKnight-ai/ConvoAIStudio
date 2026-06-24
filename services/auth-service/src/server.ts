@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { buildApp } from "./app.js";
+import { startGrpcServer } from "./grpc/server.js";
 
 async function start() {
     try {
@@ -8,13 +9,20 @@ async function start() {
         if (!process.env.PORT) {
             throw new Error("PORT environment variable is not set");
         }
-        const PORT = Number(process.env.PORT)
-        app.listen({
+
+        const PORT = Number(process.env.PORT);
+
+        //Fastify HTTP Server (REST routes)
+        await app.listen({
             port: PORT,
             host: "0.0.0.0",
         });
 
-        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`HTTP Server running on http://localhost:${PORT}`);
+
+        // gRPC Server (for internal inter-service communication)
+        await startGrpcServer(app);
+
     } catch (error) {
         console.error("Error starting server:", error);
         process.exit(1);

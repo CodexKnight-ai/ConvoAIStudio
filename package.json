@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm --filter \"*\" dev"
+    "dev": "pnpm --filter \"*\" dev",
+    "proto:generate": "protoc --proto_path=proto --ts_proto_out=packages/shared/src/proto --ts_proto_opt=esModuleInterop=true,outputServices=grpc-js,outputClientImpl=grpc-js proto/*.proto"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +19,12 @@
   },
   "type": "module",
   "dependencies": {
+    "@bufbuild/protobuf": "^2.12.1",
     "@fastify/redis": "^8.0.0",
+    "@grpc/grpc-js": "^1.14.4",
     "ioredis": "^5.11.1"
+  },
+  "devDependencies": {
+    "ts-proto": "^2.11.8"
   }
 }
