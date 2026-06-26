@@ -17,6 +17,7 @@ export async function podcastRoutes(fastify: FastifyInstance) {
         '/channel/:channelId/podcast',
         { preHandler: [fastify.authenticate, fastify.channelowner] },
         async (request, reply) => {
+            console.log(request.body);
             return podcastController.handleCreatePodcast(request, reply, repo);
         }
     );
@@ -37,7 +38,7 @@ export async function podcastRoutes(fastify: FastifyInstance) {
 
     fastify.post<{
         Params: { channelId: string; podcastId: string };
-        Body: { scheduledAt: string };
+        Body: { scheduledAt: string, duration: number };
     }>(
         '/channel/:channelId/podcast/:podcastId/schedule',
         { preHandler: [fastify.authenticate, fastify.channelowner] },

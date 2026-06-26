@@ -6,11 +6,16 @@ export const podcastQueue = new Queue(
         connection: {
             host: process.env.REDIS_HOST || "localhost",
             port: Number(process.env.REDIS_PORT || 6379),
+            db: 1
         },
         defaultJobOptions: {
-            removeOnComplete: 100,
-            removeOnFail: 1000,
+            removeOnComplete: 50,
+            removeOnFail: 50,
             attempts: 3,
+            backoff: {
+                type: "exponential",
+                delay: 1000,
+            },
         },
     }
 );

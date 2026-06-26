@@ -43,12 +43,6 @@ async function bootstrap() {
         }
     });
 
-    // Add text/plain content type parser
-    app.addContentTypeParser('text/plain', { parseAs: 'string' }, function (request, body, done) {
-        const bodyStr = typeof body === 'string' ? body : body.toString();
-        done(null, bodyStr);
-    });
-
     await app.register(helmet, {
         global: true,
         contentSecurityPolicy: false
@@ -83,12 +77,22 @@ async function bootstrap() {
     // ──────────────────────────────────────────────
     app.all("/api/v1/channels/*", { preHandler: Authenticate }, (request, reply) => {
         const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
-        return reply.from(targetUrl);
+        return reply.from(targetUrl, {
+            rewriteRequestHeaders: (_req, headers) => ({
+                ...headers,
+                'content-type': 'application/json',
+            }),
+        });
     });
 
     app.all("/api/v1/podcasts/*", { preHandler: Authenticate }, (request, reply) => {
         const targetUrl = `${PODCAST_SERVICE_URL}${request.url}`;
-        return reply.from(targetUrl);
+        return reply.from(targetUrl, {
+            rewriteRequestHeaders: (_req, headers) => ({
+                ...headers,
+                'content-type': 'application/json',
+            }),
+        });
     });
 
     app.get("/health", async () => {

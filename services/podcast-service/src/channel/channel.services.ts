@@ -5,14 +5,37 @@ export async function createChannel(
     userId: string,
     data: { name: string; description: string }
 ) {
-    const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    if (!data) {
+        throw new Error('Request body is missing', { cause: 400 });
+    }
+
+    // FIX: Destructure explicitly or fallback to safe lookup to bypass 
+    // Fastify's hidden internal property descriptors
+    const rawData = data as Record<string, any>;
+    const name = typeof rawData.name === 'string' ? rawData.name.trim() : undefined;
+    const description = typeof rawData.description === 'string' ? rawData.description.trim() : '';
+
+    if (!name) {
+        throw new Error('Channel name is required', { cause: 400 });
+    }
+
+    const slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
 
     const existing = await repo.findBySlug(slug);
     if (existing) {
         throw new Error(`Channel already exists with slug ${slug}`, { cause: 409 });
     }
 
-    return repo.create({ name: data.name, slug, description: data.description, ownerId: userId });
+    // Return a clean object literal to the repo layer
+    return repo.create({
+        name,
+        slug,
+        description,
+        ownerId: userId
+    });
 }
 
 export async function updateChannel(
@@ -29,7 +52,16 @@ export async function updateChannel(
         throw new Error('Forbidden', { cause: 403 });
     }
 
-    return repo.update(channelId, data);
+    // FIX: Normalize the incoming object data for clean updates
+    const cleanUpdate: Record<string, any> = {};
+    const rawData = data as Record<string, any>;
+
+    if ('name' in rawData) cleanUpdate.name = rawData.name;
+    if ('description' in rawData) cleanUpdate.description = rawData.description;
+    if ('bannerUrl' in rawData) cleanUpdate.bannerUrl = rawData.bannerUrl;
+    if ('profilePictureUrl' in rawData) cleanUpdate.profilePictureUrl = rawData.profilePictureUrl;
+
+    return repo.update(channelId, cleanUpdate);
 }
 
 export async function deleteChannel(repo: ChannelRepository, userId: string, channelId: string) {

@@ -148,6 +148,7 @@ exports.Prisma.PodcastScalarFieldEnum = {
   thumbnailUrl: 'thumbnailUrl',
   visibility: 'visibility',
   status: 'status',
+  duration: 'duration',
   scheduledAt: 'scheduledAt',
   schedulerJobId: 'schedulerJobId',
   startedAt: 'startedAt',

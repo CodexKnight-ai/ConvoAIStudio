@@ -5,6 +5,7 @@ export interface CreatePodcastInput {
     description?: string;
     channelId: string;
     thumbnailUrl?: string;
+    duration?: number;
     visibility?: 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
 }
 
@@ -18,6 +19,7 @@ export class PodcastRepository {
                 description: data.description ?? '',
                 thumbnailUrl: data.thumbnailUrl??'',
                 channelId: data.channelId,
+                duration: data.duration ?? 300,
                 visibility: data.visibility ?? 'PUBLIC',
                 status: 'DRAFT',
             },

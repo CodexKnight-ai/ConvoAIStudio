@@ -24,13 +24,17 @@ export class ChannelRepository {
     async create(data: CreateChannelInput) {
         return this.prisma.$transaction(async (tx) => {
             const channel = await tx.channel.create({
-                data: { ...data, subscriberCount: 1 },
+                data: {
+                    name: data.name,
+                    slug: data.slug,
+                    description: data.description,
+                    ownerId: data.ownerId,
+                    subscriberCount: 1
+                },
             });
-
             await tx.channelSubscription.create({
                 data: { userId: data.ownerId, channelId: channel.id },
             });
-
             return channel;
         });
     }

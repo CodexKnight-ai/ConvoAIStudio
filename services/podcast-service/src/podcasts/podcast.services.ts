@@ -19,14 +19,12 @@ async function getPodcastForChannel(
 
     return podcast;
 }
-
 export async function createPodcast(
     data: CreatePodcastInput,
     repo: PodcastRepository
 ) {
     return repo.create(data);
 }
-
 export async function getPodcastById(
     id: string,
     repo: PodcastRepository
@@ -39,7 +37,6 @@ export async function getPodcastById(
 
     return podcast;
 }
-
 export async function getChannelPodcasts(
     channelId: string,
     repo: PodcastRepository
@@ -51,10 +48,16 @@ export async function schedulePodcast(
     podcastId: string,
     channelId: string,
     scheduledAt: Date,
+    duration: number,
     repo: PodcastRepository
 ) {
     const podcast = await getPodcastForChannel(podcastId, channelId, repo);
-
+    if (duration <= 0) {
+        throw new Error("Duration must be greater than 0");
+    }
+    await repo.update(podcastId, {
+        duration,
+    });
     if (podcast.status !== 'DRAFT') {
         throw new Error(
             'Only draft podcasts can be scheduled'
@@ -96,24 +99,36 @@ export async function schedulePodcast(
         throw error;
     }
 }
-
 export async function cancelPodcast(
     podcastId: string,
     channelId: string,
     repo: PodcastRepository
 ) {
-    const podcast = await getPodcastForChannel(podcastId, channelId, repo);
-
-    if (
-        podcast.status !== 'DRAFT' &&
-        podcast.status !== 'SCHEDULED'
-    ) {
-        throw new Error(
-            'Only draft or scheduled podcasts can be cancelled'
-        );
+    const podcast = await repo.findById(podcastId);
+    if (!podcast) {
+        throw new Error("Podcast not found");
     }
 
-    return repo.update(podcastId, {
-        status: 'CANCELLED',
+    if (podcast.channelId !== channelId) {
+        throw new Error("Podcast does not belong to this channel");
+    }
+    if (["ENDED", "CANCELLED", "FAILED"].includes(podcast.status)) {
+        throw new Error(`Cannot cancel a podcast with status: ${podcast.status}`);
+    }
+    if (podcast.schedulerJobId) {
+        try {
+            const job = await podcastQueue.getJob(podcast.schedulerJobId);
+            if (job) {
+                await job.remove();
+                console.log(`[SERVICE] Successfully removed scheduled BullMQ job: ${podcast.schedulerJobId}`);
+            }
+        } catch (queueError) {
+            console.error(`[SERVICE] Failed to purge BullMQ job ${podcast.schedulerJobId}:`, queueError);
+        }
+    }
+    const updatedPodcast = await repo.update(podcastId, {
+        status: "CANCELLED",
+        schedulerJobId: null,
     });
+    return updatedPodcast;
 }

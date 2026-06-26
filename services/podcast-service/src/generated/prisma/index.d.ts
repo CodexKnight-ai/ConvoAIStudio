@@ -3403,11 +3403,13 @@ export namespace Prisma {
   }
 
   export type PodcastAvgAggregateOutputType = {
+    duration: number | null
     peakViewers: number | null
     totalViews: number | null
   }
 
   export type PodcastSumAggregateOutputType = {
+    duration: number | null
     peakViewers: number | null
     totalViews: number | null
   }
@@ -3419,6 +3421,7 @@ export namespace Prisma {
     thumbnailUrl: string | null
     visibility: $Enums.Visibility | null
     status: $Enums.PodcastStatus | null
+    duration: number | null
     scheduledAt: Date | null
     schedulerJobId: string | null
     startedAt: Date | null
@@ -3438,6 +3441,7 @@ export namespace Prisma {
     thumbnailUrl: string | null
     visibility: $Enums.Visibility | null
     status: $Enums.PodcastStatus | null
+    duration: number | null
     scheduledAt: Date | null
     schedulerJobId: string | null
     startedAt: Date | null
@@ -3457,6 +3461,7 @@ export namespace Prisma {
     thumbnailUrl: number
     visibility: number
     status: number
+    duration: number
     scheduledAt: number
     schedulerJobId: number
     startedAt: number
@@ -3472,11 +3477,13 @@ export namespace Prisma {
 
 
   export type PodcastAvgAggregateInputType = {
+    duration?: true
     peakViewers?: true
     totalViews?: true
   }
 
   export type PodcastSumAggregateInputType = {
+    duration?: true
     peakViewers?: true
     totalViews?: true
   }
@@ -3488,6 +3495,7 @@ export namespace Prisma {
     thumbnailUrl?: true
     visibility?: true
     status?: true
+    duration?: true
     scheduledAt?: true
     schedulerJobId?: true
     startedAt?: true
@@ -3507,6 +3515,7 @@ export namespace Prisma {
     thumbnailUrl?: true
     visibility?: true
     status?: true
+    duration?: true
     scheduledAt?: true
     schedulerJobId?: true
     startedAt?: true
@@ -3526,6 +3535,7 @@ export namespace Prisma {
     thumbnailUrl?: true
     visibility?: true
     status?: true
+    duration?: true
     scheduledAt?: true
     schedulerJobId?: true
     startedAt?: true
@@ -3632,6 +3642,7 @@ export namespace Prisma {
     thumbnailUrl: string | null
     visibility: $Enums.Visibility
     status: $Enums.PodcastStatus
+    duration: number | null
     scheduledAt: Date | null
     schedulerJobId: string | null
     startedAt: Date | null
@@ -3670,6 +3681,7 @@ export namespace Prisma {
     thumbnailUrl?: boolean
     visibility?: boolean
     status?: boolean
+    duration?: boolean
     scheduledAt?: boolean
     schedulerJobId?: boolean
     startedAt?: boolean
@@ -3690,6 +3702,7 @@ export namespace Prisma {
     thumbnailUrl?: boolean
     visibility?: boolean
     status?: boolean
+    duration?: boolean
     scheduledAt?: boolean
     schedulerJobId?: boolean
     startedAt?: boolean
@@ -3710,6 +3723,7 @@ export namespace Prisma {
     thumbnailUrl?: boolean
     visibility?: boolean
     status?: boolean
+    duration?: boolean
     scheduledAt?: boolean
     schedulerJobId?: boolean
     startedAt?: boolean
@@ -3730,6 +3744,7 @@ export namespace Prisma {
     thumbnailUrl?: boolean
     visibility?: boolean
     status?: boolean
+    duration?: boolean
     scheduledAt?: boolean
     schedulerJobId?: boolean
     startedAt?: boolean
@@ -3742,7 +3757,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type PodcastOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "thumbnailUrl" | "visibility" | "status" | "scheduledAt" | "schedulerJobId" | "startedAt" | "endedAt" | "peakViewers" | "totalViews" | "channelId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["podcast"]>
+  export type PodcastOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "thumbnailUrl" | "visibility" | "status" | "duration" | "scheduledAt" | "schedulerJobId" | "startedAt" | "endedAt" | "peakViewers" | "totalViews" | "channelId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["podcast"]>
   export type PodcastInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }
@@ -3765,6 +3780,7 @@ export namespace Prisma {
       thumbnailUrl: string | null
       visibility: $Enums.Visibility
       status: $Enums.PodcastStatus
+      duration: number | null
       scheduledAt: Date | null
       schedulerJobId: string | null
       startedAt: Date | null
@@ -4205,6 +4221,7 @@ export namespace Prisma {
     readonly thumbnailUrl: FieldRef<"Podcast", 'String'>
     readonly visibility: FieldRef<"Podcast", 'Visibility'>
     readonly status: FieldRef<"Podcast", 'PodcastStatus'>
+    readonly duration: FieldRef<"Podcast", 'Int'>
     readonly scheduledAt: FieldRef<"Podcast", 'DateTime'>
     readonly schedulerJobId: FieldRef<"Podcast", 'String'>
     readonly startedAt: FieldRef<"Podcast", 'DateTime'>
@@ -4682,6 +4699,7 @@ export namespace Prisma {
     thumbnailUrl: 'thumbnailUrl',
     visibility: 'visibility',
     status: 'status',
+    duration: 'duration',
     scheduledAt: 'scheduledAt',
     schedulerJobId: 'schedulerJobId',
     startedAt: 'startedAt',
@@ -4964,6 +4982,7 @@ export namespace Prisma {
     thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
     status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    duration?: IntNullableFilter<"Podcast"> | number | null
     scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
     schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
     startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
@@ -4984,6 +5003,7 @@ export namespace Prisma {
     thumbnailUrl?: SortOrderInput | SortOrder
     visibility?: SortOrder
     status?: SortOrder
+    duration?: SortOrderInput | SortOrder
     scheduledAt?: SortOrderInput | SortOrder
     schedulerJobId?: SortOrderInput | SortOrder
     startedAt?: SortOrderInput | SortOrder
@@ -5007,6 +5027,7 @@ export namespace Prisma {
     thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
     status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    duration?: IntNullableFilter<"Podcast"> | number | null
     scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
     schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
     startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
@@ -5027,6 +5048,7 @@ export namespace Prisma {
     thumbnailUrl?: SortOrderInput | SortOrder
     visibility?: SortOrder
     status?: SortOrder
+    duration?: SortOrderInput | SortOrder
     scheduledAt?: SortOrderInput | SortOrder
     schedulerJobId?: SortOrderInput | SortOrder
     startedAt?: SortOrderInput | SortOrder
@@ -5054,6 +5076,7 @@ export namespace Prisma {
     thumbnailUrl?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityWithAggregatesFilter<"Podcast"> | $Enums.Visibility
     status?: EnumPodcastStatusWithAggregatesFilter<"Podcast"> | $Enums.PodcastStatus
+    duration?: IntNullableWithAggregatesFilter<"Podcast"> | number | null
     scheduledAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
     schedulerJobId?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
     startedAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
@@ -5227,6 +5250,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -5246,6 +5270,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -5265,6 +5290,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5284,6 +5310,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5303,6 +5330,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -5322,6 +5350,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5340,6 +5369,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -5617,6 +5647,17 @@ export namespace Prisma {
     not?: NestedEnumPodcastStatusFilter<$PrismaModel> | $Enums.PodcastStatus
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type PodcastCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -5624,6 +5665,7 @@ export namespace Prisma {
     thumbnailUrl?: SortOrder
     visibility?: SortOrder
     status?: SortOrder
+    duration?: SortOrder
     scheduledAt?: SortOrder
     schedulerJobId?: SortOrder
     startedAt?: SortOrder
@@ -5637,6 +5679,7 @@ export namespace Prisma {
   }
 
   export type PodcastAvgOrderByAggregateInput = {
+    duration?: SortOrder
     peakViewers?: SortOrder
     totalViews?: SortOrder
   }
@@ -5648,6 +5691,7 @@ export namespace Prisma {
     thumbnailUrl?: SortOrder
     visibility?: SortOrder
     status?: SortOrder
+    duration?: SortOrder
     scheduledAt?: SortOrder
     schedulerJobId?: SortOrder
     startedAt?: SortOrder
@@ -5667,6 +5711,7 @@ export namespace Prisma {
     thumbnailUrl?: SortOrder
     visibility?: SortOrder
     status?: SortOrder
+    duration?: SortOrder
     scheduledAt?: SortOrder
     schedulerJobId?: SortOrder
     startedAt?: SortOrder
@@ -5680,6 +5725,7 @@ export namespace Prisma {
   }
 
   export type PodcastSumOrderByAggregateInput = {
+    duration?: SortOrder
     peakViewers?: SortOrder
     totalViews?: SortOrder
   }
@@ -5702,6 +5748,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPodcastStatusFilter<$PrismaModel>
     _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type PodcastCreateNestedManyWithoutChannelInput = {
@@ -5838,6 +5900,14 @@ export namespace Prisma {
 
   export type EnumPodcastStatusFieldUpdateOperationsInput = {
     set?: $Enums.PodcastStatus
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ChannelUpdateOneRequiredWithoutPodcastsNestedInput = {
@@ -6043,6 +6113,33 @@ export namespace Prisma {
     _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type PodcastCreateWithoutChannelInput = {
     id?: string
     title: string
@@ -6050,6 +6147,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -6068,6 +6166,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -6135,6 +6234,7 @@ export namespace Prisma {
     thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
     status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    duration?: IntNullableFilter<"Podcast"> | number | null
     scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
     schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
     startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
@@ -6339,6 +6439,7 @@ export namespace Prisma {
     thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
     status?: $Enums.PodcastStatus
+    duration?: number | null
     scheduledAt?: Date | string | null
     schedulerJobId?: string | null
     startedAt?: Date | string | null
@@ -6362,6 +6463,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6380,6 +6482,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -6398,6 +6501,7 @@ export namespace Prisma {
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
     status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
     scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
     startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

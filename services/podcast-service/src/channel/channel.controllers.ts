@@ -12,6 +12,7 @@ export async function handleCreateChannel(
         if (!userId) {
             return reply.code(401).send({ error: 'Unauthorized' });
         }
+
         const channel = await channelService.createChannel(repo, userId, request.body);
         return reply.code(201).send(channel);
     } catch (error: any) {
@@ -19,7 +20,6 @@ export async function handleCreateChannel(
         return reply.code(status).send({ error: error.message });
     }
 }
-
 export async function handleUpdateChannel(
     request: FastifyRequest<{ Params: { channelId: string }; Body: { name?: string; description?: string; bannerUrl?: string; profilePictureUrl?: string } }>,
     reply: FastifyReply,

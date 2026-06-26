@@ -88,7 +88,7 @@ export async function handleGetChannelPodcasts(
 export async function handleSchedulePodcast(
     request: FastifyRequest<{
         Params: { channelId: string; podcastId: string };
-        Body: { scheduledAt: string };
+        Body: { scheduledAt: string; duration: number };
     }>,
     reply: FastifyReply,
     repo: PodcastRepository
@@ -99,6 +99,7 @@ export async function handleSchedulePodcast(
                 request.params.podcastId,
                 request.params.channelId,
                 new Date(request.body.scheduledAt),
+                request.body.duration,
                 repo
             );
 

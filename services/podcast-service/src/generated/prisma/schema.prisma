@@ -62,26 +62,22 @@ model ChannelSubscription {
 }
 
 model Podcast {
-  id String @id @default(uuid())
-
-  title       String
-  description String
-
+  id           String        @id @default(uuid())
+  title        String
+  description  String
   thumbnailUrl String?
+  visibility   Visibility    @default(PUBLIC)
+  status       PodcastStatus @default(DRAFT)
 
-  visibility Visibility @default(PUBLIC)
-
-  status PodcastStatus @default(DRAFT)
+  duration Int? // Duration in seconds
 
   scheduledAt    DateTime?
   schedulerJobId String?
 
-  startedAt DateTime?
-  endedAt   DateTime?
-
-  peakViewers Int @default(0)
-
-  totalViews Int @default(0)
+  startedAt   DateTime?
+  endedAt     DateTime?
+  peakViewers Int       @default(0)
+  totalViews  Int       @default(0)
 
   channelId String
   channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)

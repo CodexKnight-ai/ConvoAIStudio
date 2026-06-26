@@ -3,3 +3,9 @@ export const PodcastJobs = {
     END_PODCAST: 'end-podcast',
     CANCEL_PODCAST: 'cancel-podcast',
 } as const;
+
+export type PodcastJobName = typeof PodcastJobs[keyof typeof PodcastJobs];
+
+export interface PodcastJobData {
+    podcastId: string;
+}
