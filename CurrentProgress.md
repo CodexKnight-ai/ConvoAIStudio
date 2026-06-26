@@ -2,9 +2,9 @@
 
 Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has migrated from a planned monolithic layout (`apps/server`, `apps/web`) to a **microservices architecture** with an API gateway, isolated databases per service, and a standalone Next.js frontend.
 
-**Last analyzed:** June 26, 2026
+**Last analyzed:** June 27, 2026
 
-**Update:** Full codebase index completed on June 26, 2026.
+**Update:** Full codebase index completed on June 26, 2026. Updated ai-engine scaffold status and monorepo layout on June 27, 2026.
 
 ---
 
@@ -17,7 +17,7 @@ Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has mig
 | Auth | `auth-service` (isolated DB) | **Implemented** |
 | Podcasts | `podcast-service` (isolated DB) | **Partially implemented** |
 | Realtime | `realtime-service` (WebSockets, WebRTC) | **Not started** |
-| AI Pipeline | `ai-engine` (Python FastAPI, gRPC) | **Not started** (mock 15s timer in podcast-service) |
+| AI Pipeline | `ai-engine` (Python FastAPI, gRPC) | **Scaffolded** (basic structure, gRPC deps) |
 | Shared packages | `proto-contracts`, `ts-config` | **Not created** |
 | Infra | `infra/k8s`, `infra/monitoring` | **Not created** |
 | Queues | BullMQ / Redis Pub/Sub | **Implemented (BullMQ in podcast-service)** |
@@ -29,13 +29,18 @@ Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has mig
 
 ```
 ai-podcast/
-├── Client/web/                 # Next.js 16 frontend (not in root pnpm workspace)
+├── apps/
+│   └── client/                  # Next.js 16 frontend (not in root pnpm workspace)
 ├── services/
 │   ├── api-gateway/            # Entry point :4000 — proxies to downstream services
 │   ├── auth-service/           # IAM :4001 — auth_db
-│   └── podcast-service/        # Channels & podcasts :4002 — podcast_db
+│   ├── podcast-service/        # Channels & podcasts :4002 — podcast_db
+│   └── ai_engine/              # Python AI pipeline (scaffolded)
+├── packages/
+│   └── shared/                 # Shared gRPC generated code
+├── proto/                      # Protocol buffer definitions
 ├── docker-compose.yaml         # Postgres, Redis, gateway, auth, podcast
-├── pnpm-workspace.yaml         # apps/*, services/*, packages/* (apps/ & packages/ empty)
+├── pnpm-workspace.yaml         # apps/*, services/*, packages/*
 ├── AGENTS.md                   # Target architecture blueprint
 └── README.md                   # Outdated — still describes old monolith + GraphQL
 ```
@@ -410,6 +415,25 @@ proto/
 protoc --proto_path=proto --ts_proto_out=packages/shared/src/proto --ts_proto_opt=esModuleInterop=true,outputServices=grpc-js,outputClientImpl=grpc-js proto/*.proto
 ```
 
+### AI Engine: `services/ai_engine/`
+
+**Technology:** Python, grpcio, grpcio-tools
+
+**Directory Structure:**
+```
+services/ai_engine/
+├── app/
+│   ├── __init__.py
+│   ├── config.py                    # Configuration
+│   ├── grpc/                        # gRPC server setup
+│   └── main.py                      # Main entry point
+├── generated/                       # Generated gRPC code
+├── requirement.txt                  # Python dependencies (grpcio, grpcio-tools)
+└── .gitignore                      # Python ignore patterns
+```
+
+**Status:** Scaffolded with basic structure and gRPC dependencies. No FastAPI, LangChain, or agent logic implemented yet.
+
 ---
 
 ## Completed Work
@@ -539,7 +563,7 @@ Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, axios.
 | Component | Description |
 |-----------|-------------|
 | `realtime-service` | WebSockets, live chat, audience reactions, WebRTC signaling |
-| `ai-engine` | Python FastAPI multi-agent pipeline, LangChain, gRPC server |
+| `ai-engine` | Python FastAPI multi-agent pipeline, LangChain, gRPC server — **Scaffolded** (basic structure only) |
 | `packages/proto-contracts` | Shared gRPC `.proto` definitions |
 | `packages/ts-config` | Shared TypeScript configs |
 | `infra/k8s` | Kubernetes deployment manifests |

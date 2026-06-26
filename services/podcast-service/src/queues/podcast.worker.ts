@@ -6,6 +6,14 @@ import {
     initAIEngineClient,
     startPodcast,
 } from "../grpc/ai-engine/ai-engine.client.js";
+import { RedisEventPublisher } from "src/publisher/redis-event-publisher.js";
+import {
+    redisPublisher,
+    connectRedisPublisher,
+} from "../lib/redis-pubsub.js";
+import { PodcastEventType } from "../events/events-types.js";
+
+const eventPublisher = new RedisEventPublisher(redisPublisher);
 
 /**
  * ✅ INIT ONCE (GLOBAL SCOPE - NOT INSIDE FUNCTION)
@@ -14,7 +22,7 @@ initAIEngineClient({
     host: process.env.AI_ENGINE_HOST || "localhost",
     port: Number(process.env.AI_ENGINE_PORT) || 50052,
 });
-
+await connectRedisPublisher();
 export function createPodcastWorker(prisma: PrismaClient) {
     console.log("[WORKER] Creating podcast worker...");
 
@@ -60,7 +68,31 @@ export function createPodcastWorker(prisma: PrismaClient) {
                      * ✅ gRPC STREAM START
                      */
                     try {
-                        await startPodcast(podcastId, podcast.title);
+                        const stream = startPodcast(podcastId, podcast.title);
+
+                        let sequence = 1;
+
+                        for await (const chunk of stream) {
+                            try {
+                                await eventPublisher.publish(
+                                    `podcast:${podcastId}:events`,
+                                    {
+                                        event: PodcastEventType.TRANSCRIPT_CHUNK,
+                                        podcastId,
+                                        sequence: sequence++,
+                                        timestamp: new Date().toISOString(),
+                                        payload: {
+                                            text: chunk.transcript,
+                                        },
+                                    }
+                                );
+                            } catch (err) {
+                                console.error(
+                                    `[WORKER] Failed to publish transcript event for ${podcastId}`,
+                                    err
+                                );
+                            }
+                        }
                     } catch (error) {
                         console.error(
                             `[WORKER] gRPC stream failed for ${podcastId}`,
