@@ -65,13 +65,24 @@ services:
     environment:
       - DATABASE_URL=postgresql://admin:password@postgres:5432/podcast_db
       - REDIS_DB=1
+      - AI_ENGINE_GRPC_URL=ai-engine:50052
     depends_on:
       - postgres
       - redis
+      - ai-engine
     networks:
       - convo-network
     expose:
       - "4002"
+
+  ai-engine:
+    build:
+      context: ./services/ai-engine
+      dockerfile: Dockerfile
+    networks:
+      - convo-network
+    expose:
+      - "50052"
 
 volumes:
   postgres_data:

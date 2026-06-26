@@ -32,6 +32,12 @@
     // "noFallthroughCasesInSwitch": true,
     // "noPropertyAccessFromIndexSignature": true,
 
+    // Path Aliases for workspace packages
+    "baseUrl": ".",
+    "paths": {
+      "@convoai/shared/proto/*": ["../../packages/shared/src/proto/*"]
+    },
+
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",

@@ -85,6 +85,7 @@ export async function schedulePodcast(
         await repo.update(podcastId, {
             schedulerJobId: job.id?.toString() ?? null,
         });
+        console.log("[QUEUE] Adding START_PODCAST job", podcastId);
         return updatedPodcast;
     }
     catch (error) {

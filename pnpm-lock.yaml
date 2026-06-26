@@ -300,6 +300,8 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  packages/shared: {}
+
   services/api-gateway:
     dependencies:
       '@bufbuild/protobuf':
@@ -412,6 +414,9 @@ importers:
 
   services/podcast-service:
     dependencies:
+      '@convoai/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@fastify/cookie':
         specifier: ^11.0.2
         version: 11.0.2
@@ -424,6 +429,9 @@ importers:
       '@fastify/redis':
         specifier: ^8.0.0
         version: 8.0.0
+      '@grpc/grpc-js':
+        specifier: ^1.14.4
+        version: 1.14.4
       '@prisma/adapter-pg':
         specifier: ^7.8.0
         version: 7.8.0

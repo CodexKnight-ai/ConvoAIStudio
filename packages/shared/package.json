@@ -1,0 +1,10 @@
+{
+  "name": "@convoai/shared",
+  "version": "1.0.0",
+  "description": "Shared proto-generated types and contracts for ConvoAI Studio",
+  "type": "module",
+  "main": "./src/proto/ai_engine.ts",
+  "exports": {
+    "./proto/*": "./src/proto/*.ts"
+  }
+}
