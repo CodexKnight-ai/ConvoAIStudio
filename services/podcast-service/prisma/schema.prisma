@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -14,8 +9,10 @@ datasource db {
 
 enum PodcastStatus {
   DRAFT
-  PROCESSING
-  PUBLISHED
+  SCHEDULED
+  LIVE
+  ENDED
+  CANCELLED
   FAILED
 }
 
@@ -28,9 +25,8 @@ enum Visibility {
 model Channel {
   id String @id @default(uuid())
 
-  name String
-  slug String @unique
-
+  name        String
+  slug        String @unique
   description String
 
   bannerUrl         String?
@@ -39,42 +35,65 @@ model Channel {
   subscriberCount Int @default(0)
   podcastCount    Int @default(0)
 
-  createdAt DateTime @default(now())
+  ownerId String
 
-  ownerId  String
-  podcasts Podcast[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+  deletedAt DateTime?
+
+  podcasts      Podcast[]
+  subscriptions ChannelSubscription[]
 
   @@index([ownerId])
   @@index([slug])
 }
 
 model ChannelSubscription {
-  userId    String
+  userId String
+
   channelId String
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
 
   @@id([userId, channelId])
+
   @@index([channelId])
   @@index([userId])
 }
 
 model Podcast {
-  id          String        @id @default(uuid())
+  id String @id @default(uuid())
+
   title       String
   description String
-  thumbnail   String?
-  audioUrl    String?
-  duration    Int?
-  views       Int           @default(0)
-  upvotes     Int           @default(0)
-  downvotes   Int           @default(0)
-  status      PodcastStatus @default(DRAFT)
-  visibility  Visibility    @default(PUBLIC)
-  createdAt   DateTime      @default(now())
-  channelId   String
-  channel     Channel       @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  thumbnailUrl String?
+
+  visibility Visibility @default(PUBLIC)
+
+  status PodcastStatus @default(DRAFT)
+
+  scheduledAt DateTime?
+  schedulerJobId String?
+
+  startedAt DateTime?
+  endedAt   DateTime?
+
+  peakViewers Int @default(0)
+
+  totalViews Int @default(0)
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
   @@index([channelId])
-  @@index([createdAt])
   @@index([status])
+  @@index([scheduledAt])
+  @@index([visibility])
+  @@index([visibility, scheduledAt])
 }

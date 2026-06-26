@@ -31,6 +31,24 @@ const COOKIE_OPTS = {
 };
 
 async function bootstrap() {
+    // Add default JSON content type parser
+    app.addContentTypeParser('application/json', { parseAs: 'string' }, function (request, body, done) {
+        try {
+            const bodyStr = typeof body === 'string' ? body : body.toString();
+            const parsed = JSON.parse(bodyStr);
+            done(null, parsed);
+        } catch (err: any) {
+            err.statusCode = 400;
+            done(err, undefined);
+        }
+    });
+
+    // Add text/plain content type parser
+    app.addContentTypeParser('text/plain', { parseAs: 'string' }, function (request, body, done) {
+        const bodyStr = typeof body === 'string' ? body : body.toString();
+        done(null, bodyStr);
+    });
+
     await app.register(helmet, {
         global: true,
         contentSecurityPolicy: false

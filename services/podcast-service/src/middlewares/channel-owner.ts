@@ -2,7 +2,28 @@ import type { FastifyRequest, FastifyReply } from "fastify";
 import { ChannelRepository } from "../channel/channel.repository.js";
 
 export async function ChannelOwner(request: FastifyRequest, reply: FastifyReply) {
-    const channelId = (request.params as any)?.channelId || (request.body as any)?.channelId;
+    const params = request.params as { channelId?: string; podcastId?: string; id?: string };
+    const body = request.body as { channelId?: string } | undefined;
+
+    let channelId = params.channelId ?? body?.channelId;
+
+    if (!channelId) {
+        const podcastId = params.podcastId ?? params.id;
+
+        if (podcastId) {
+            const podcast = await request.server.prisma.podcast.findFirst({
+                where: { id: podcastId, deletedAt: null },
+                select: { channelId: true },
+            });
+
+            if (!podcast) {
+                return reply.status(404).send({ error: "Podcast not found" });
+            }
+
+            channelId = podcast.channelId;
+        }
+    }
+
     if (!channelId) {
         return reply.status(400).send({ error: "channelId is required" });
     }

@@ -36,9 +36,14 @@ message RegisterResponse {
   string username = 2;
   string email = 3;
   string role = 4;
-  int64 access_token_expires_at = 5;
-  int64 refresh_token_expires_at = 6;
-  string error = 7;
+  string first_name = 5;
+  string last_name = 6;
+  string access_token = 7;
+  string refresh_token = 8;
+  string session_id = 9;
+  int64 access_token_expires_at = 10;
+  int64 refresh_token_expires_at = 11;
+  string error = 12;
 }
 
 message LoginRequest {
@@ -51,9 +56,14 @@ message LoginResponse {
   string username = 2;
   string email = 3;
   string role = 4;
-  int64 access_token_expires_at = 5;
-  int64 refresh_token_expires_at = 6;
-  string error = 7;
+  string first_name = 5;
+  string last_name = 6;
+  string access_token = 7;
+  string refresh_token = 8;
+  string session_id = 9;
+  int64 access_token_expires_at = 10;
+  int64 refresh_token_expires_at = 11;
+  string error = 12;
 }
 
 message RefreshRequest {
@@ -64,11 +74,15 @@ message RefreshRequest {
 message RefreshResponse {
   int64 access_token_expires_at = 1;
   int64 refresh_token_expires_at = 2;
-  string error = 3;
+  string access_token = 3;
+  string refresh_token = 4;
+  string session_id = 5;
+  string error = 6;
 }
 
 message LogoutRequest {
   string session_id = 1;
+  string refresh_token = 2;
 }
 
 message LogoutResponse {

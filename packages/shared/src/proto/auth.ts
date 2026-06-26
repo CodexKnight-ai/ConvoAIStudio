@@ -47,6 +47,11 @@ export interface RegisterResponse {
   username: string;
   email: string;
   role: string;
+  firstName: string;
+  lastName: string;
+  accessToken: string;
+  refreshToken: string;
+  sessionId: string;
   accessTokenExpiresAt: number;
   refreshTokenExpiresAt: number;
   error: string;
@@ -62,6 +67,11 @@ export interface LoginResponse {
   username: string;
   email: string;
   role: string;
+  firstName: string;
+  lastName: string;
+  accessToken: string;
+  refreshToken: string;
+  sessionId: string;
   accessTokenExpiresAt: number;
   refreshTokenExpiresAt: number;
   error: string;
@@ -75,11 +85,15 @@ export interface RefreshRequest {
 export interface RefreshResponse {
   accessTokenExpiresAt: number;
   refreshTokenExpiresAt: number;
+  accessToken: string;
+  refreshToken: string;
+  sessionId: string;
   error: string;
 }
 
 export interface LogoutRequest {
   sessionId: string;
+  refreshToken: string;
 }
 
 export interface LogoutResponse {
@@ -449,6 +463,11 @@ function createBaseRegisterResponse(): RegisterResponse {
     username: "",
     email: "",
     role: "",
+    firstName: "",
+    lastName: "",
+    accessToken: "",
+    refreshToken: "",
+    sessionId: "",
     accessTokenExpiresAt: 0,
     refreshTokenExpiresAt: 0,
     error: "",
@@ -469,14 +488,29 @@ export const RegisterResponse: MessageFns<RegisterResponse> = {
     if (message.role !== "") {
       writer.uint32(34).string(message.role);
     }
+    if (message.firstName !== "") {
+      writer.uint32(42).string(message.firstName);
+    }
+    if (message.lastName !== "") {
+      writer.uint32(50).string(message.lastName);
+    }
+    if (message.accessToken !== "") {
+      writer.uint32(58).string(message.accessToken);
+    }
+    if (message.refreshToken !== "") {
+      writer.uint32(66).string(message.refreshToken);
+    }
+    if (message.sessionId !== "") {
+      writer.uint32(74).string(message.sessionId);
+    }
     if (message.accessTokenExpiresAt !== 0) {
-      writer.uint32(40).int64(message.accessTokenExpiresAt);
+      writer.uint32(80).int64(message.accessTokenExpiresAt);
     }
     if (message.refreshTokenExpiresAt !== 0) {
-      writer.uint32(48).int64(message.refreshTokenExpiresAt);
+      writer.uint32(88).int64(message.refreshTokenExpiresAt);
     }
     if (message.error !== "") {
-      writer.uint32(58).string(message.error);
+      writer.uint32(98).string(message.error);
     }
     return writer;
   },
@@ -521,23 +555,63 @@ export const RegisterResponse: MessageFns<RegisterResponse> = {
           continue;
         }
         case 5: {
-          if (tag !== 40) {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.firstName = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.lastName = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.accessToken = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.refreshToken = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.sessionId = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
             break;
           }
 
           message.accessTokenExpiresAt = longToNumber(reader.int64());
           continue;
         }
-        case 6: {
-          if (tag !== 48) {
+        case 11: {
+          if (tag !== 88) {
             break;
           }
 
           message.refreshTokenExpiresAt = longToNumber(reader.int64());
           continue;
         }
-        case 7: {
-          if (tag !== 58) {
+        case 12: {
+          if (tag !== 98) {
             break;
           }
 
@@ -563,6 +637,31 @@ export const RegisterResponse: MessageFns<RegisterResponse> = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       role: isSet(object.role) ? globalThis.String(object.role) : "",
+      firstName: isSet(object.firstName)
+        ? globalThis.String(object.firstName)
+        : isSet(object.first_name)
+        ? globalThis.String(object.first_name)
+        : "",
+      lastName: isSet(object.lastName)
+        ? globalThis.String(object.lastName)
+        : isSet(object.last_name)
+        ? globalThis.String(object.last_name)
+        : "",
+      accessToken: isSet(object.accessToken)
+        ? globalThis.String(object.accessToken)
+        : isSet(object.access_token)
+        ? globalThis.String(object.access_token)
+        : "",
+      refreshToken: isSet(object.refreshToken)
+        ? globalThis.String(object.refreshToken)
+        : isSet(object.refresh_token)
+        ? globalThis.String(object.refresh_token)
+        : "",
+      sessionId: isSet(object.sessionId)
+        ? globalThis.String(object.sessionId)
+        : isSet(object.session_id)
+        ? globalThis.String(object.session_id)
+        : "",
       accessTokenExpiresAt: isSet(object.accessTokenExpiresAt)
         ? globalThis.Number(object.accessTokenExpiresAt)
         : isSet(object.access_token_expires_at)
@@ -591,6 +690,21 @@ export const RegisterResponse: MessageFns<RegisterResponse> = {
     if (message.role !== "") {
       obj.role = message.role;
     }
+    if (message.firstName !== "") {
+      obj.firstName = message.firstName;
+    }
+    if (message.lastName !== "") {
+      obj.lastName = message.lastName;
+    }
+    if (message.accessToken !== "") {
+      obj.accessToken = message.accessToken;
+    }
+    if (message.refreshToken !== "") {
+      obj.refreshToken = message.refreshToken;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
     if (message.accessTokenExpiresAt !== 0) {
       obj.accessTokenExpiresAt = Math.round(message.accessTokenExpiresAt);
     }
@@ -612,6 +726,11 @@ export const RegisterResponse: MessageFns<RegisterResponse> = {
     message.username = object.username ?? "";
     message.email = object.email ?? "";
     message.role = object.role ?? "";
+    message.firstName = object.firstName ?? "";
+    message.lastName = object.lastName ?? "";
+    message.accessToken = object.accessToken ?? "";
+    message.refreshToken = object.refreshToken ?? "";
+    message.sessionId = object.sessionId ?? "";
     message.accessTokenExpiresAt = object.accessTokenExpiresAt ?? 0;
     message.refreshTokenExpiresAt = object.refreshTokenExpiresAt ?? 0;
     message.error = object.error ?? "";
@@ -701,6 +820,11 @@ function createBaseLoginResponse(): LoginResponse {
     username: "",
     email: "",
     role: "",
+    firstName: "",
+    lastName: "",
+    accessToken: "",
+    refreshToken: "",
+    sessionId: "",
     accessTokenExpiresAt: 0,
     refreshTokenExpiresAt: 0,
     error: "",
@@ -721,14 +845,29 @@ export const LoginResponse: MessageFns<LoginResponse> = {
     if (message.role !== "") {
       writer.uint32(34).string(message.role);
     }
+    if (message.firstName !== "") {
+      writer.uint32(42).string(message.firstName);
+    }
+    if (message.lastName !== "") {
+      writer.uint32(50).string(message.lastName);
+    }
+    if (message.accessToken !== "") {
+      writer.uint32(58).string(message.accessToken);
+    }
+    if (message.refreshToken !== "") {
+      writer.uint32(66).string(message.refreshToken);
+    }
+    if (message.sessionId !== "") {
+      writer.uint32(74).string(message.sessionId);
+    }
     if (message.accessTokenExpiresAt !== 0) {
-      writer.uint32(40).int64(message.accessTokenExpiresAt);
+      writer.uint32(80).int64(message.accessTokenExpiresAt);
     }
     if (message.refreshTokenExpiresAt !== 0) {
-      writer.uint32(48).int64(message.refreshTokenExpiresAt);
+      writer.uint32(88).int64(message.refreshTokenExpiresAt);
     }
     if (message.error !== "") {
-      writer.uint32(58).string(message.error);
+      writer.uint32(98).string(message.error);
     }
     return writer;
   },
@@ -773,23 +912,63 @@ export const LoginResponse: MessageFns<LoginResponse> = {
           continue;
         }
         case 5: {
-          if (tag !== 40) {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.firstName = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.lastName = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.accessToken = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.refreshToken = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.sessionId = reader.string();
+          continue;
+        }
+        case 10: {
+          if (tag !== 80) {
             break;
           }
 
           message.accessTokenExpiresAt = longToNumber(reader.int64());
           continue;
         }
-        case 6: {
-          if (tag !== 48) {
+        case 11: {
+          if (tag !== 88) {
             break;
           }
 
           message.refreshTokenExpiresAt = longToNumber(reader.int64());
           continue;
         }
-        case 7: {
-          if (tag !== 58) {
+        case 12: {
+          if (tag !== 98) {
             break;
           }
 
@@ -815,6 +994,31 @@ export const LoginResponse: MessageFns<LoginResponse> = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
       role: isSet(object.role) ? globalThis.String(object.role) : "",
+      firstName: isSet(object.firstName)
+        ? globalThis.String(object.firstName)
+        : isSet(object.first_name)
+        ? globalThis.String(object.first_name)
+        : "",
+      lastName: isSet(object.lastName)
+        ? globalThis.String(object.lastName)
+        : isSet(object.last_name)
+        ? globalThis.String(object.last_name)
+        : "",
+      accessToken: isSet(object.accessToken)
+        ? globalThis.String(object.accessToken)
+        : isSet(object.access_token)
+        ? globalThis.String(object.access_token)
+        : "",
+      refreshToken: isSet(object.refreshToken)
+        ? globalThis.String(object.refreshToken)
+        : isSet(object.refresh_token)
+        ? globalThis.String(object.refresh_token)
+        : "",
+      sessionId: isSet(object.sessionId)
+        ? globalThis.String(object.sessionId)
+        : isSet(object.session_id)
+        ? globalThis.String(object.session_id)
+        : "",
       accessTokenExpiresAt: isSet(object.accessTokenExpiresAt)
         ? globalThis.Number(object.accessTokenExpiresAt)
         : isSet(object.access_token_expires_at)
@@ -843,6 +1047,21 @@ export const LoginResponse: MessageFns<LoginResponse> = {
     if (message.role !== "") {
       obj.role = message.role;
     }
+    if (message.firstName !== "") {
+      obj.firstName = message.firstName;
+    }
+    if (message.lastName !== "") {
+      obj.lastName = message.lastName;
+    }
+    if (message.accessToken !== "") {
+      obj.accessToken = message.accessToken;
+    }
+    if (message.refreshToken !== "") {
+      obj.refreshToken = message.refreshToken;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
+    }
     if (message.accessTokenExpiresAt !== 0) {
       obj.accessTokenExpiresAt = Math.round(message.accessTokenExpiresAt);
     }
@@ -864,6 +1083,11 @@ export const LoginResponse: MessageFns<LoginResponse> = {
     message.username = object.username ?? "";
     message.email = object.email ?? "";
     message.role = object.role ?? "";
+    message.firstName = object.firstName ?? "";
+    message.lastName = object.lastName ?? "";
+    message.accessToken = object.accessToken ?? "";
+    message.refreshToken = object.refreshToken ?? "";
+    message.sessionId = object.sessionId ?? "";
     message.accessTokenExpiresAt = object.accessTokenExpiresAt ?? 0;
     message.refreshTokenExpiresAt = object.refreshTokenExpiresAt ?? 0;
     message.error = object.error ?? "";
@@ -956,7 +1180,14 @@ export const RefreshRequest: MessageFns<RefreshRequest> = {
 };
 
 function createBaseRefreshResponse(): RefreshResponse {
-  return { accessTokenExpiresAt: 0, refreshTokenExpiresAt: 0, error: "" };
+  return {
+    accessTokenExpiresAt: 0,
+    refreshTokenExpiresAt: 0,
+    accessToken: "",
+    refreshToken: "",
+    sessionId: "",
+    error: "",
+  };
 }
 
 export const RefreshResponse: MessageFns<RefreshResponse> = {
@@ -967,8 +1198,17 @@ export const RefreshResponse: MessageFns<RefreshResponse> = {
     if (message.refreshTokenExpiresAt !== 0) {
       writer.uint32(16).int64(message.refreshTokenExpiresAt);
     }
+    if (message.accessToken !== "") {
+      writer.uint32(26).string(message.accessToken);
+    }
+    if (message.refreshToken !== "") {
+      writer.uint32(34).string(message.refreshToken);
+    }
+    if (message.sessionId !== "") {
+      writer.uint32(42).string(message.sessionId);
+    }
     if (message.error !== "") {
-      writer.uint32(26).string(message.error);
+      writer.uint32(50).string(message.error);
     }
     return writer;
   },
@@ -1001,6 +1241,30 @@ export const RefreshResponse: MessageFns<RefreshResponse> = {
             break;
           }
 
+          message.accessToken = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.refreshToken = reader.string();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.sessionId = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
           message.error = reader.string();
           continue;
         }
@@ -1025,6 +1289,21 @@ export const RefreshResponse: MessageFns<RefreshResponse> = {
         : isSet(object.refresh_token_expires_at)
         ? globalThis.Number(object.refresh_token_expires_at)
         : 0,
+      accessToken: isSet(object.accessToken)
+        ? globalThis.String(object.accessToken)
+        : isSet(object.access_token)
+        ? globalThis.String(object.access_token)
+        : "",
+      refreshToken: isSet(object.refreshToken)
+        ? globalThis.String(object.refreshToken)
+        : isSet(object.refresh_token)
+        ? globalThis.String(object.refresh_token)
+        : "",
+      sessionId: isSet(object.sessionId)
+        ? globalThis.String(object.sessionId)
+        : isSet(object.session_id)
+        ? globalThis.String(object.session_id)
+        : "",
       error: isSet(object.error) ? globalThis.String(object.error) : "",
     };
   },
@@ -1036,6 +1315,15 @@ export const RefreshResponse: MessageFns<RefreshResponse> = {
     }
     if (message.refreshTokenExpiresAt !== 0) {
       obj.refreshTokenExpiresAt = Math.round(message.refreshTokenExpiresAt);
+    }
+    if (message.accessToken !== "") {
+      obj.accessToken = message.accessToken;
+    }
+    if (message.refreshToken !== "") {
+      obj.refreshToken = message.refreshToken;
+    }
+    if (message.sessionId !== "") {
+      obj.sessionId = message.sessionId;
     }
     if (message.error !== "") {
       obj.error = message.error;
@@ -1050,19 +1338,25 @@ export const RefreshResponse: MessageFns<RefreshResponse> = {
     const message = createBaseRefreshResponse();
     message.accessTokenExpiresAt = object.accessTokenExpiresAt ?? 0;
     message.refreshTokenExpiresAt = object.refreshTokenExpiresAt ?? 0;
+    message.accessToken = object.accessToken ?? "";
+    message.refreshToken = object.refreshToken ?? "";
+    message.sessionId = object.sessionId ?? "";
     message.error = object.error ?? "";
     return message;
   },
 };
 
 function createBaseLogoutRequest(): LogoutRequest {
-  return { sessionId: "" };
+  return { sessionId: "", refreshToken: "" };
 }
 
 export const LogoutRequest: MessageFns<LogoutRequest> = {
   encode(message: LogoutRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.sessionId !== "") {
       writer.uint32(10).string(message.sessionId);
+    }
+    if (message.refreshToken !== "") {
+      writer.uint32(18).string(message.refreshToken);
     }
     return writer;
   },
@@ -1082,6 +1376,14 @@ export const LogoutRequest: MessageFns<LogoutRequest> = {
           message.sessionId = reader.string();
           continue;
         }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.refreshToken = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1098,6 +1400,11 @@ export const LogoutRequest: MessageFns<LogoutRequest> = {
         : isSet(object.session_id)
         ? globalThis.String(object.session_id)
         : "",
+      refreshToken: isSet(object.refreshToken)
+        ? globalThis.String(object.refreshToken)
+        : isSet(object.refresh_token)
+        ? globalThis.String(object.refresh_token)
+        : "",
     };
   },
 
@@ -1105,6 +1412,9 @@ export const LogoutRequest: MessageFns<LogoutRequest> = {
     const obj: any = {};
     if (message.sessionId !== "") {
       obj.sessionId = message.sessionId;
+    }
+    if (message.refreshToken !== "") {
+      obj.refreshToken = message.refreshToken;
     }
     return obj;
   },
@@ -1115,6 +1425,7 @@ export const LogoutRequest: MessageFns<LogoutRequest> = {
   fromPartial<I extends Exact<DeepPartial<LogoutRequest>, I>>(object: I): LogoutRequest {
     const message = createBaseLogoutRequest();
     message.sessionId = object.sessionId ?? "";
+    message.refreshToken = object.refreshToken ?? "";
     return message;
   },
 };

@@ -2,6 +2,53 @@
 
 A production-grade, AI-powered real-time podcast platform engineered for scalability, multi-agent orchestration, seamless creator experience, and enterprise-grade reliability.
 
+## Index
+
+1. [Project Overview](#1-project-overview)
+2. [Vision & Goals](#2-vision--goals)
+3. [Core Features](#3-core-features)
+4. [Functional Requirements](#4-functional-requirements)
+5. [Non-Functional Requirements](#5-non-functional-requirements)
+6. [System Architecture](#6-system-architecture)
+7. [High-Level Design](#7-high-level-design)
+8. [Event-Driven Architecture](#8-event-driven-architecture)
+9. [Realtime Architecture](#9-realtime-architecture)
+10. [AI Orchestration Design](#10-ai-orchestration-design)
+11. [Database Design (PostgreSQL)](#11-database-design-postgresql)
+12. [Monorepo Structure](#12-monorepo-structure)
+13. [Tech Stack Justification](#13-tech-stack-justification)
+14. [Constraints & Assumptions](#14-constraints--assumptions)
+15. [Security Considerations](#15-security-considerations)
+16. [Scalability Considerations](#16-scalability-considerations)
+17. [Trade-offs & Engineering Decisions](#17-trade-offs--engineering-decisions)
+18. [Development Workflow / SDLC](#18-development-workflow--sdlc)
+19. [Local Setup Instructions](#19-local-setup-instructions)
+    - [Prerequisites](#prerequisites)
+    - [Quick Start (5 minutes)](#quick-start-5-minutes)
+    - [Service URLs & Health Checks](#service-urls--health-checks)
+    - [Useful Commands](#useful-commands)
+    - [Development Workflow Example](#development-workflow-example)
+20. [Environment Variables](#20-environment-variables)
+    - [Root `.env.local`](#root-envlocal)
+    - [Auth Service](#auth-service-servicesauth-serviceenv)
+    - [Podcast Service](#podcast-service-servicespodcast-serviceenv)
+    - [Realtime Service](#realtime-service-servicesrealtime-serviceenv)
+    - [AI Engine](#ai-engine-servicesai-engineenv)
+    - [Storage Service](#storage-service-servicesstorage-serviceenv)
+    - [Transcoding Service](#transcoding-service-servicestranscoding-serviceenv)
+    - [Notification Service](#notification-service-servicesnotification-serviceenv)
+    - [Telemetry Service](#telemetry-service-servicestelemetry-serviceenv)
+    - [API Gateway](#api-gateway-servicesapi-gatewayenv)
+21. [Future Scope](#21-future-scope)
+    - [Immediate Priorities (6 months)](#immediate-priorities-6-months)
+    - [Strategic Initiatives (12 months)](#strategic-initiatives-12-months)
+    - [Enterprise Features (18 months)](#enterprise-features-18-months)
+22. [Engineering Learnings](#22-engineering-learnings)
+23. [Challenges Faced](#23-challenges-faced)
+24. [Conclusion](#24-conclusion)
+
+**Related docs:** [CurrentProgress.md](./CurrentProgress.md) · [AGENTS.md](./AGENTS.md)
+
 ---
 
 ## 1. Project Overview

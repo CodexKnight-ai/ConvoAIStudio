@@ -21,16 +21,16 @@ export const authGrpcClient = {
         });
     },
     register: (data: {
-        first_name: string;
-        last_name?: string|undefined;
+        firstName: string;
+        lastName?: string|undefined;
         email: string;
         username: string;
         password: string;
     }): Promise<any> => {
         return new Promise((resolve, reject) => {
             client.register({
-                firstName: data.first_name,
-                lastName: data.last_name || '',
+                firstName: data.firstName,
+                lastName: data.lastName || '',
                 email: data.email,
                 username: data.username,
                 password: data.password
@@ -40,10 +40,6 @@ export const authGrpcClient = {
             });
         });
     },
-
-    /**
-     * Login user
-     */
     login: (data: {
         email: string;
         password: string;
@@ -52,14 +48,13 @@ export const authGrpcClient = {
             client.login(data, (err: any, response: any) => {
                 console.log("Trying login using grpc", response);
                 if (err) reject(err);
-                else resolve(response);
+                else{
+                    console.log("grpc response", response);
+                    resolve(response);
+                }
             });
         });
     },
-
-    /**
-     * Refresh tokens
-     */
     refresh: (data: {
         refresh_token: string;
         session_id: string;
@@ -74,22 +69,15 @@ export const authGrpcClient = {
             });
         });
     },
-
-    /**
-     * Logout user
-     */
-    logout: (session_id: string): Promise<any> => {
+    logout: (session_id: string, refresh_token: string): Promise<any> => {
+        console.log("calling grpc logout with:", session_id, refresh_token);
         return new Promise((resolve, reject) => {
-            client.logout({ sessionId: session_id }, (err: any, response: any) => {
+            client.logout({ sessionId: session_id, refreshToken: refresh_token }, (err: any, response: any) => {
                 if (err) reject(err);
                 else resolve(response);
             });
         });
     },
-
-    /**
-     * Get current user profile
-     */
     getMe: (user_id: string): Promise<any> => {
         return new Promise((resolve, reject) => {
             client.getMe({ userId: user_id }, (err: any, response: any) => {

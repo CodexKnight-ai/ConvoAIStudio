@@ -8,7 +8,8 @@ export async function handleRegister(
     repo: AuthRepository
 ) {
     try {
-        return await authService.register(request.server, reply, repo, request.body);
+        console.log(request.body);
+        return await authService.register(request.server, repo, request.body);
     } catch (error: any) {
         const status = typeof error.cause === 'number' ? error.cause : 500;
         return reply.code(status).send({ error: error.message });
@@ -21,7 +22,7 @@ export async function handleLogin(
     repo: AuthRepository
 ) {
     try {
-        return await authService.login(request.server, reply, repo, request.body);
+        return await authService.login(request.server, repo, request.body);
     } catch (error: any) {
         const status = typeof error.cause === 'number' ? error.cause : 500;
         return reply.code(status).send({ error: error.message });
@@ -33,7 +34,7 @@ export async function handleRefresh(
     reply: FastifyReply
 ) {
     try {
-        return await authService.refresh(request.server, reply, request.body);
+        return await authService.refresh(request.server, request.body);
     } catch (error: any) {
         const status = typeof error.cause === 'number' ? error.cause : 500;
         return reply.code(status).send({ error: error.message });
@@ -42,7 +43,9 @@ export async function handleRefresh(
 
 export async function handleLogout(request: FastifyRequest, reply: FastifyReply) {
     try {
-        return await authService.logout(request.server, request, reply);
+        const refreshToken = (request as any).cookies?.refreshToken;
+        const sessionId = (request as any).cookies?.sessionId;
+        return await authService.logout(request.server, { refreshToken, sessionId });
     } catch (error: any) {
         const status = typeof error.cause === 'number' ? error.cause : 500;
         return reply.code(status).send({ error: error.message });
@@ -51,7 +54,7 @@ export async function handleLogout(request: FastifyRequest, reply: FastifyReply)
 
 export async function handleGetMe(request: FastifyRequest, reply: FastifyReply, repo: AuthRepository) {
     try {
-        return await authService.getMe(reply, repo, request.user.id);
+        return await authService.getMe(repo, (request as any).user.id);
     } catch (error: any) {
         return reply.code(500).send({ error: 'Internal Server Error' });
     }

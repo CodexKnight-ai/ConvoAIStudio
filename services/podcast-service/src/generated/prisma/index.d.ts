@@ -35,8 +35,10 @@ export type Podcast = $Result.DefaultSelection<Prisma.$PodcastPayload>
 export namespace $Enums {
   export const PodcastStatus: {
   DRAFT: 'DRAFT',
-  PROCESSING: 'PROCESSING',
-  PUBLISHED: 'PUBLISHED',
+  SCHEDULED: 'SCHEDULED',
+  LIVE: 'LIVE',
+  ENDED: 'ENDED',
+  CANCELLED: 'CANCELLED',
   FAILED: 'FAILED'
 };
 
@@ -1081,10 +1083,12 @@ export namespace Prisma {
 
   export type ChannelCountOutputType = {
     podcasts: number
+    subscriptions: number
   }
 
   export type ChannelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     podcasts?: boolean | ChannelCountOutputTypeCountPodcastsArgs
+    subscriptions?: boolean | ChannelCountOutputTypeCountSubscriptionsArgs
   }
 
   // Custom InputTypes
@@ -1103,6 +1107,13 @@ export namespace Prisma {
    */
   export type ChannelCountOutputTypeCountPodcastsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PodcastWhereInput
+  }
+
+  /**
+   * ChannelCountOutputType without action
+   */
+  export type ChannelCountOutputTypeCountSubscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ChannelSubscriptionWhereInput
   }
 
 
@@ -1141,8 +1152,10 @@ export namespace Prisma {
     profilePictureUrl: string | null
     subscriberCount: number | null
     podcastCount: number | null
-    createdAt: Date | null
     ownerId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ChannelMaxAggregateOutputType = {
@@ -1154,8 +1167,10 @@ export namespace Prisma {
     profilePictureUrl: string | null
     subscriberCount: number | null
     podcastCount: number | null
-    createdAt: Date | null
     ownerId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ChannelCountAggregateOutputType = {
@@ -1167,8 +1182,10 @@ export namespace Prisma {
     profilePictureUrl: number
     subscriberCount: number
     podcastCount: number
-    createdAt: number
     ownerId: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -1192,8 +1209,10 @@ export namespace Prisma {
     profilePictureUrl?: true
     subscriberCount?: true
     podcastCount?: true
-    createdAt?: true
     ownerId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type ChannelMaxAggregateInputType = {
@@ -1205,8 +1224,10 @@ export namespace Prisma {
     profilePictureUrl?: true
     subscriberCount?: true
     podcastCount?: true
-    createdAt?: true
     ownerId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type ChannelCountAggregateInputType = {
@@ -1218,8 +1239,10 @@ export namespace Prisma {
     profilePictureUrl?: true
     subscriberCount?: true
     podcastCount?: true
-    createdAt?: true
     ownerId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -1318,8 +1341,10 @@ export namespace Prisma {
     profilePictureUrl: string | null
     subscriberCount: number
     podcastCount: number
-    createdAt: Date
     ownerId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     _count: ChannelCountAggregateOutputType | null
     _avg: ChannelAvgAggregateOutputType | null
     _sum: ChannelSumAggregateOutputType | null
@@ -1350,9 +1375,12 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     subscriberCount?: boolean
     podcastCount?: boolean
-    createdAt?: boolean
     ownerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     podcasts?: boolean | Channel$podcastsArgs<ExtArgs>
+    subscriptions?: boolean | Channel$subscriptionsArgs<ExtArgs>
     _count?: boolean | ChannelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channel"]>
 
@@ -1365,8 +1393,10 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     subscriberCount?: boolean
     podcastCount?: boolean
-    createdAt?: boolean
     ownerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["channel"]>
 
   export type ChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1378,8 +1408,10 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     subscriberCount?: boolean
     podcastCount?: boolean
-    createdAt?: boolean
     ownerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }, ExtArgs["result"]["channel"]>
 
   export type ChannelSelectScalar = {
@@ -1391,13 +1423,16 @@ export namespace Prisma {
     profilePictureUrl?: boolean
     subscriberCount?: boolean
     podcastCount?: boolean
-    createdAt?: boolean
     ownerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "bannerUrl" | "profilePictureUrl" | "subscriberCount" | "podcastCount" | "createdAt" | "ownerId", ExtArgs["result"]["channel"]>
+  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "bannerUrl" | "profilePictureUrl" | "subscriberCount" | "podcastCount" | "ownerId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["channel"]>
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     podcasts?: boolean | Channel$podcastsArgs<ExtArgs>
+    subscriptions?: boolean | Channel$subscriptionsArgs<ExtArgs>
     _count?: boolean | ChannelCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1407,6 +1442,7 @@ export namespace Prisma {
     name: "Channel"
     objects: {
       podcasts: Prisma.$PodcastPayload<ExtArgs>[]
+      subscriptions: Prisma.$ChannelSubscriptionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1417,8 +1453,10 @@ export namespace Prisma {
       profilePictureUrl: string | null
       subscriberCount: number
       podcastCount: number
-      createdAt: Date
       ownerId: string
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["channel"]>
     composites: {}
   }
@@ -1814,6 +1852,7 @@ export namespace Prisma {
   export interface Prisma__ChannelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     podcasts<T extends Channel$podcastsArgs<ExtArgs> = {}>(args?: Subset<T, Channel$podcastsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PodcastPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    subscriptions<T extends Channel$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Channel$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChannelSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1851,8 +1890,10 @@ export namespace Prisma {
     readonly profilePictureUrl: FieldRef<"Channel", 'String'>
     readonly subscriberCount: FieldRef<"Channel", 'Int'>
     readonly podcastCount: FieldRef<"Channel", 'Int'>
-    readonly createdAt: FieldRef<"Channel", 'DateTime'>
     readonly ownerId: FieldRef<"Channel", 'String'>
+    readonly createdAt: FieldRef<"Channel", 'DateTime'>
+    readonly updatedAt: FieldRef<"Channel", 'DateTime'>
+    readonly deletedAt: FieldRef<"Channel", 'DateTime'>
   }
     
 
@@ -2270,6 +2311,30 @@ export namespace Prisma {
   }
 
   /**
+   * Channel.subscriptions
+   */
+  export type Channel$subscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ChannelSubscription
+     */
+    select?: ChannelSubscriptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ChannelSubscription
+     */
+    omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
+    where?: ChannelSubscriptionWhereInput
+    orderBy?: ChannelSubscriptionOrderByWithRelationInput | ChannelSubscriptionOrderByWithRelationInput[]
+    cursor?: ChannelSubscriptionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ChannelSubscriptionScalarFieldEnum | ChannelSubscriptionScalarFieldEnum[]
+  }
+
+  /**
    * Channel without action
    */
   export type ChannelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2436,18 +2501,21 @@ export namespace Prisma {
     userId?: boolean
     channelId?: boolean
     createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channelSubscription"]>
 
   export type ChannelSubscriptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     channelId?: boolean
     createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channelSubscription"]>
 
   export type ChannelSubscriptionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     channelId?: boolean
     createdAt?: boolean
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["channelSubscription"]>
 
   export type ChannelSubscriptionSelectScalar = {
@@ -2457,10 +2525,21 @@ export namespace Prisma {
   }
 
   export type ChannelSubscriptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "channelId" | "createdAt", ExtArgs["result"]["channelSubscription"]>
+  export type ChannelSubscriptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+  }
+  export type ChannelSubscriptionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+  }
+  export type ChannelSubscriptionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+  }
 
   export type $ChannelSubscriptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ChannelSubscription"
-    objects: {}
+    objects: {
+      channel: Prisma.$ChannelPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
       channelId: string
@@ -2859,6 +2938,7 @@ export namespace Prisma {
    */
   export interface Prisma__ChannelSubscriptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    channel<T extends ChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChannelDefaultArgs<ExtArgs>>): Prisma__ChannelClient<$Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2908,6 +2988,10 @@ export namespace Prisma {
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which ChannelSubscription to fetch.
      */
     where: ChannelSubscriptionWhereUniqueInput
@@ -2926,6 +3010,10 @@ export namespace Prisma {
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which ChannelSubscription to fetch.
      */
     where: ChannelSubscriptionWhereUniqueInput
@@ -2943,6 +3031,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
     /**
      * Filter, which ChannelSubscription to fetch.
      */
@@ -2992,6 +3084,10 @@ export namespace Prisma {
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
+    /**
      * Filter, which ChannelSubscription to fetch.
      */
     where?: ChannelSubscriptionWhereInput
@@ -3039,6 +3135,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
     /**
      * Filter, which ChannelSubscriptions to fetch.
      */
@@ -3088,6 +3188,10 @@ export namespace Prisma {
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
+    /**
      * The data needed to create a ChannelSubscription.
      */
     data: XOR<ChannelSubscriptionCreateInput, ChannelSubscriptionUncheckedCreateInput>
@@ -3121,6 +3225,10 @@ export namespace Prisma {
      */
     data: ChannelSubscriptionCreateManyInput | ChannelSubscriptionCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3135,6 +3243,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
     /**
      * The data needed to update a ChannelSubscription.
      */
@@ -3187,6 +3299,10 @@ export namespace Prisma {
      * Limit how many ChannelSubscriptions to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3201,6 +3317,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
     /**
      * The filter to search for the ChannelSubscription to update in case it exists.
      */
@@ -3227,6 +3347,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
     /**
      * Filter which ChannelSubscription to delete.
      */
@@ -3259,6 +3383,10 @@ export namespace Prisma {
      * Omit specific fields from the ChannelSubscription
      */
     omit?: ChannelSubscriptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelSubscriptionInclude<ExtArgs> | null
   }
 
 
@@ -3275,129 +3403,139 @@ export namespace Prisma {
   }
 
   export type PodcastAvgAggregateOutputType = {
-    duration: number | null
-    views: number | null
-    upvotes: number | null
-    downvotes: number | null
+    peakViewers: number | null
+    totalViews: number | null
   }
 
   export type PodcastSumAggregateOutputType = {
-    duration: number | null
-    views: number | null
-    upvotes: number | null
-    downvotes: number | null
+    peakViewers: number | null
+    totalViews: number | null
   }
 
   export type PodcastMinAggregateOutputType = {
     id: string | null
     title: string | null
     description: string | null
-    thumbnail: string | null
-    audioUrl: string | null
-    duration: number | null
-    views: number | null
-    upvotes: number | null
-    downvotes: number | null
-    status: $Enums.PodcastStatus | null
+    thumbnailUrl: string | null
     visibility: $Enums.Visibility | null
-    createdAt: Date | null
+    status: $Enums.PodcastStatus | null
+    scheduledAt: Date | null
+    schedulerJobId: string | null
+    startedAt: Date | null
+    endedAt: Date | null
+    peakViewers: number | null
+    totalViews: number | null
     channelId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type PodcastMaxAggregateOutputType = {
     id: string | null
     title: string | null
     description: string | null
-    thumbnail: string | null
-    audioUrl: string | null
-    duration: number | null
-    views: number | null
-    upvotes: number | null
-    downvotes: number | null
-    status: $Enums.PodcastStatus | null
+    thumbnailUrl: string | null
     visibility: $Enums.Visibility | null
-    createdAt: Date | null
+    status: $Enums.PodcastStatus | null
+    scheduledAt: Date | null
+    schedulerJobId: string | null
+    startedAt: Date | null
+    endedAt: Date | null
+    peakViewers: number | null
+    totalViews: number | null
     channelId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    deletedAt: Date | null
   }
 
   export type PodcastCountAggregateOutputType = {
     id: number
     title: number
     description: number
-    thumbnail: number
-    audioUrl: number
-    duration: number
-    views: number
-    upvotes: number
-    downvotes: number
-    status: number
+    thumbnailUrl: number
     visibility: number
-    createdAt: number
+    status: number
+    scheduledAt: number
+    schedulerJobId: number
+    startedAt: number
+    endedAt: number
+    peakViewers: number
+    totalViews: number
     channelId: number
+    createdAt: number
+    updatedAt: number
+    deletedAt: number
     _all: number
   }
 
 
   export type PodcastAvgAggregateInputType = {
-    duration?: true
-    views?: true
-    upvotes?: true
-    downvotes?: true
+    peakViewers?: true
+    totalViews?: true
   }
 
   export type PodcastSumAggregateInputType = {
-    duration?: true
-    views?: true
-    upvotes?: true
-    downvotes?: true
+    peakViewers?: true
+    totalViews?: true
   }
 
   export type PodcastMinAggregateInputType = {
     id?: true
     title?: true
     description?: true
-    thumbnail?: true
-    audioUrl?: true
-    duration?: true
-    views?: true
-    upvotes?: true
-    downvotes?: true
-    status?: true
+    thumbnailUrl?: true
     visibility?: true
-    createdAt?: true
+    status?: true
+    scheduledAt?: true
+    schedulerJobId?: true
+    startedAt?: true
+    endedAt?: true
+    peakViewers?: true
+    totalViews?: true
     channelId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type PodcastMaxAggregateInputType = {
     id?: true
     title?: true
     description?: true
-    thumbnail?: true
-    audioUrl?: true
-    duration?: true
-    views?: true
-    upvotes?: true
-    downvotes?: true
-    status?: true
+    thumbnailUrl?: true
     visibility?: true
-    createdAt?: true
+    status?: true
+    scheduledAt?: true
+    schedulerJobId?: true
+    startedAt?: true
+    endedAt?: true
+    peakViewers?: true
+    totalViews?: true
     channelId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
   }
 
   export type PodcastCountAggregateInputType = {
     id?: true
     title?: true
     description?: true
-    thumbnail?: true
-    audioUrl?: true
-    duration?: true
-    views?: true
-    upvotes?: true
-    downvotes?: true
-    status?: true
+    thumbnailUrl?: true
     visibility?: true
-    createdAt?: true
+    status?: true
+    scheduledAt?: true
+    schedulerJobId?: true
+    startedAt?: true
+    endedAt?: true
+    peakViewers?: true
+    totalViews?: true
     channelId?: true
+    createdAt?: true
+    updatedAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -3491,16 +3629,19 @@ export namespace Prisma {
     id: string
     title: string
     description: string
-    thumbnail: string | null
-    audioUrl: string | null
-    duration: number | null
-    views: number
-    upvotes: number
-    downvotes: number
-    status: $Enums.PodcastStatus
+    thumbnailUrl: string | null
     visibility: $Enums.Visibility
-    createdAt: Date
+    status: $Enums.PodcastStatus
+    scheduledAt: Date | null
+    schedulerJobId: string | null
+    startedAt: Date | null
+    endedAt: Date | null
+    peakViewers: number
+    totalViews: number
     channelId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
     _count: PodcastCountAggregateOutputType | null
     _avg: PodcastAvgAggregateOutputType | null
     _sum: PodcastSumAggregateOutputType | null
@@ -3526,16 +3667,19 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     description?: boolean
-    thumbnail?: boolean
-    audioUrl?: boolean
-    duration?: boolean
-    views?: boolean
-    upvotes?: boolean
-    downvotes?: boolean
-    status?: boolean
+    thumbnailUrl?: boolean
     visibility?: boolean
-    createdAt?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    schedulerJobId?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+    peakViewers?: boolean
+    totalViews?: boolean
     channelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["podcast"]>
 
@@ -3543,16 +3687,19 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     description?: boolean
-    thumbnail?: boolean
-    audioUrl?: boolean
-    duration?: boolean
-    views?: boolean
-    upvotes?: boolean
-    downvotes?: boolean
-    status?: boolean
+    thumbnailUrl?: boolean
     visibility?: boolean
-    createdAt?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    schedulerJobId?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+    peakViewers?: boolean
+    totalViews?: boolean
     channelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["podcast"]>
 
@@ -3560,16 +3707,19 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     description?: boolean
-    thumbnail?: boolean
-    audioUrl?: boolean
-    duration?: boolean
-    views?: boolean
-    upvotes?: boolean
-    downvotes?: boolean
-    status?: boolean
+    thumbnailUrl?: boolean
     visibility?: boolean
-    createdAt?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    schedulerJobId?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+    peakViewers?: boolean
+    totalViews?: boolean
     channelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
     channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["podcast"]>
 
@@ -3577,19 +3727,22 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     description?: boolean
-    thumbnail?: boolean
-    audioUrl?: boolean
-    duration?: boolean
-    views?: boolean
-    upvotes?: boolean
-    downvotes?: boolean
-    status?: boolean
+    thumbnailUrl?: boolean
     visibility?: boolean
-    createdAt?: boolean
+    status?: boolean
+    scheduledAt?: boolean
+    schedulerJobId?: boolean
+    startedAt?: boolean
+    endedAt?: boolean
+    peakViewers?: boolean
+    totalViews?: boolean
     channelId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type PodcastOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "thumbnail" | "audioUrl" | "duration" | "views" | "upvotes" | "downvotes" | "status" | "visibility" | "createdAt" | "channelId", ExtArgs["result"]["podcast"]>
+  export type PodcastOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "thumbnailUrl" | "visibility" | "status" | "scheduledAt" | "schedulerJobId" | "startedAt" | "endedAt" | "peakViewers" | "totalViews" | "channelId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["podcast"]>
   export type PodcastInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     channel?: boolean | ChannelDefaultArgs<ExtArgs>
   }
@@ -3609,16 +3762,19 @@ export namespace Prisma {
       id: string
       title: string
       description: string
-      thumbnail: string | null
-      audioUrl: string | null
-      duration: number | null
-      views: number
-      upvotes: number
-      downvotes: number
-      status: $Enums.PodcastStatus
+      thumbnailUrl: string | null
       visibility: $Enums.Visibility
-      createdAt: Date
+      status: $Enums.PodcastStatus
+      scheduledAt: Date | null
+      schedulerJobId: string | null
+      startedAt: Date | null
+      endedAt: Date | null
+      peakViewers: number
+      totalViews: number
       channelId: string
+      createdAt: Date
+      updatedAt: Date
+      deletedAt: Date | null
     }, ExtArgs["result"]["podcast"]>
     composites: {}
   }
@@ -4046,16 +4202,19 @@ export namespace Prisma {
     readonly id: FieldRef<"Podcast", 'String'>
     readonly title: FieldRef<"Podcast", 'String'>
     readonly description: FieldRef<"Podcast", 'String'>
-    readonly thumbnail: FieldRef<"Podcast", 'String'>
-    readonly audioUrl: FieldRef<"Podcast", 'String'>
-    readonly duration: FieldRef<"Podcast", 'Int'>
-    readonly views: FieldRef<"Podcast", 'Int'>
-    readonly upvotes: FieldRef<"Podcast", 'Int'>
-    readonly downvotes: FieldRef<"Podcast", 'Int'>
-    readonly status: FieldRef<"Podcast", 'PodcastStatus'>
+    readonly thumbnailUrl: FieldRef<"Podcast", 'String'>
     readonly visibility: FieldRef<"Podcast", 'Visibility'>
-    readonly createdAt: FieldRef<"Podcast", 'DateTime'>
+    readonly status: FieldRef<"Podcast", 'PodcastStatus'>
+    readonly scheduledAt: FieldRef<"Podcast", 'DateTime'>
+    readonly schedulerJobId: FieldRef<"Podcast", 'String'>
+    readonly startedAt: FieldRef<"Podcast", 'DateTime'>
+    readonly endedAt: FieldRef<"Podcast", 'DateTime'>
+    readonly peakViewers: FieldRef<"Podcast", 'Int'>
+    readonly totalViews: FieldRef<"Podcast", 'Int'>
     readonly channelId: FieldRef<"Podcast", 'String'>
+    readonly createdAt: FieldRef<"Podcast", 'DateTime'>
+    readonly updatedAt: FieldRef<"Podcast", 'DateTime'>
+    readonly deletedAt: FieldRef<"Podcast", 'DateTime'>
   }
     
 
@@ -4498,8 +4657,10 @@ export namespace Prisma {
     profilePictureUrl: 'profilePictureUrl',
     subscriberCount: 'subscriberCount',
     podcastCount: 'podcastCount',
+    ownerId: 'ownerId',
     createdAt: 'createdAt',
-    ownerId: 'ownerId'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ChannelScalarFieldEnum = (typeof ChannelScalarFieldEnum)[keyof typeof ChannelScalarFieldEnum]
@@ -4518,16 +4679,19 @@ export namespace Prisma {
     id: 'id',
     title: 'title',
     description: 'description',
-    thumbnail: 'thumbnail',
-    audioUrl: 'audioUrl',
-    duration: 'duration',
-    views: 'views',
-    upvotes: 'upvotes',
-    downvotes: 'downvotes',
-    status: 'status',
+    thumbnailUrl: 'thumbnailUrl',
     visibility: 'visibility',
+    status: 'status',
+    scheduledAt: 'scheduledAt',
+    schedulerJobId: 'schedulerJobId',
+    startedAt: 'startedAt',
+    endedAt: 'endedAt',
+    peakViewers: 'peakViewers',
+    totalViews: 'totalViews',
+    channelId: 'channelId',
     createdAt: 'createdAt',
-    channelId: 'channelId'
+    updatedAt: 'updatedAt',
+    deletedAt: 'deletedAt'
   };
 
   export type PodcastScalarFieldEnum = (typeof PodcastScalarFieldEnum)[keyof typeof PodcastScalarFieldEnum]
@@ -4605,20 +4769,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'PodcastStatus'
-   */
-  export type EnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'PodcastStatus[]'
-   */
-  export type ListEnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Visibility'
    */
   export type EnumVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Visibility'>
@@ -4629,6 +4779,20 @@ export namespace Prisma {
    * Reference to a field of type 'Visibility[]'
    */
   export type ListEnumVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Visibility[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PodcastStatus'
+   */
+  export type EnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PodcastStatus[]'
+   */
+  export type ListEnumPodcastStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PodcastStatus[]'>
     
 
 
@@ -4661,9 +4825,12 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableFilter<"Channel"> | string | null
     subscriberCount?: IntFilter<"Channel"> | number
     podcastCount?: IntFilter<"Channel"> | number
-    createdAt?: DateTimeFilter<"Channel"> | Date | string
     ownerId?: StringFilter<"Channel"> | string
+    createdAt?: DateTimeFilter<"Channel"> | Date | string
+    updatedAt?: DateTimeFilter<"Channel"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Channel"> | Date | string | null
     podcasts?: PodcastListRelationFilter
+    subscriptions?: ChannelSubscriptionListRelationFilter
   }
 
   export type ChannelOrderByWithRelationInput = {
@@ -4675,9 +4842,12 @@ export namespace Prisma {
     profilePictureUrl?: SortOrderInput | SortOrder
     subscriberCount?: SortOrder
     podcastCount?: SortOrder
-    createdAt?: SortOrder
     ownerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     podcasts?: PodcastOrderByRelationAggregateInput
+    subscriptions?: ChannelSubscriptionOrderByRelationAggregateInput
   }
 
   export type ChannelWhereUniqueInput = Prisma.AtLeast<{
@@ -4692,9 +4862,12 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableFilter<"Channel"> | string | null
     subscriberCount?: IntFilter<"Channel"> | number
     podcastCount?: IntFilter<"Channel"> | number
-    createdAt?: DateTimeFilter<"Channel"> | Date | string
     ownerId?: StringFilter<"Channel"> | string
+    createdAt?: DateTimeFilter<"Channel"> | Date | string
+    updatedAt?: DateTimeFilter<"Channel"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Channel"> | Date | string | null
     podcasts?: PodcastListRelationFilter
+    subscriptions?: ChannelSubscriptionListRelationFilter
   }, "id" | "slug">
 
   export type ChannelOrderByWithAggregationInput = {
@@ -4706,8 +4879,10 @@ export namespace Prisma {
     profilePictureUrl?: SortOrderInput | SortOrder
     subscriberCount?: SortOrder
     podcastCount?: SortOrder
-    createdAt?: SortOrder
     ownerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ChannelCountOrderByAggregateInput
     _avg?: ChannelAvgOrderByAggregateInput
     _max?: ChannelMaxOrderByAggregateInput
@@ -4727,8 +4902,10 @@ export namespace Prisma {
     profilePictureUrl?: StringNullableWithAggregatesFilter<"Channel"> | string | null
     subscriberCount?: IntWithAggregatesFilter<"Channel"> | number
     podcastCount?: IntWithAggregatesFilter<"Channel"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
     ownerId?: StringWithAggregatesFilter<"Channel"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Channel"> | Date | string | null
   }
 
   export type ChannelSubscriptionWhereInput = {
@@ -4738,12 +4915,14 @@ export namespace Prisma {
     userId?: StringFilter<"ChannelSubscription"> | string
     channelId?: StringFilter<"ChannelSubscription"> | string
     createdAt?: DateTimeFilter<"ChannelSubscription"> | Date | string
+    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
   }
 
   export type ChannelSubscriptionOrderByWithRelationInput = {
     userId?: SortOrder
     channelId?: SortOrder
     createdAt?: SortOrder
+    channel?: ChannelOrderByWithRelationInput
   }
 
   export type ChannelSubscriptionWhereUniqueInput = Prisma.AtLeast<{
@@ -4754,6 +4933,7 @@ export namespace Prisma {
     userId?: StringFilter<"ChannelSubscription"> | string
     channelId?: StringFilter<"ChannelSubscription"> | string
     createdAt?: DateTimeFilter<"ChannelSubscription"> | Date | string
+    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
   }, "userId_channelId">
 
   export type ChannelSubscriptionOrderByWithAggregationInput = {
@@ -4781,16 +4961,19 @@ export namespace Prisma {
     id?: StringFilter<"Podcast"> | string
     title?: StringFilter<"Podcast"> | string
     description?: StringFilter<"Podcast"> | string
-    thumbnail?: StringNullableFilter<"Podcast"> | string | null
-    audioUrl?: StringNullableFilter<"Podcast"> | string | null
-    duration?: IntNullableFilter<"Podcast"> | number | null
-    views?: IntFilter<"Podcast"> | number
-    upvotes?: IntFilter<"Podcast"> | number
-    downvotes?: IntFilter<"Podcast"> | number
-    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
-    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
+    startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    peakViewers?: IntFilter<"Podcast"> | number
+    totalViews?: IntFilter<"Podcast"> | number
     channelId?: StringFilter<"Podcast"> | string
+    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    updatedAt?: DateTimeFilter<"Podcast"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
     channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
   }
 
@@ -4798,16 +4981,19 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    thumbnail?: SortOrderInput | SortOrder
-    audioUrl?: SortOrderInput | SortOrder
-    duration?: SortOrderInput | SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-    status?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
     visibility?: SortOrder
-    createdAt?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    schedulerJobId?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
     channelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     channel?: ChannelOrderByWithRelationInput
   }
 
@@ -4818,16 +5004,19 @@ export namespace Prisma {
     NOT?: PodcastWhereInput | PodcastWhereInput[]
     title?: StringFilter<"Podcast"> | string
     description?: StringFilter<"Podcast"> | string
-    thumbnail?: StringNullableFilter<"Podcast"> | string | null
-    audioUrl?: StringNullableFilter<"Podcast"> | string | null
-    duration?: IntNullableFilter<"Podcast"> | number | null
-    views?: IntFilter<"Podcast"> | number
-    upvotes?: IntFilter<"Podcast"> | number
-    downvotes?: IntFilter<"Podcast"> | number
-    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
-    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
+    startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    peakViewers?: IntFilter<"Podcast"> | number
+    totalViews?: IntFilter<"Podcast"> | number
     channelId?: StringFilter<"Podcast"> | string
+    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    updatedAt?: DateTimeFilter<"Podcast"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
     channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
   }, "id">
 
@@ -4835,16 +5024,19 @@ export namespace Prisma {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    thumbnail?: SortOrderInput | SortOrder
-    audioUrl?: SortOrderInput | SortOrder
-    duration?: SortOrderInput | SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-    status?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
     visibility?: SortOrder
-    createdAt?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrderInput | SortOrder
+    schedulerJobId?: SortOrderInput | SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    endedAt?: SortOrderInput | SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
     channelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: PodcastCountOrderByAggregateInput
     _avg?: PodcastAvgOrderByAggregateInput
     _max?: PodcastMaxOrderByAggregateInput
@@ -4859,16 +5051,19 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Podcast"> | string
     title?: StringWithAggregatesFilter<"Podcast"> | string
     description?: StringWithAggregatesFilter<"Podcast"> | string
-    thumbnail?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
-    audioUrl?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
-    duration?: IntNullableWithAggregatesFilter<"Podcast"> | number | null
-    views?: IntWithAggregatesFilter<"Podcast"> | number
-    upvotes?: IntWithAggregatesFilter<"Podcast"> | number
-    downvotes?: IntWithAggregatesFilter<"Podcast"> | number
-    status?: EnumPodcastStatusWithAggregatesFilter<"Podcast"> | $Enums.PodcastStatus
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityWithAggregatesFilter<"Podcast"> | $Enums.Visibility
-    createdAt?: DateTimeWithAggregatesFilter<"Podcast"> | Date | string
+    status?: EnumPodcastStatusWithAggregatesFilter<"Podcast"> | $Enums.PodcastStatus
+    scheduledAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
+    schedulerJobId?: StringNullableWithAggregatesFilter<"Podcast"> | string | null
+    startedAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
+    endedAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
+    peakViewers?: IntWithAggregatesFilter<"Podcast"> | number
+    totalViews?: IntWithAggregatesFilter<"Podcast"> | number
     channelId?: StringWithAggregatesFilter<"Podcast"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Podcast"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Podcast"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"Podcast"> | Date | string | null
   }
 
   export type ChannelCreateInput = {
@@ -4880,9 +5075,12 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     subscriberCount?: number
     podcastCount?: number
-    createdAt?: Date | string
     ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     podcasts?: PodcastCreateNestedManyWithoutChannelInput
+    subscriptions?: ChannelSubscriptionCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateInput = {
@@ -4894,9 +5092,12 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     subscriberCount?: number
     podcastCount?: number
-    createdAt?: Date | string
     ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     podcasts?: PodcastUncheckedCreateNestedManyWithoutChannelInput
+    subscriptions?: ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUpdateInput = {
@@ -4908,9 +5109,12 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     podcasts?: PodcastUpdateManyWithoutChannelNestedInput
+    subscriptions?: ChannelSubscriptionUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateInput = {
@@ -4922,9 +5126,12 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     podcasts?: PodcastUncheckedUpdateManyWithoutChannelNestedInput
+    subscriptions?: ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelCreateManyInput = {
@@ -4936,8 +5143,10 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     subscriberCount?: number
     podcastCount?: number
-    createdAt?: Date | string
     ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type ChannelUpdateManyMutationInput = {
@@ -4949,8 +5158,10 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ChannelUncheckedUpdateManyInput = {
@@ -4962,14 +5173,16 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ChannelSubscriptionCreateInput = {
     userId: string
-    channelId: string
     createdAt?: Date | string
+    channel: ChannelCreateNestedOneWithoutSubscriptionsInput
   }
 
   export type ChannelSubscriptionUncheckedCreateInput = {
@@ -4980,8 +5193,8 @@ export namespace Prisma {
 
   export type ChannelSubscriptionUpdateInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput
   }
 
   export type ChannelSubscriptionUncheckedUpdateInput = {
@@ -4998,7 +5211,6 @@ export namespace Prisma {
 
   export type ChannelSubscriptionUpdateManyMutationInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -5012,15 +5224,18 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
     channel: ChannelCreateNestedOneWithoutPodcastsInput
   }
 
@@ -5028,31 +5243,37 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
-    createdAt?: Date | string
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
     channelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type PodcastUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     channel?: ChannelUpdateOneRequiredWithoutPodcastsNestedInput
   }
 
@@ -5060,63 +5281,75 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     channelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PodcastCreateManyInput = {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
-    createdAt?: Date | string
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
     channelId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type PodcastUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PodcastUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     channelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -5171,10 +5404,27 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type PodcastListRelationFilter = {
     every?: PodcastWhereInput
     some?: PodcastWhereInput
     none?: PodcastWhereInput
+  }
+
+  export type ChannelSubscriptionListRelationFilter = {
+    every?: ChannelSubscriptionWhereInput
+    some?: ChannelSubscriptionWhereInput
+    none?: ChannelSubscriptionWhereInput
   }
 
   export type SortOrderInput = {
@@ -5183,6 +5433,10 @@ export namespace Prisma {
   }
 
   export type PodcastOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ChannelSubscriptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -5195,8 +5449,10 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     subscriberCount?: SortOrder
     podcastCount?: SortOrder
-    createdAt?: SortOrder
     ownerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ChannelAvgOrderByAggregateInput = {
@@ -5213,8 +5469,10 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     subscriberCount?: SortOrder
     podcastCount?: SortOrder
-    createdAt?: SortOrder
     ownerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ChannelMinOrderByAggregateInput = {
@@ -5226,8 +5484,10 @@ export namespace Prisma {
     profilePictureUrl?: SortOrder
     subscriberCount?: SortOrder
     podcastCount?: SortOrder
-    createdAt?: SortOrder
     ownerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ChannelSumOrderByAggregateInput = {
@@ -5301,6 +5561,25 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type ChannelScalarRelationFilter = {
+    is?: ChannelWhereInput
+    isNot?: ChannelWhereInput
+  }
+
   export type ChannelSubscriptionUserIdChannelIdCompoundUniqueInput = {
     userId: string
     channelId: string
@@ -5324,15 +5603,11 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  export type EnumVisibilityFilter<$PrismaModel = never> = {
+    equals?: $Enums.Visibility | EnumVisibilityFieldRefInput<$PrismaModel>
+    in?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
+    not?: NestedEnumVisibilityFilter<$PrismaModel> | $Enums.Visibility
   }
 
   export type EnumPodcastStatusFilter<$PrismaModel = never> = {
@@ -5342,104 +5617,71 @@ export namespace Prisma {
     not?: NestedEnumPodcastStatusFilter<$PrismaModel> | $Enums.PodcastStatus
   }
 
-  export type EnumVisibilityFilter<$PrismaModel = never> = {
-    equals?: $Enums.Visibility | EnumVisibilityFieldRefInput<$PrismaModel>
-    in?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Visibility[] | ListEnumVisibilityFieldRefInput<$PrismaModel>
-    not?: NestedEnumVisibilityFilter<$PrismaModel> | $Enums.Visibility
-  }
-
-  export type ChannelScalarRelationFilter = {
-    is?: ChannelWhereInput
-    isNot?: ChannelWhereInput
-  }
-
   export type PodcastCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    thumbnail?: SortOrder
-    audioUrl?: SortOrder
-    duration?: SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-    status?: SortOrder
+    thumbnailUrl?: SortOrder
     visibility?: SortOrder
-    createdAt?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    schedulerJobId?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
     channelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type PodcastAvgOrderByAggregateInput = {
-    duration?: SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
   }
 
   export type PodcastMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    thumbnail?: SortOrder
-    audioUrl?: SortOrder
-    duration?: SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-    status?: SortOrder
+    thumbnailUrl?: SortOrder
     visibility?: SortOrder
-    createdAt?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    schedulerJobId?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
     channelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type PodcastMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    thumbnail?: SortOrder
-    audioUrl?: SortOrder
-    duration?: SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-    status?: SortOrder
+    thumbnailUrl?: SortOrder
     visibility?: SortOrder
-    createdAt?: SortOrder
+    status?: SortOrder
+    scheduledAt?: SortOrder
+    schedulerJobId?: SortOrder
+    startedAt?: SortOrder
+    endedAt?: SortOrder
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
     channelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type PodcastSumOrderByAggregateInput = {
-    duration?: SortOrder
-    views?: SortOrder
-    upvotes?: SortOrder
-    downvotes?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type EnumPodcastStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.PodcastStatus | EnumPodcastStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel> | $Enums.PodcastStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPodcastStatusFilter<$PrismaModel>
-    _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
+    peakViewers?: SortOrder
+    totalViews?: SortOrder
   }
 
   export type EnumVisibilityWithAggregatesFilter<$PrismaModel = never> = {
@@ -5452,6 +5694,16 @@ export namespace Prisma {
     _max?: NestedEnumVisibilityFilter<$PrismaModel>
   }
 
+  export type EnumPodcastStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PodcastStatus | EnumPodcastStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel> | $Enums.PodcastStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPodcastStatusFilter<$PrismaModel>
+    _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
+  }
+
   export type PodcastCreateNestedManyWithoutChannelInput = {
     create?: XOR<PodcastCreateWithoutChannelInput, PodcastUncheckedCreateWithoutChannelInput> | PodcastCreateWithoutChannelInput[] | PodcastUncheckedCreateWithoutChannelInput[]
     connectOrCreate?: PodcastCreateOrConnectWithoutChannelInput | PodcastCreateOrConnectWithoutChannelInput[]
@@ -5459,11 +5711,25 @@ export namespace Prisma {
     connect?: PodcastWhereUniqueInput | PodcastWhereUniqueInput[]
   }
 
+  export type ChannelSubscriptionCreateNestedManyWithoutChannelInput = {
+    create?: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput> | ChannelSubscriptionCreateWithoutChannelInput[] | ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChannelSubscriptionCreateOrConnectWithoutChannelInput | ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
+    createMany?: ChannelSubscriptionCreateManyChannelInputEnvelope
+    connect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+  }
+
   export type PodcastUncheckedCreateNestedManyWithoutChannelInput = {
     create?: XOR<PodcastCreateWithoutChannelInput, PodcastUncheckedCreateWithoutChannelInput> | PodcastCreateWithoutChannelInput[] | PodcastUncheckedCreateWithoutChannelInput[]
     connectOrCreate?: PodcastCreateOrConnectWithoutChannelInput | PodcastCreateOrConnectWithoutChannelInput[]
     createMany?: PodcastCreateManyChannelInputEnvelope
     connect?: PodcastWhereUniqueInput | PodcastWhereUniqueInput[]
+  }
+
+  export type ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput = {
+    create?: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput> | ChannelSubscriptionCreateWithoutChannelInput[] | ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChannelSubscriptionCreateOrConnectWithoutChannelInput | ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
+    createMany?: ChannelSubscriptionCreateManyChannelInputEnvelope
+    connect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -5486,6 +5752,10 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type PodcastUpdateManyWithoutChannelNestedInput = {
     create?: XOR<PodcastCreateWithoutChannelInput, PodcastUncheckedCreateWithoutChannelInput> | PodcastCreateWithoutChannelInput[] | PodcastUncheckedCreateWithoutChannelInput[]
     connectOrCreate?: PodcastCreateOrConnectWithoutChannelInput | PodcastCreateOrConnectWithoutChannelInput[]
@@ -5498,6 +5768,20 @@ export namespace Prisma {
     update?: PodcastUpdateWithWhereUniqueWithoutChannelInput | PodcastUpdateWithWhereUniqueWithoutChannelInput[]
     updateMany?: PodcastUpdateManyWithWhereWithoutChannelInput | PodcastUpdateManyWithWhereWithoutChannelInput[]
     deleteMany?: PodcastScalarWhereInput | PodcastScalarWhereInput[]
+  }
+
+  export type ChannelSubscriptionUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput> | ChannelSubscriptionCreateWithoutChannelInput[] | ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChannelSubscriptionCreateOrConnectWithoutChannelInput | ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
+    upsert?: ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput | ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: ChannelSubscriptionCreateManyChannelInputEnvelope
+    set?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    disconnect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    delete?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    connect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    update?: ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput | ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput | ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: ChannelSubscriptionScalarWhereInput | ChannelSubscriptionScalarWhereInput[]
   }
 
   export type PodcastUncheckedUpdateManyWithoutChannelNestedInput = {
@@ -5514,26 +5798,46 @@ export namespace Prisma {
     deleteMany?: PodcastScalarWhereInput | PodcastScalarWhereInput[]
   }
 
+  export type ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput> | ChannelSubscriptionCreateWithoutChannelInput[] | ChannelSubscriptionUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: ChannelSubscriptionCreateOrConnectWithoutChannelInput | ChannelSubscriptionCreateOrConnectWithoutChannelInput[]
+    upsert?: ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput | ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: ChannelSubscriptionCreateManyChannelInputEnvelope
+    set?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    disconnect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    delete?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    connect?: ChannelSubscriptionWhereUniqueInput | ChannelSubscriptionWhereUniqueInput[]
+    update?: ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput | ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput | ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: ChannelSubscriptionScalarWhereInput | ChannelSubscriptionScalarWhereInput[]
+  }
+
+  export type ChannelCreateNestedOneWithoutSubscriptionsInput = {
+    create?: XOR<ChannelCreateWithoutSubscriptionsInput, ChannelUncheckedCreateWithoutSubscriptionsInput>
+    connectOrCreate?: ChannelCreateOrConnectWithoutSubscriptionsInput
+    connect?: ChannelWhereUniqueInput
+  }
+
+  export type ChannelUpdateOneRequiredWithoutSubscriptionsNestedInput = {
+    create?: XOR<ChannelCreateWithoutSubscriptionsInput, ChannelUncheckedCreateWithoutSubscriptionsInput>
+    connectOrCreate?: ChannelCreateOrConnectWithoutSubscriptionsInput
+    upsert?: ChannelUpsertWithoutSubscriptionsInput
+    connect?: ChannelWhereUniqueInput
+    update?: XOR<XOR<ChannelUpdateToOneWithWhereWithoutSubscriptionsInput, ChannelUpdateWithoutSubscriptionsInput>, ChannelUncheckedUpdateWithoutSubscriptionsInput>
+  }
+
   export type ChannelCreateNestedOneWithoutPodcastsInput = {
     create?: XOR<ChannelCreateWithoutPodcastsInput, ChannelUncheckedCreateWithoutPodcastsInput>
     connectOrCreate?: ChannelCreateOrConnectWithoutPodcastsInput
     connect?: ChannelWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type EnumVisibilityFieldUpdateOperationsInput = {
+    set?: $Enums.Visibility
   }
 
   export type EnumPodcastStatusFieldUpdateOperationsInput = {
     set?: $Enums.PodcastStatus
-  }
-
-  export type EnumVisibilityFieldUpdateOperationsInput = {
-    set?: $Enums.Visibility
   }
 
   export type ChannelUpdateOneRequiredWithoutPodcastsNestedInput = {
@@ -5592,6 +5896,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5680,11 +5995,18 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedEnumPodcastStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.PodcastStatus | EnumPodcastStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumPodcastStatusFilter<$PrismaModel> | $Enums.PodcastStatus
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumVisibilityFilter<$PrismaModel = never> = {
@@ -5694,41 +6016,11 @@ export namespace Prisma {
     not?: NestedEnumVisibilityFilter<$PrismaModel> | $Enums.Visibility
   }
 
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedEnumPodcastStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.PodcastStatus | EnumPodcastStatusFieldRefInput<$PrismaModel>
     in?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel> | $Enums.PodcastStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumPodcastStatusFilter<$PrismaModel>
-    _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
+    not?: NestedEnumPodcastStatusFilter<$PrismaModel> | $Enums.PodcastStatus
   }
 
   export type NestedEnumVisibilityWithAggregatesFilter<$PrismaModel = never> = {
@@ -5741,34 +6033,50 @@ export namespace Prisma {
     _max?: NestedEnumVisibilityFilter<$PrismaModel>
   }
 
+  export type NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PodcastStatus | EnumPodcastStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PodcastStatus[] | ListEnumPodcastStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPodcastStatusWithAggregatesFilter<$PrismaModel> | $Enums.PodcastStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPodcastStatusFilter<$PrismaModel>
+    _max?: NestedEnumPodcastStatusFilter<$PrismaModel>
+  }
+
   export type PodcastCreateWithoutChannelInput = {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type PodcastUncheckedCreateWithoutChannelInput = {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
     createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
   }
 
   export type PodcastCreateOrConnectWithoutChannelInput = {
@@ -5778,6 +6086,26 @@ export namespace Prisma {
 
   export type PodcastCreateManyChannelInputEnvelope = {
     data: PodcastCreateManyChannelInput | PodcastCreateManyChannelInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ChannelSubscriptionCreateWithoutChannelInput = {
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type ChannelSubscriptionUncheckedCreateWithoutChannelInput = {
+    userId: string
+    createdAt?: Date | string
+  }
+
+  export type ChannelSubscriptionCreateOrConnectWithoutChannelInput = {
+    where: ChannelSubscriptionWhereUniqueInput
+    create: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput>
+  }
+
+  export type ChannelSubscriptionCreateManyChannelInputEnvelope = {
+    data: ChannelSubscriptionCreateManyChannelInput | ChannelSubscriptionCreateManyChannelInput[]
     skipDuplicates?: boolean
   }
 
@@ -5804,16 +6132,124 @@ export namespace Prisma {
     id?: StringFilter<"Podcast"> | string
     title?: StringFilter<"Podcast"> | string
     description?: StringFilter<"Podcast"> | string
-    thumbnail?: StringNullableFilter<"Podcast"> | string | null
-    audioUrl?: StringNullableFilter<"Podcast"> | string | null
-    duration?: IntNullableFilter<"Podcast"> | number | null
-    views?: IntFilter<"Podcast"> | number
-    upvotes?: IntFilter<"Podcast"> | number
-    downvotes?: IntFilter<"Podcast"> | number
-    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    thumbnailUrl?: StringNullableFilter<"Podcast"> | string | null
     visibility?: EnumVisibilityFilter<"Podcast"> | $Enums.Visibility
-    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    status?: EnumPodcastStatusFilter<"Podcast"> | $Enums.PodcastStatus
+    scheduledAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    schedulerJobId?: StringNullableFilter<"Podcast"> | string | null
+    startedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    endedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+    peakViewers?: IntFilter<"Podcast"> | number
+    totalViews?: IntFilter<"Podcast"> | number
     channelId?: StringFilter<"Podcast"> | string
+    createdAt?: DateTimeFilter<"Podcast"> | Date | string
+    updatedAt?: DateTimeFilter<"Podcast"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Podcast"> | Date | string | null
+  }
+
+  export type ChannelSubscriptionUpsertWithWhereUniqueWithoutChannelInput = {
+    where: ChannelSubscriptionWhereUniqueInput
+    update: XOR<ChannelSubscriptionUpdateWithoutChannelInput, ChannelSubscriptionUncheckedUpdateWithoutChannelInput>
+    create: XOR<ChannelSubscriptionCreateWithoutChannelInput, ChannelSubscriptionUncheckedCreateWithoutChannelInput>
+  }
+
+  export type ChannelSubscriptionUpdateWithWhereUniqueWithoutChannelInput = {
+    where: ChannelSubscriptionWhereUniqueInput
+    data: XOR<ChannelSubscriptionUpdateWithoutChannelInput, ChannelSubscriptionUncheckedUpdateWithoutChannelInput>
+  }
+
+  export type ChannelSubscriptionUpdateManyWithWhereWithoutChannelInput = {
+    where: ChannelSubscriptionScalarWhereInput
+    data: XOR<ChannelSubscriptionUpdateManyMutationInput, ChannelSubscriptionUncheckedUpdateManyWithoutChannelInput>
+  }
+
+  export type ChannelSubscriptionScalarWhereInput = {
+    AND?: ChannelSubscriptionScalarWhereInput | ChannelSubscriptionScalarWhereInput[]
+    OR?: ChannelSubscriptionScalarWhereInput[]
+    NOT?: ChannelSubscriptionScalarWhereInput | ChannelSubscriptionScalarWhereInput[]
+    userId?: StringFilter<"ChannelSubscription"> | string
+    channelId?: StringFilter<"ChannelSubscription"> | string
+    createdAt?: DateTimeFilter<"ChannelSubscription"> | Date | string
+  }
+
+  export type ChannelCreateWithoutSubscriptionsInput = {
+    id?: string
+    name: string
+    slug: string
+    description: string
+    bannerUrl?: string | null
+    profilePictureUrl?: string | null
+    subscriberCount?: number
+    podcastCount?: number
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    podcasts?: PodcastCreateNestedManyWithoutChannelInput
+  }
+
+  export type ChannelUncheckedCreateWithoutSubscriptionsInput = {
+    id?: string
+    name: string
+    slug: string
+    description: string
+    bannerUrl?: string | null
+    profilePictureUrl?: string | null
+    subscriberCount?: number
+    podcastCount?: number
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    podcasts?: PodcastUncheckedCreateNestedManyWithoutChannelInput
+  }
+
+  export type ChannelCreateOrConnectWithoutSubscriptionsInput = {
+    where: ChannelWhereUniqueInput
+    create: XOR<ChannelCreateWithoutSubscriptionsInput, ChannelUncheckedCreateWithoutSubscriptionsInput>
+  }
+
+  export type ChannelUpsertWithoutSubscriptionsInput = {
+    update: XOR<ChannelUpdateWithoutSubscriptionsInput, ChannelUncheckedUpdateWithoutSubscriptionsInput>
+    create: XOR<ChannelCreateWithoutSubscriptionsInput, ChannelUncheckedCreateWithoutSubscriptionsInput>
+    where?: ChannelWhereInput
+  }
+
+  export type ChannelUpdateToOneWithWhereWithoutSubscriptionsInput = {
+    where?: ChannelWhereInput
+    data: XOR<ChannelUpdateWithoutSubscriptionsInput, ChannelUncheckedUpdateWithoutSubscriptionsInput>
+  }
+
+  export type ChannelUpdateWithoutSubscriptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriberCount?: IntFieldUpdateOperationsInput | number
+    podcastCount?: IntFieldUpdateOperationsInput | number
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    podcasts?: PodcastUpdateManyWithoutChannelNestedInput
+  }
+
+  export type ChannelUncheckedUpdateWithoutSubscriptionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    bannerUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    subscriberCount?: IntFieldUpdateOperationsInput | number
+    podcastCount?: IntFieldUpdateOperationsInput | number
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    podcasts?: PodcastUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelCreateWithoutPodcastsInput = {
@@ -5825,8 +6261,11 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     subscriberCount?: number
     podcastCount?: number
-    createdAt?: Date | string
     ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    subscriptions?: ChannelSubscriptionCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelUncheckedCreateWithoutPodcastsInput = {
@@ -5838,8 +6277,11 @@ export namespace Prisma {
     profilePictureUrl?: string | null
     subscriberCount?: number
     podcastCount?: number
-    createdAt?: Date | string
     ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    subscriptions?: ChannelSubscriptionUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type ChannelCreateOrConnectWithoutPodcastsInput = {
@@ -5867,8 +6309,11 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptions?: ChannelSubscriptionUpdateManyWithoutChannelNestedInput
   }
 
   export type ChannelUncheckedUpdateWithoutPodcastsInput = {
@@ -5880,22 +6325,33 @@ export namespace Prisma {
     profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     subscriberCount?: IntFieldUpdateOperationsInput | number
     podcastCount?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscriptions?: ChannelSubscriptionUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type PodcastCreateManyChannelInput = {
     id?: string
     title: string
     description: string
-    thumbnail?: string | null
-    audioUrl?: string | null
-    duration?: number | null
-    views?: number
-    upvotes?: number
-    downvotes?: number
-    status?: $Enums.PodcastStatus
+    thumbnailUrl?: string | null
     visibility?: $Enums.Visibility
+    status?: $Enums.PodcastStatus
+    scheduledAt?: Date | string | null
+    schedulerJobId?: string | null
+    startedAt?: Date | string | null
+    endedAt?: Date | string | null
+    peakViewers?: number
+    totalViews?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ChannelSubscriptionCreateManyChannelInput = {
+    userId: string
     createdAt?: Date | string
   }
 
@@ -5903,44 +6359,68 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PodcastUncheckedUpdateWithoutChannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PodcastUncheckedUpdateManyWithoutChannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
-    audioUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    duration?: NullableIntFieldUpdateOperationsInput | number | null
-    views?: IntFieldUpdateOperationsInput | number
-    upvotes?: IntFieldUpdateOperationsInput | number
-    downvotes?: IntFieldUpdateOperationsInput | number
-    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     visibility?: EnumVisibilityFieldUpdateOperationsInput | $Enums.Visibility
+    status?: EnumPodcastStatusFieldUpdateOperationsInput | $Enums.PodcastStatus
+    scheduledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    schedulerJobId?: NullableStringFieldUpdateOperationsInput | string | null
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    peakViewers?: IntFieldUpdateOperationsInput | number
+    totalViews?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ChannelSubscriptionUpdateWithoutChannelInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChannelSubscriptionUncheckedUpdateWithoutChannelInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ChannelSubscriptionUncheckedUpdateManyWithoutChannelInput = {
+    userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

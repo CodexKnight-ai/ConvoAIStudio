@@ -129,8 +129,10 @@ exports.Prisma.ChannelScalarFieldEnum = {
   profilePictureUrl: 'profilePictureUrl',
   subscriberCount: 'subscriberCount',
   podcastCount: 'podcastCount',
+  ownerId: 'ownerId',
   createdAt: 'createdAt',
-  ownerId: 'ownerId'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.ChannelSubscriptionScalarFieldEnum = {
@@ -143,16 +145,19 @@ exports.Prisma.PodcastScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
-  thumbnail: 'thumbnail',
-  audioUrl: 'audioUrl',
-  duration: 'duration',
-  views: 'views',
-  upvotes: 'upvotes',
-  downvotes: 'downvotes',
-  status: 'status',
+  thumbnailUrl: 'thumbnailUrl',
   visibility: 'visibility',
+  status: 'status',
+  scheduledAt: 'scheduledAt',
+  schedulerJobId: 'schedulerJobId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  peakViewers: 'peakViewers',
+  totalViews: 'totalViews',
+  channelId: 'channelId',
   createdAt: 'createdAt',
-  channelId: 'channelId'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -169,17 +174,19 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.PodcastStatus = exports.$Enums.PodcastStatus = {
-  DRAFT: 'DRAFT',
-  PROCESSING: 'PROCESSING',
-  PUBLISHED: 'PUBLISHED',
-  FAILED: 'FAILED'
-};
-
 exports.Visibility = exports.$Enums.Visibility = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
   UNLISTED: 'UNLISTED'
+};
+
+exports.PodcastStatus = exports.$Enums.PodcastStatus = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  LIVE: 'LIVE',
+  ENDED: 'ENDED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
 };
 
 exports.Prisma.ModelName = {

@@ -1,51 +1,66 @@
-import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaClient, Prisma } from '../generated/prisma/client.js';
 
 export interface CreatePodcastInput {
     title: string;
     description?: string;
     channelId: string;
+    thumbnailUrl?: string;
     visibility?: 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
 }
 
 export class PodcastRepository {
-    private prisma: PrismaClient;
-
-    constructor(prisma:PrismaClient) {
-        this.prisma = prisma;
-    }
+    constructor(private readonly prisma: PrismaClient) { }
 
     async create(data: CreatePodcastInput) {
         return this.prisma.podcast.create({
             data: {
                 title: data.title,
                 description: data.description ?? '',
+                thumbnailUrl: data.thumbnailUrl??'',
                 channelId: data.channelId,
                 visibility: data.visibility ?? 'PUBLIC',
-                status: 'PROCESSING',
+                status: 'DRAFT',
             },
         });
     }
 
     async findById(id: string) {
-        return this.prisma.podcast.findUnique({
-            where: { id },
-        });
-    }
-
-    async updateStatus(id: string, status: 'PUBLISHED' | 'FAILED', audioUrl?: string) {
-        return this.prisma.podcast.update({
-            where: { id },
-            data: {
-                status,
-                ...(audioUrl !== undefined ? { audioUrl } : {}),
+        return this.prisma.podcast.findFirst({
+            where: {
+                id,
+                deletedAt: null,
             },
         });
     }
 
     async findByChannel(channelId: string) {
         return this.prisma.podcast.findMany({
-            where: { channelId },
-            orderBy: { createdAt: 'desc' },
+            where: {
+                channelId,
+                deletedAt: null,
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+    }
+
+    async update(
+        id: string,
+        data: Prisma.PodcastUpdateInput
+    ) {
+        return this.prisma.podcast.update({
+            where: { id },
+            data,
+        });
+    }
+
+    async softDelete(id: string) {
+        return this.prisma.podcast.update({
+            where: { id },
+            data: {
+                deletedAt: new Date(),
+            },
         });
     }
 }

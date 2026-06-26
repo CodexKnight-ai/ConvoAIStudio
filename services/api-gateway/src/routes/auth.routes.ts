@@ -18,15 +18,25 @@ export async function authRoutes(app: FastifyInstance) {
     // ──────────────────────────────────────────────────────────────
     app.post("/register", async (request, reply) => {
         try {
-            const body = request.body as {
-                first_name: string;
-                last_name?: string;
-                email: string;
-                username: string;
-                password: string;
-            };
+            // console.log("auth-route-body:", JSON.stringify(request.body, null, 2));
+            console.log("Content-Type:", request.headers['content-type']);
+            let body = request.body as any;
+            if (typeof body === 'string') {
+                try {
+                    body = JSON.parse(body);
+                } catch (err) {
+                    // ignore and let validation catch it
+                }
+            }
+
+            // Validate required fields
+            console.log("body:", body);
+            if (!body?.firstName || !body?.email || !body?.username || !body?.password) {
+                return reply.status(400).send({ error: "[1]Missing required fields: firstName, email, username, and password are required" });
+            }
 
             const result = await authGrpcClient.register(body);
+            console.log("gateway register grpc result:", JSON.stringify(result, null, 2));
 
             if (result.error) {
                 return reply.status(400).send({ error: result.error });
@@ -45,6 +55,8 @@ export async function authRoutes(app: FastifyInstance) {
                 username: result.username,
                 email: result.email,
                 role: result.role,
+                firstName: result.firstName,
+                lastName: result.lastName,
                 accessTokenExpiresAt: result.accessTokenExpiresAt,
                 refreshTokenExpiresAt: result.refreshTokenExpiresAt,
             });
@@ -59,9 +71,16 @@ export async function authRoutes(app: FastifyInstance) {
     // ──────────────────────────────────────────────────────────────
     app.post("/login", async (request, reply) => {
         try {
-            const body = request.body as { email: string; password: string };
+            let body = request.body as any;
+            if (typeof body === 'string') {
+                try {
+                    body = JSON.parse(body);
+                } catch (err) {
+                    // ignore
+                }
+            }
             const result = await authGrpcClient.login(body);
-
+            console.log("auth-route-body:",result);
             if (result.error) {
                 return reply.status(401).send({ error: result.error });
             }
@@ -80,6 +99,8 @@ export async function authRoutes(app: FastifyInstance) {
                 username: result.username,
                 email: result.email,
                 role: result.role,
+                firstName: result.firstName,
+                lastName: result.lastName,
                 accessTokenExpiresAt: result.accessTokenExpiresAt,
                 refreshTokenExpiresAt: result.refreshTokenExpiresAt,
             });
@@ -131,9 +152,11 @@ export async function authRoutes(app: FastifyInstance) {
     app.post("/logout", async (request, reply) => {
         try {
             const sessionId = request.cookies.sessionId;
+            const refreshToken = request.cookies.refreshToken;
+            console.log("logout cookies:", request.cookies);
 
-            if (sessionId) {
-                await authGrpcClient.logout(sessionId);
+            if (sessionId && refreshToken) {
+                await authGrpcClient.logout(sessionId, refreshToken);
             }
             reply.clearCookie("accessToken", COOKIE_OPTS);
             reply.clearCookie("refreshToken", COOKIE_OPTS);

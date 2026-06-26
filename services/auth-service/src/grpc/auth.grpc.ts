@@ -4,13 +4,6 @@ import { AuthRepository } from '../auth/auth.repository.js';
 import { verifyAccessToken } from '../auth/jwt.js';
 import { FastifyInstance } from 'fastify';
 
-function createStubReply() {
-    return {
-        setCookie: () => {},
-        clearCookie: () => {},
-        code: () => {},
-    } as any;
-}
 
 export function createAuthGrpcHandlers(fastify: FastifyInstance) {
     const repo = new AuthRepository(fastify);
@@ -43,8 +36,7 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
         // ──────────────────────────────────────────────
         register: async (call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => {
             try {
-                const stubReply = createStubReply();
-                const result = await authService.register(fastify, stubReply, repo, {
+                const result = await authService.register(fastify, repo, {
                     firstName: call.request.firstName,
                     lastName: call.request.lastName,
                     email: call.request.email,
@@ -52,13 +44,19 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
                     password: call.request.password,
                 });
 
+                console.log('grpc register result:', JSON.stringify(result, null, 2));
                 callback(null, {
                     userId: result.user.id,
                     username: result.user.username,
                     email: result.user.email,
                     role: result.user.role,
-                    accessTokenExpiresAt: result.accessTokenExpiresAt,
-                    refreshTokenExpiresAt: result.refreshTokenExpiresAt,
+                    firstName: result.user.firstName || '',
+                    lastName: result.user.lastName || '',
+                    accessToken: result.accessToken,
+                    refreshToken: result.refreshToken,
+                    sessionId: result.sessionId,
+                    accessTokenExpiresAt: result.accessTokenExpiresAt.getTime(),
+                    refreshTokenExpiresAt: result.refreshTokenExpiresAt.getTime(),
                 });
             } catch (err: any) {
                 callback({
@@ -72,22 +70,26 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
         // Login
         // ──────────────────────────────────────────────
         login: async (call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => {
-            console.log("Login gRPC handler called", call.request);
             try {
-                const stubReply = createStubReply();
-                const result = await authService.login(fastify, stubReply, repo, {
+                const result = await authService.login(fastify, repo, {
                     email: call.request.email,
                     password: call.request.password,
                 });
-
+                // console.log('USER: ', result.user);
                 callback(null, {
                     userId: result.user.id,
                     username: result.user.username,
                     email: result.user.email,
                     role: result.user.role,
-                    accessTokenExpiresAt: result.accessTokenExpiresAt,
-                    refreshTokenExpiresAt: result.refreshTokenExpiresAt,
+                    firstName: result.user.firstName || '',
+                    lastName: result.user.lastName || '',
+                    accessToken: result.accessToken,
+                    refreshToken: result.refreshToken,
+                    sessionId: result.sessionId,
+                    accessTokenExpiresAt: result.accessTokenExpiresAt.getTime(),
+                    refreshTokenExpiresAt: result.refreshTokenExpiresAt.getTime(),
                 });
+
             } catch (err: any) {
                 callback({
                     code: status.UNAUTHENTICATED,
@@ -101,15 +103,17 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
         // ──────────────────────────────────────────────
         refresh: async (call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => {
             try {
-                const stubReply = createStubReply();
-                const result = await authService.refresh(fastify, stubReply, {
+                const result = await authService.refresh(fastify, {
                     refreshToken: call.request.refreshToken,
                     sessionId: call.request.sessionId,
                 });
 
                 callback(null, {
-                    accessTokenExpiresAt: result.accessTokenExpiresAt,
-                    refreshTokenExpiresAt: result.refreshTokenExpiresAt,
+                    accessTokenExpiresAt: result.accessTokenExpiresAt.getTime(),
+                    refreshTokenExpiresAt: result.refreshTokenExpiresAt.getTime(),
+                    accessToken: result.accessToken,
+                    refreshToken: result.refreshToken,
+                    sessionId: result.sessionId,
                 });
             } catch (err: any) {
                 callback({
@@ -124,15 +128,11 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
         // ──────────────────────────────────────────────
         logout: async (call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => {
             try {
-                const stubReply = createStubReply();
-                const fakeRequest = {
-                    cookies: {
-                        refreshToken: '',
-                        sessionId: call.request.sessionId,
-                    },
-                } as any;
-
-                await authService.logout(fastify, fakeRequest, stubReply);
+                console.log('grpc logout request:', call.request);
+                await authService.logout(fastify, {
+                    refreshToken: call.request.refreshToken,
+                    sessionId: call.request.sessionId,
+                });
 
                 callback(null, { success: true });
             } catch (err: any) {
@@ -148,8 +148,7 @@ export function createAuthGrpcHandlers(fastify: FastifyInstance) {
         // ──────────────────────────────────────────────
         getMe: async (call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => {
             try {
-                const stubReply = createStubReply();
-                const user = await authService.getMe(stubReply, repo, call.request.userId);
+                const user = await authService.getMe(repo, call.request.userId);
                 if (!user) {
                     callback({
                         code: status.NOT_FOUND,
