@@ -20,7 +20,7 @@ Convo-AI-Studio is an AI-powered realtime podcast platform. The codebase has mig
 | AI Pipeline | `ai-engine` (Python FastAPI, gRPC) | **Scaffolded** (basic structure, gRPC deps) |
 | Shared packages | `proto-contracts`, `ts-config` | **Not created** |
 | Infra | `infra/k8s`, `infra/monitoring` | **Not created** |
-| Queues | BullMQ / Redis Pub/Sub | **Implemented (BullMQ in podcast-service)** |
+| Queues | BullMQ / Redis Pub/Sub | **Implemented** (BullMQ + Redis Pub/Sub in podcast-service) |
 | GraphQL | Mercurius at gateway | **Not implemented** |
 
 ---
@@ -517,7 +517,20 @@ Three-layer pattern: **repository → service → controller → routes**.
 ### 5. Queues & Background Processing
 - Scaffolded **BullMQ** queue structures (`podcastQueue` and `createPodcastWorker`) inside `services/podcast-service` to manage podcast lifecycles asynchronously (processing states like `START_PODCAST`, `END_PODCAST`, and `CANCEL_PODCAST`).
 
-### 6. Frontend (`Client/web`)
+### 6. Redis Pub/Sub (Real-time Events)
+- **Redis Pub/Sub infrastructure** in `services/podcast-service` for real-time event broadcasting:
+  - `src/lib/redis-pubsub.ts` - Redis publisher setup with connection management (DB 1)
+  - `src/publisher/redis-event-publisher.ts` - Event publisher implementation
+  - `src/publisher/event-publisher.ts` - Event publisher interface
+  - `src/dev/pubsub-listener.ts` - Development listener tool for debugging
+  - `src/events/` - Event type definitions:
+    - `events-types.ts` - Event types: TRANSCRIPT_CHUNK, PODCAST_STARTED, PODCAST_ENDED, AUDIO_CHUNK, AI_RESPONSE
+    - `podcast-event.ts` - PodcastEvent interface with event, podcastId, sequence, timestamp, payload
+    - `transcript-event.ts` - TranscriptChunkPayload interface
+- Channel pattern: `podcast:{podcastId}:events`
+- Ready for integration with ai-engine and realtime-service
+
+### 7. Frontend (`Client/web`)
 Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, axios.
 
 **Pages built:**
@@ -616,7 +629,7 @@ Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, axios.
 
 | Area | Completion |
 |------|------------|
-| Microservices scaffold | ~60% |
+| Microservices scaffold | ~65% |
 | Auth & sessions | ~98% |
 | Channel management | ~75% |
 | Podcast CRUD & AI pipeline | ~40% |
@@ -624,9 +637,9 @@ Next.js 16 (App Router), React 19, TailwindCSS 4, Framer Motion, Zustand, axios.
 | Frontend UI | ~85% |
 | Frontend ↔ API integration | ~25% |
 | Realtime / WebSockets | 0% |
-| AI engine (Python) | 0% |
+| AI engine (Python) | ~5% (scaffolded) |
 | GraphQL / federation | 0% |
 | Infra / observability | ~10% (Docker Compose only) |
 | Tests / CI | 0% |
 
-**Overall project maturity: ~38–43%** — solid auth and channel foundations with a polished frontend shell; core realtime AI, job queues, and cross-service features remain ahead.
+**Overall project maturity: ~40–45%** — solid auth and channel foundations with a polished frontend shell; ai-engine scaffolded but core realtime AI, job queues, and cross-service features remain ahead.

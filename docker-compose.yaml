@@ -1,6 +1,11 @@
+version: "3.9"
+
 networks:
   convo-network:
     driver: bridge
+
+volumes:
+  postgres_data:
 
 services:
   postgres:
@@ -32,57 +37,72 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
-    networks:
-      - convo-network
     environment:
-      - AUTH_SERVICE_URL=http://auth-service:4001
-      - AUTH_SERVICE_GRPC_URL=http://auth-service:50051
-      - PODCAST_SERVICE_URL=http://podcast-service:4002
+      AUTH_SERVICE_URL: http://auth-service:4001
+      AUTH_SERVICE_GRPC_URL: auth-service:50051
+      PODCAST_SERVICE_URL: http://podcast-service:4002
     depends_on:
       - auth-service
       - podcast-service
+    networks:
+      - convo-network
 
   auth-service:
     build:
       context: ./services/auth-service
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/auth_db
-      - REDIS_DB=0
+      DATABASE_URL: postgresql://admin:password@postgres:5432/auth_db
+      REDIS_DB: 0
+      REDIS_URL: redis://redis:6379
     depends_on:
       - postgres
       - redis
-    networks:
-      - convo-network
     expose:
       - "4001"
       - "50051"
+    networks:
+      - convo-network
 
   podcast-service:
     build:
       context: ./services/podcast-service
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=postgresql://admin:password@postgres:5432/podcast_db
-      - REDIS_DB=1
-      - AI_ENGINE_GRPC_URL=ai-engine:50052
+      DATABASE_URL: postgresql://admin:password@postgres:5432/podcast_db
+      REDIS_DB: 1
+      REDIS_URL: redis://redis:6379
+      AI_ENGINE_GRPC_URL: ai-engine:50052
     depends_on:
       - postgres
       - redis
       - ai-engine
-    networks:
-      - convo-network
     expose:
       - "4002"
+    networks:
+      - convo-network
 
   ai-engine:
     build:
-      context: ./services/ai-engine
+      context: ./services/ai_engine
       dockerfile: Dockerfile
-    networks:
-      - convo-network
+    depends_on:
+      - redis
     expose:
       - "50052"
+    networks:
+      - convo-network
 
-volumes:
-  postgres_data:
+  realtime-service:
+    build:
+      context: ./services/realtime-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: 4003
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+    ports:
+      - "4003:4003"
+    networks:
+      - convo-network

@@ -11,7 +11,6 @@ const prisma = new PrismaClient({
 const worker = createPodcastWorker(prisma);
 
 console.log("Podcast Worker Started");
-
 worker.on("failed", (job, err) => {
     console.error(`❌ Job ${job?.id} (${job?.name}) failed:`, err.message);
 });

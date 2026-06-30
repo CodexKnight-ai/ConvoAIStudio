@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm --filter \"*\" dev",
+    "dev": "concurrently -n gateway,auth,podcast,worker,realtime,ai-engine -c blue,green,yellow,cyan,magenta,red \"pnpm --filter api-gateway dev\" \"pnpm --filter auth-service dev\" \"pnpm --filter podcast-service dev\" \"pnpm --filter podcast-service worker\" \"pnpm --filter realtime-service dev\" \"cd services/ai_engine && .venv\\Scripts\\python -m app.main\"",
     "proto:generate": "protoc --proto_path=proto --ts_proto_out=packages/shared/src/proto --ts_proto_opt=esModuleInterop=true,outputServices=grpc-js,outputClientImpl=grpc-js proto/*.proto"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "ioredis": "^5.11.1"
   },
   "devDependencies": {
+    "concurrently": "^10.0.3",
     "ts-proto": "^2.11.8"
   }
 }
