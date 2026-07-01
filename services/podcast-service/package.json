@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "worker": "tsx watch src/worker.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/services/podcast-service/src/server.js",
     "db:migrate": "pnpm prisma migrate dev",
     "db:generate": "pnpm prisma generate"
   },
